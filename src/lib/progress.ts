@@ -6,6 +6,7 @@ import type {
   ConceptProgress,
   LearningBackup,
   PathProgress,
+  RecallAttempt,
   RecallGrade,
   RecallStatus,
   ReviewEntry,
@@ -132,6 +133,7 @@ export function setConceptStatus(
     status === "Ny" || !intervalDays
       ? lastReviewed
       : addDays(lastReviewed, intervalDays);
+  // Nytt objekt uten recall: et vurdert kort skal ikke åpne med forrige forsøk.
   const next: ConceptProgress = {
     status,
     lastReviewed: status === "Ny" ? prev?.lastReviewed : lastReviewed,
@@ -189,6 +191,31 @@ export function introduceConcepts(
     changed = true;
   }
   if (changed) writeMap(CONCEPT_KEY, map);
+}
+
+/**
+ * Lagrer eller fjerner gjenkallingen på et begrep som allerede ligger i køen.
+ * `null` sletter utkastet. Tom, uavslørt tekst skal ikke ligge igjen som et forsøk.
+ */
+export function setRecallAttempt(
+  id: string,
+  attempt: RecallAttempt | null
+): void {
+  const map = getAllConceptProgress();
+  const prev = map[id];
+  if (!prev) return;
+  if (!attempt || (!attempt.revealed && attempt.text.trim().length === 0)) {
+    if (!prev.recall) return;
+    const next = { ...prev };
+    delete next.recall;
+    map[id] = next;
+    writeMap(CONCEPT_KEY, map);
+    return;
+  }
+  const text = attempt.revealed ? attempt.text.trim() : attempt.text;
+  if (prev.recall?.text === text && prev.recall.revealed === attempt.revealed) return;
+  map[id] = { ...prev, recall: { text, revealed: attempt.revealed } };
+  writeMap(CONCEPT_KEY, map);
 }
 
 /** Begreper brukeren har møtt, og som forfaller i dag eller tidligere. */
