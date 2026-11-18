@@ -99,7 +99,7 @@ export function IdeaFab() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full bg-slate-900 px-4 py-3 text-sm font-medium text-white shadow-lg shadow-slate-900/20 hover:bg-slate-800"
+        className="fixed bottom-24 right-4 z-40 flex items-center gap-2 rounded-full bg-slate-900 px-4 py-3 text-sm font-medium text-white shadow-lg shadow-slate-900/20 hover:bg-slate-800 sm:bottom-5 sm:right-5"
         aria-label="Ny idé"
       >
         + Idé

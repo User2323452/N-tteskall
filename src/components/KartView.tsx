@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { getConcept, getPath } from "@/data/learning";
-import { overviewAreas } from "@/data/overview";
+import { areaPictures, overviewAreas } from "@/data/overview";
 
-export function OverviewView() {
+export function KartView() {
   const [openId, setOpenId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -31,45 +32,55 @@ export function OverviewView() {
   }, [openId]);
 
   return (
-    <div className="mx-auto max-w-xl space-y-8">
+    <div className="mx-auto max-w-xl space-y-6">
       <header>
         <h1 className="font-[family-name:var(--font-display)] text-4xl tracking-tight text-[var(--ink)]">
-          Oversikt
+          Kart
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-[var(--muted)]">
-          Områdene hver for seg. Åpne ett for å se temaene og begrepene.
+          Et kart over økonomien. Åpne et område, og temaene og begrepene ligger
+          inni.
         </p>
       </header>
 
-      <ul className="space-y-3">
+      <ul className="space-y-4">
         {overviewAreas.map((area) => {
           const open = openId === area.id;
+          const picture = areaPictures[area.id];
           return (
             <li key={area.id} id={area.id} className="scroll-mt-20">
-              <section
-                className="overflow-hidden rounded-2xl border border-[var(--line)] bg-white"
-                style={{ boxShadow: `inset 3px 0 0 ${area.accent}` }}
-              >
+              <section className="overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
                 <button
                   type="button"
                   aria-expanded={open}
                   onClick={() => setOpenId(open ? null : area.id)}
-                  className="flex w-full items-start justify-between gap-3 px-4 py-4 text-left"
+                  className="block w-full text-left"
                 >
-                  <span>
-                    <span className="block font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
-                      {area.name}
+                  {picture && (
+                    <Image
+                      src={picture.src}
+                      alt={picture.alt}
+                      width={1200}
+                      height={900}
+                      className="aspect-[16/9] w-full object-cover"
+                    />
+                  )}
+                  <span className="flex items-start justify-between gap-3 px-4 py-4">
+                    <span>
+                      <span className="block font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
+                        {area.name}
+                      </span>
+                      <span className="mt-1 block text-sm leading-relaxed text-[var(--muted)]">
+                        {area.summary}
+                      </span>
                     </span>
-                    <span className="mt-1 block text-sm leading-relaxed text-[var(--muted)]">
-                      {area.summary}
-                    </span>
+                    <ChevronDown
+                      className={`mt-1 h-5 w-5 shrink-0 text-[var(--muted)] transition-transform motion-reduce:transition-none ${
+                        open ? "rotate-180" : ""
+                      }`}
+                      aria-hidden
+                    />
                   </span>
-                  <ChevronDown
-                    className={`mt-1 h-5 w-5 shrink-0 text-[var(--muted)] transition-transform motion-reduce:transition-none ${
-                      open ? "rotate-180" : ""
-                    }`}
-                    aria-hidden
-                  />
                 </button>
 
                 {open && (

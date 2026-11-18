@@ -93,7 +93,7 @@ export function SearchView() {
           {results.coming.length > 0 && (
             <section>
               <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-                I oversikten ({results.coming.length})
+                På kartet ({results.coming.length})
               </h2>
               <ul className="space-y-1.5">
                 {results.coming.map((path) => (

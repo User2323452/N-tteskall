@@ -6,7 +6,10 @@ export type ConceptCategory =
   | "personlig"
   | "metode";
 
-export type RecallGrade = "Usikker" | "OK" | "Kan det";
+export type RecallGrade = "Usikker" | "OK" | "Kan det" | "Sitter";
+
+/** Rekkefølge på vurderingene, fra usikker til «dette sitter». */
+export const recallGrades: RecallGrade[] = ["Usikker", "OK", "Kan det", "Sitter"];
 
 export type RecallStatus = "Ny" | RecallGrade;
 

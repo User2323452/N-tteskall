@@ -16,10 +16,9 @@ import {
   introduceConcepts,
   setConceptStatus,
 } from "@/lib/progress";
-import type { ConceptProgress, RecallGrade } from "@/types/learning";
+import { recallGrades, type ConceptProgress, type RecallGrade } from "@/types/learning";
 import { termStatusStyle } from "@/lib/theme";
-
-const grades: RecallGrade[] = ["Usikker", "OK", "Kan det"];
+import { ConceptFigure, ConceptTeaching } from "@/components/figures/ConceptFigure";
 
 export function ConceptView({ conceptId }: { conceptId: string }) {
   const concept = getConcept(conceptId);
@@ -107,15 +106,21 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
         </button>
       </div>
 
-      {revealed && (
-        <div className="mt-5 space-y-4 text-[15px] leading-relaxed text-slate-700">
-          <p>{concept.explanation}</p>
-          {concept.tip && (
-            <p className="rounded-xl border border-amber-200/70 bg-amber-50/60 px-3.5 py-3 text-sm text-amber-950">
-              <span className="font-semibold">Husk: </span>
-              {concept.tip}
-            </p>
-          )}
+      {revealed ? (
+        <ConceptTeaching id={concept.id}>
+          <div className="space-y-4 text-[15px] leading-relaxed text-slate-700">
+            <p>{concept.explanation}</p>
+            {concept.tip && (
+              <p className="rounded-xl border border-amber-200/70 bg-amber-50/60 px-3.5 py-3 text-sm text-amber-950">
+                <span className="font-semibold">Husk: </span>
+                {concept.tip}
+              </p>
+            )}
+          </div>
+        </ConceptTeaching>
+      ) : (
+        <div className="mt-5">
+          <ConceptFigure id={concept.id} />
         </div>
       )}
 
@@ -136,7 +141,7 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
           Legg i Repeter
         </button>
         <div className="mt-3 flex flex-wrap gap-2">
-          {grades.map((g) => (
+          {recallGrades.map((g) => (
             <button
               key={g}
               type="button"

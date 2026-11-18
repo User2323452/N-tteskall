@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
-import { TransmissionFigure } from "@/components/TransmissionFigure";
+import { ConceptFigure } from "@/components/figures/ConceptFigure";
 import {
   getConcept,
   getLesson,
@@ -153,8 +153,6 @@ export function LessonView({
         ))}
       </div>
 
-      {lesson.visual === "transmisjon" && <TransmissionFigure />}
-
       {concepts.length > 0 && (
         <section className="mt-8">
           <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
@@ -163,16 +161,19 @@ export function LessonView({
           <ul className="mt-3 space-y-2">
             {concepts.map((c) =>
               c ? (
-                <li key={c.id}>
-                  <Link
-                    href={`/begrep/${c.id}`}
-                    className="block rounded-2xl border border-slate-200/80 bg-white px-4 py-3 transition hover:border-slate-300"
-                  >
+                <li
+                  key={c.id}
+                  className="rounded-2xl border border-slate-200/80 bg-white px-4 py-3"
+                >
+                  <Link href={`/begrep/${c.id}`} className="block">
                     <span className="font-medium text-slate-900">{c.term}</span>
                     <span className="mt-0.5 block text-sm text-slate-500">
                       {c.definition}
                     </span>
                   </Link>
+                  <div className="mt-3">
+                    <ConceptFigure id={c.id} />
+                  </div>
                 </li>
               ) : null
             )}

@@ -1,10 +1,5 @@
-import type { Metadata } from "next";
-import { OverviewView } from "@/components/OverviewView";
-
-export const metadata: Metadata = {
-  title: "Oversikt · Nøtteskall",
-};
+import { redirect } from "next/navigation";
 
 export default function OversiktPage() {
-  return <OverviewView />;
+  redirect("/kart");
 }

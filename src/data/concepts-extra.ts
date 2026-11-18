@@ -76,7 +76,7 @@ export const extraConcepts: Concept[] = [
     "Monetary policy",
     "makro",
     "Norges Banks styring av rente og likviditet i kronemarkedet for å nå inflasjonsmålet.",
-    "Verktøyet folk møter, er styringsrenten. Finanspolitikken — statsbudsjettet og bruken av oljepenger — er et annet spor og ligger under norsk økonomi i oversikten.",
+    "Verktøyet folk møter, er styringsrenten. Finanspolitikken — statsbudsjettet og bruken av oljepenger — er et annet spor og ligger under norsk økonomi på kartet.",
     ["styringsrenten", "inflasjonsmal", "finanspolitikk"]
   ),
   c(
