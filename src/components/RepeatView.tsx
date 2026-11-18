@@ -5,8 +5,10 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { concepts, getConcept } from "@/data/learning";
 import {
+  formatDueLabel,
   getDueConceptIds,
   gradeHint,
+  listSchedule,
   setConceptStatus,
 } from "@/lib/progress";
 import type { RecallGrade } from "@/types/learning";
@@ -48,6 +50,11 @@ export function RepeatView() {
   }
 
   if (queue.length === 0 || index >= queue.length) {
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    const upcoming = listSchedule().filter((item) => item.dueOn > today);
+    const nextUp = upcoming[0];
+    const nextTerm = nextUp ? getConcept(nextUp.id)?.term : undefined;
     return (
       <div className="mx-auto max-w-lg space-y-4 py-8 text-center">
         <h1 className="font-[family-name:var(--font-display)] text-3xl text-slate-900">
@@ -58,6 +65,11 @@ export function RepeatView() {
             ? "Fullfør en leksjon, så legges nøkkelbegrepene her. Du kan også legge et begrep i køen fra begrepssiden."
             : "Du har gått gjennom det som forfalt i dag."}
         </p>
+        {nextTerm && nextUp && (
+          <p className="text-sm text-slate-700">
+            Neste: {nextTerm}, {formatDueLabel(nextUp.dueOn)}
+          </p>
+        )}
         <div className="flex flex-wrap justify-center gap-2">
           <Link
             href="/"
