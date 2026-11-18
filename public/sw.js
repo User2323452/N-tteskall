@@ -1,5 +1,5 @@
 /* Minimal PWA service worker — cache shell for offline revisit */
-const CACHE = "notteskall-shell-v3";
+const CACHE = "notteskall-shell-v4";
 const SHELL = ["/", "/manifest.webmanifest", "/icons/icon-192.png", "/icons/icon-512.png"];
 
 self.addEventListener("install", (event) => {
