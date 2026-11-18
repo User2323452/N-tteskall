@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f5f1;
+  --background: #f3f6f8;
   --foreground: #0f172a;
+  --accent: #0f766e;
+  --accent-soft: #ccfbf1;
 }
 
 @theme inline {
@@ -13,9 +15,24 @@
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(ellipse 80% 50% at 100% -10%, #d8f3ef 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 0% 0%, #e8eef5 0%, transparent 50%),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-body), system-ui, sans-serif;
+  min-height: 100dvh;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { Plus, X } from "lucide-react";
 import { v4 as uuid } from "uuid";
 import { db, ensureSeeded } from "@/lib/db";
@@ -231,8 +232,16 @@ export function BegrepsbankenView() {
           Begrepsbanken
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
-          Ordlista di. Trykk <strong>Start repetisjon</strong>, si forklaringen
-          høyt, sjekk, og sett status.
+          Utvidet ordliste du kan redigere selv. For kuraterte forklaringer og
+          læringsløp: start på forsiden eller bruk{" "}
+          <Link
+            href="/repeter"
+            className="font-medium text-slate-800 underline-offset-2 hover:underline"
+          >
+            Repeter
+          </Link>
+          . Her: trykk <strong>Start repetisjon</strong>, si forklaringen høyt,
+          sjekk, og sett status.
         </p>
       </header>
 

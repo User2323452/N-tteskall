@@ -2,319 +2,239 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { BookOpen, ChevronDown, PenLine, Shuffle } from "lucide-react";
-import { db, ensureSeeded } from "@/lib/db";
-import { AreaIcon } from "@/components/AreaIcon";
-import { areaAccent } from "@/lib/theme";
-import { isPageEmpty, type Area, type CareerGoal, type Group, type Page } from "@/types/mesterplan";
-import { useLiveQuery } from "@/lib/useLiveQuery";
 import { useRouter } from "next/navigation";
+import { ArrowRight, BookOpen, Clock, Search } from "lucide-react";
+import {
+  categoryLabel,
+  concepts,
+  getLessonsForPath,
+  learningPaths,
+  searchLearning,
+} from "@/data/learning";
+import {
+  getAllPathProgress,
+  getDueConceptIds,
+  nextLessonId,
+} from "@/lib/progress";
 
 export function HomeView() {
-  const [ready, setReady] = useState(false);
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const router = useRouter();
+  const [q, setQ] = useState("");
+  const [progressTick, setProgressTick] = useState(0);
 
   useEffect(() => {
-    void ensureSeeded().then(() => setReady(true));
+    setProgressTick((n) => n + 1);
   }, []);
 
-  const areas = useLiveQuery(() => db.areas.orderBy("order").toArray(), ready);
-  const groups = useLiveQuery(() => db.groups.orderBy("order").toArray(), ready);
-  const pages = useLiveQuery(() => db.pages.orderBy("order").toArray(), ready);
-  const terms = useLiveQuery(() => db.terms.toArray(), ready);
-  const goals = useLiveQuery(
-    () => db.careerGoals.orderBy("order").toArray(),
-    ready
-  );
+  const pathProgress = useMemo(() => {
+    void progressTick;
+    return getAllPathProgress();
+  }, [progressTick]);
 
-  const groupsByArea = useMemo(() => {
-    const map = new Map<string, Group[]>();
-    for (const g of groups ?? []) {
-      const list = map.get(g.areaId) ?? [];
-      list.push(g);
-      map.set(g.areaId, list);
+  const dueCount = useMemo(() => {
+    void progressTick;
+    return getDueConceptIds(concepts.map((c) => c.id)).length;
+  }, [progressTick]);
+
+  const continueTarget = useMemo(() => {
+    for (const path of learningPaths) {
+      const prog = pathProgress[path.id];
+      const next = nextLessonId(path.lessonIds, prog?.completedLessonIds ?? []);
+      if (next) {
+        return { path, lessonId: next, started: (prog?.completedLessonIds.length ?? 0) > 0 };
+      }
     }
-    return map;
-  }, [groups]);
+    return null;
+  }, [pathProgress]);
 
-  const pagesByArea = useMemo(() => {
-    const map = new Map<string, Page[]>();
-    for (const p of pages ?? []) {
-      const list = map.get(p.areaId) ?? [];
-      list.push(p);
-      map.set(p.areaId, list);
+  const liveSearch = useMemo(() => searchLearning(q), [q]);
+
+  function onSearchSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = q.trim();
+    if (!trimmed) return;
+    if (liveSearch.concepts.length === 1 && liveSearch.paths.length === 0) {
+      router.push(`/begrep/${liveSearch.concepts[0].id}`);
+      return;
     }
-    return map;
-  }, [pages]);
-
-  const filledPages = useMemo(
-    () => (pages ?? []).filter((p) => !isPageEmpty(p.content)),
-    [pages]
-  );
-  const emptyPages = useMemo(
-    () => (pages ?? []).filter((p) => isPageEmpty(p.content)),
-    [pages]
-  );
-  const termCount = terms?.length ?? 0;
-
-  function openRandomEmpty() {
-    if (!emptyPages.length) return;
-    const pick = emptyPages[Math.floor(Math.random() * emptyPages.length)];
-    router.push(`/tema/${pick.id}`);
+    router.push(`/sok?q=${encodeURIComponent(trimmed)}`);
   }
-
-  function randomTopic() {
-    if (!filledPages.length) return;
-    const pick = filledPages[Math.floor(Math.random() * filledPages.length)];
-    router.push(`/tema/${pick.id}?modus=test`);
-  }
-
-  if (!ready || !areas) {
-    return (
-      <p className="text-sm text-slate-500">Laster MesterPlan…</p>
-    );
-  }
-
-  const memory = areas.find((a) => a.id === "hukommelse");
-  const inbox = areas.find((a) => a.id === "innboks");
-  const rest = areas.filter(
-    (a) => a.id !== "hukommelse" && a.id !== "innboks"
-  );
 
   return (
-    <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white/70 px-5 py-8 shadow-sm backdrop-blur">
-        <div className="pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full bg-sky-100/70 blur-2xl" />
-        <div className="pointer-events-none absolute -bottom-20 left-10 h-40 w-40 rounded-full bg-amber-100/60 blur-2xl" />
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+    <div className="space-y-10">
+      <section className="relative overflow-hidden pt-2">
+        <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[var(--accent-soft)] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 left-0 h-48 w-48 rounded-full bg-sky-100/80 blur-3xl" />
+
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
           Økonomi i et nøtteskall
         </p>
-        <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl tracking-tight text-slate-900 sm:text-4xl">
+        <h1 className="mt-3 font-[family-name:var(--font-display)] text-[2.35rem] leading-[1.05] tracking-tight text-slate-900 sm:text-5xl">
           MesterPlan
         </h1>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600">
-          Skriv økonomi med egne ord. Repeter begreper. Test hva du husker. Alt
-          lagres bare på denne telefonen.
+        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-slate-600">
+          Lær økonomi gjennom korte læringsløp — eller søk opp et begrep og få
+          det forklart på bokmål.
         </p>
 
-        <div className="mt-5 space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            I dag
-          </p>
-          <div className="flex flex-wrap gap-2">
+        <form onSubmit={onSearchSubmit} className="relative mt-6 max-w-xl">
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Søk begrep — f.eks. styringsrenten, ASK…"
+            className="w-full rounded-2xl border border-slate-200/90 bg-white py-3.5 pl-10 pr-4 text-sm text-slate-900 shadow-sm outline-none ring-[var(--accent)] transition placeholder:text-slate-400 focus:ring-2"
+            aria-label="Søk etter økonomisk begrep"
+          />
+        </form>
+
+        {q.trim() && (
+          <div className="mt-3 max-w-xl space-y-1 rounded-2xl border border-slate-200/80 bg-white/90 p-2 shadow-sm backdrop-blur">
+            {liveSearch.concepts.slice(0, 5).map((c) => (
+              <Link
+                key={c.id}
+                href={`/begrep/${c.id}`}
+                className="block rounded-xl px-3 py-2 text-sm hover:bg-slate-50"
+              >
+                <span className="font-medium text-slate-900">{c.term}</span>
+                <span className="mt-0.5 block truncate text-xs text-slate-500">
+                  {c.definition}
+                </span>
+              </Link>
+            ))}
+            {liveSearch.paths.slice(0, 2).map((p) => (
+              <Link
+                key={p.id}
+                href={`/lop/${p.id}`}
+                className="block rounded-xl px-3 py-2 text-sm hover:bg-slate-50"
+              >
+                <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  Læringsløp
+                </span>
+                <span className="block font-medium text-slate-900">{p.title}</span>
+              </Link>
+            ))}
+            {liveSearch.concepts.length === 0 && liveSearch.paths.length === 0 && (
+              <p className="px-3 py-2 text-sm text-slate-500">
+                Ingen treff. Prøv «inflasjon» eller «ASK».
+              </p>
+            )}
             <Link
-              href="/begrepsbanken?okt=1"
-              className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-3.5 py-2.5 text-sm font-medium text-white"
+              href={`/sok?q=${encodeURIComponent(q.trim())}`}
+              className="flex items-center gap-1 px-3 py-2 text-xs font-medium text-[var(--accent)]"
+            >
+              Se alle treff <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+        )}
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          {continueTarget ? (
+            <Link
+              href={`/lop/${continueTarget.path.id}/${continueTarget.lessonId}`}
+              className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
             >
               <BookOpen className="h-4 w-4" />
-              Repeter begreper ({termCount})
+              {continueTarget.started
+                ? `Fortsett: ${continueTarget.path.title}`
+                : `Start: ${continueTarget.path.title}`}
             </Link>
-            {emptyPages.length > 0 && (
-              <button
-                type="button"
-                onClick={openRandomEmpty}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-700"
-              >
-                <PenLine className="h-4 w-4" />
-                Skriv på et tomt tema
-              </button>
+          ) : (
+            <Link
+              href={`/lop/${learningPaths[0].id}`}
+              className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white"
+            >
+              <BookOpen className="h-4 w-4" />
+              Se læringsløp
+            </Link>
+          )}
+          <Link
+            href="/repeter"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700"
+          >
+            Repeter begreper
+            {dueCount > 0 && (
+              <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600">
+                {dueCount}
+              </span>
             )}
-            {filledPages.length > 0 && (
-              <button
-                type="button"
-                onClick={randomTopic}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-3.5 py-2.5 text-sm font-medium text-slate-600"
-              >
-                <Shuffle className="h-4 w-4" />
-                Tilfeldig tema å teste
-              </button>
-            )}
-          </div>
+          </Link>
         </div>
       </section>
 
-      {memory && (
-        <MemoryCard area={memory} goals={goals ?? []} />
-      )}
-
-      <div className="grid gap-4 md:grid-cols-2">
-        {rest.map((area) => (
-          <AreaCard
-            key={area.id}
-            area={area}
-            groups={groupsByArea.get(area.id) ?? []}
-            pages={pagesByArea.get(area.id) ?? []}
-            collapsed={collapsed}
-            setCollapsed={setCollapsed}
-          />
-        ))}
-      </div>
-
-      {inbox && (
-        <AreaCard
-          area={inbox}
-          groups={groupsByArea.get(inbox.id) ?? []}
-          pages={pagesByArea.get(inbox.id) ?? []}
-          collapsed={collapsed}
-          setCollapsed={setCollapsed}
-          compact
-        />
-      )}
-    </div>
-  );
-}
-
-function MemoryCard({
-  area,
-  goals,
-}: {
-  area: Area;
-  goals: CareerGoal[];
-}) {
-  const accent = areaAccent[area.id];
-  return (
-    <section
-      className={`rounded-2xl border ${accent.border} ${accent.soft} p-4 shadow-sm`}
-    >
-      <div className="mb-3 flex items-center gap-2">
-        <span className={`rounded-lg bg-white/80 p-2 ${accent.text}`}>
-          <AreaIcon name={area.icon} />
-        </span>
-        <h2 className="font-[family-name:var(--font-display)] text-xl text-slate-900">
-          {area.name}
-        </h2>
-      </div>
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-        Karrieremål
-      </p>
-      <ul className="mb-4 space-y-1.5">
-        {goals.map((g) => (
-          <li
-            key={g.id}
-            className="rounded-lg bg-white/70 px-3 py-2 text-sm text-slate-700"
-          >
-            {g.text}
-          </li>
-        ))}
-      </ul>
-      <Link
-        href="/begrepsbanken"
-        className="inline-flex items-center gap-2 text-sm font-medium text-slate-800 underline-offset-2 hover:underline"
-      >
-        <AreaIcon name="chart" className="h-4 w-4" />
-        Begrepsbanken
-      </Link>
-    </section>
-  );
-}
-
-function AreaCard({
-  area,
-  groups,
-  pages,
-  collapsed,
-  setCollapsed,
-  compact,
-}: {
-  area: Area;
-  groups: Group[];
-  pages: Page[];
-  collapsed: Record<string, boolean>;
-  setCollapsed: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
-  compact?: boolean;
-}) {
-  const accent = areaAccent[area.id];
-  const ungrouped = pages
-    .filter((p) => !p.groupId)
-    .sort((a, b) => a.order - b.order);
-
-  return (
-    <section
-      className={`rounded-2xl border ${accent.border} ${accent.soft} p-4 shadow-sm ${compact ? "md:col-span-2" : ""}`}
-    >
-      <div className="mb-1 flex items-start gap-2">
-        <span className={`mt-0.5 rounded-lg bg-white/80 p-2 ${accent.text}`}>
-          <AreaIcon name={area.icon} />
-        </span>
-        <div>
-          <h2 className="font-[family-name:var(--font-display)] text-lg text-slate-900">
-            {area.name}
-          </h2>
-          {area.subtitle && (
-            <p className="text-xs leading-relaxed text-slate-500">
-              {area.subtitle}
+      <section>
+        <div className="mb-4 flex items-end justify-between gap-3">
+          <div>
+            <h2 className="font-[family-name:var(--font-display)] text-2xl text-slate-900">
+              Læringsløp
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Kuraterte stier — ingen tomme sider å fylle først.
             </p>
-          )}
+          </div>
         </div>
-      </div>
 
-      <div className="mt-3 space-y-2">
-        {groups.map((g) => {
-          const gPages = pages
-            .filter((p) => p.groupId === g.id)
-            .sort((a, b) => a.order - b.order);
-          const isCollapsed =
-            collapsed[g.id] ?? g.collapsedByDefault ?? false;
-          return (
-            <div key={g.id}>
-              <button
-                type="button"
-                className="mb-1 flex w-full items-center gap-1 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
-                onClick={() =>
-                  setCollapsed((c) => ({ ...c, [g.id]: !isCollapsed }))
-                }
-              >
-                <ChevronDown
-                  className={`h-3.5 w-3.5 transition ${isCollapsed ? "-rotate-90" : ""}`}
-                />
-                {g.name}
-              </button>
-              {!isCollapsed && (
-                <ul className="space-y-1">
-                  {gPages.map((p) => (
-                    <PageRow key={p.id} page={p} />
-                  ))}
-                </ul>
-              )}
-            </div>
-          );
-        })}
-        {ungrouped.length > 0 && (
-          <ul className="space-y-1">
-            {ungrouped.map((p) => (
-              <PageRow key={p.id} page={p} />
-            ))}
-          </ul>
-        )}
-        {pages.length === 0 && (
-          <p className="rounded-lg bg-white/60 px-3 py-2 text-sm text-slate-500">
-            Ingen sider her ennå. Trykk + Idé for å fange noe fort.
-          </p>
-        )}
-      </div>
-    </section>
-  );
-}
+        <ul className="space-y-3">
+          {learningPaths.map((path) => {
+            const lessons = getLessonsForPath(path.id);
+            const done = pathProgress[path.id]?.completedLessonIds.length ?? 0;
+            const total = lessons.length;
+            const pct = total ? Math.round((done / total) * 100) : 0;
+            const next = nextLessonId(
+              path.lessonIds,
+              pathProgress[path.id]?.completedLessonIds ?? []
+            );
+            return (
+              <li key={path.id}>
+                <Link
+                  href={next ? `/lop/${path.id}/${next}` : `/lop/${path.id}`}
+                  className="group block rounded-2xl border border-slate-200/80 bg-white/90 p-4 shadow-sm transition hover:border-slate-300 hover:shadow-md"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                        {categoryLabel[path.category]}
+                      </p>
+                      <h3 className="mt-1 font-[family-name:var(--font-display)] text-xl text-slate-900 group-hover:text-[var(--accent)]">
+                        {path.title}
+                      </h3>
+                      <p className="mt-1 text-sm leading-relaxed text-slate-600">
+                        {path.subtitle}
+                      </p>
+                    </div>
+                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500" />
+                  </div>
+                  <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-slate-500">
+                    <span className="inline-flex items-center gap-1">
+                      <Clock className="h-3.5 w-3.5" />
+                      ca. {path.estimatedMinutes} min
+                    </span>
+                    <span>
+                      {done}/{total} leksjoner
+                    </span>
+                  </div>
+                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100">
+                    <div
+                      className="h-full rounded-full bg-[var(--accent)] transition-all duration-500"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
 
-function PageRow({ page }: { page: Page }) {
-  const empty = isPageEmpty(page.content);
-  return (
-    <li>
-      <Link
-        href={`/tema/${page.id}`}
-        className="flex items-center justify-between gap-2 rounded-lg bg-white/75 px-3 py-2 text-sm text-slate-800 transition hover:bg-white"
-      >
-        <span className="flex items-center gap-2 truncate">
-          {page.icon && <AreaIcon name={page.icon} className="h-3.5 w-3.5 opacity-70" />}
-          <span className="truncate">{page.title}</span>
-        </span>
-        {empty && (
-          <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-500">
-            Ikke skrevet ennå
-          </span>
-        )}
-      </Link>
-    </li>
+      <section className="border-t border-slate-200/70 pt-6">
+        <p className="text-sm text-slate-500">
+          Trenger du egne notater?{" "}
+          <Link href="/notater" className="font-medium text-slate-800 underline-offset-2 hover:underline">
+            Åpne notatbiblioteket
+          </Link>{" "}
+          — det er valgfritt, ikke starten.
+        </p>
+      </section>
+    </div>
   );
 }
