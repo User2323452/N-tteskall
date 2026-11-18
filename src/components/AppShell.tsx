@@ -62,7 +62,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <footer className="mx-auto max-w-5xl px-4 pb-24">
         <DataBackup />
         <p className="mt-2 text-xs text-slate-400">
-          Lokal lagring i nettleseren. Ta backup med eksporter JSON.
+          Data ligger bare i Safari på denne telefonen. Ta sikkerhetskopi før du
+          bytter enhet.
         </p>
       </footer>
       <IdeaFab />

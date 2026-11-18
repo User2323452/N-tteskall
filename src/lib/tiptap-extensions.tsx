@@ -17,7 +17,7 @@ function CalloutView({ node, updateAttributes }: NodeViewProps) {
         <input
           className="mb-1 w-full bg-transparent text-sm font-semibold text-sky-900 outline-none placeholder:text-sky-400"
           value={node.attrs.title ?? ""}
-          placeholder="Callout-tittel (valgfritt)"
+          placeholder="Tittel på uthevet boks (valgfritt)"
           onChange={(e) => updateAttributes({ title: e.target.value })}
         />
         <NodeViewContent className="text-[15px] leading-relaxed text-slate-800" />
@@ -67,7 +67,7 @@ function ToggleView({ node, updateAttributes }: NodeViewProps) {
           <input
             className="flex-1 bg-transparent outline-none"
             value={node.attrs.title ?? ""}
-            placeholder="Toggle-tittel"
+            placeholder="Tittel på sammenleggbar"
             onClick={(e) => e.stopPropagation()}
             onChange={(e) => updateAttributes({ title: e.target.value })}
           />

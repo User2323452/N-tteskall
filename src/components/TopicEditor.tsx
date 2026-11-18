@@ -141,7 +141,8 @@ export function TopicEditor({ content, onChange, editable = true }: Props) {
                 })
                 .run()
             }
-            aria-label="Callout"
+            aria-label="Uthevet boks"
+            title="Uthevet boks"
           >
             <MessageSquareQuote className="h-4 w-4" />
           </button>
@@ -154,12 +155,13 @@ export function TopicEditor({ content, onChange, editable = true }: Props) {
                 .focus()
                 .insertContent({
                   type: "toggleBlock",
-                  attrs: { title: "Toggle" },
+                  attrs: { title: "Sammenleggbar" },
                   content: [{ type: "paragraph" }],
                 })
                 .run()
             }
-            aria-label="Toggle"
+            aria-label="Sammenleggbar"
+            title="Sammenleggbar"
           >
             <ChevronsUpDown className="h-4 w-4" />
           </button>

@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { v4 as uuid } from "uuid";
 import { db, ensureSeeded } from "@/lib/db";
 import { useLiveQuery } from "@/lib/useLiveQuery";
-import { areaAccent, termStatusStyle } from "@/lib/theme";
+import { areaAccent, labelForTermArea, termStatusStyle } from "@/lib/theme";
 import type { Term, TermAreaId, TermStatus } from "@/types/mesterplan";
+import { useSearchParams } from "next/navigation";
 
 const areaFilters: { id: TermAreaId | "alle"; label: string }[] = [
   { id: "alle", label: "Alle" },
@@ -20,11 +21,15 @@ const areaFilters: { id: TermAreaId | "alle"; label: string }[] = [
 const statuses: TermStatus[] = ["Ny", "Usikker", "Kan det"];
 
 export function BegrepsbankenView() {
+  const search = useSearchParams();
   const [ready, setReady] = useState(false);
   const [areaFilter, setAreaFilter] = useState<TermAreaId | "alle">("alle");
   const [statusFilter, setStatusFilter] = useState<TermStatus | "alle">("alle");
-  const [hideExplanation, setHideExplanation] = useState(false);
-  const [revealId, setRevealId] = useState<string | null>(null);
+  const [session, setSession] = useState<{
+    ids: string[];
+    index: number;
+    revealed: boolean;
+  } | null>(null);
   const [draft, setDraft] = useState({
     term: "",
     english: "",
@@ -55,10 +60,52 @@ export function BegrepsbankenView() {
     return list;
   }, [terms, areaFilter, statusFilter]);
 
+  useEffect(() => {
+    if (!ready || !terms || session) return;
+    if (search.get("okt") === "1" && terms.length > 0) {
+      startSession(terms);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- start once when seed ready + ?okt=1
+  }, [ready, terms, search]);
+
+  function startSession(pool: Term[]) {
+    const sorted = [...pool].sort((a, b) => {
+      const statusRank = (s: TermStatus) =>
+        s === "Ny" ? 0 : s === "Usikker" ? 1 : 2;
+      const rank = statusRank(a.status) - statusRank(b.status);
+      if (rank !== 0) return rank;
+      const da = a.lastReviewed ?? "";
+      const db_ = b.lastReviewed ?? "";
+      if (da !== db_) return da.localeCompare(db_);
+      return a.term.localeCompare(b.term, "nb");
+    });
+    setSession({
+      ids: sorted.map((t) => t.id),
+      index: 0,
+      revealed: false,
+    });
+  }
+
   async function updateStatus(term: Term, status: TermStatus) {
     await db.terms.update(term.id, {
       status,
       lastReviewed: new Date().toISOString().slice(0, 10),
+    });
+  }
+
+  async function gradeInSession(status: TermStatus) {
+    if (!session || !terms) return;
+    const current = terms.find((t) => t.id === session.ids[session.index]);
+    if (!current) return;
+    await updateStatus(current, status);
+    if (session.index + 1 >= session.ids.length) {
+      setSession(null);
+      return;
+    }
+    setSession({
+      ...session,
+      index: session.index + 1,
+      revealed: false,
     });
   }
 
@@ -75,6 +122,108 @@ export function BegrepsbankenView() {
     setDraft({ term: "", english: "", explanation: "", areaId: draft.areaId });
   }
 
+  const sessionTerm =
+    session && terms
+      ? terms.find((t) => t.id === session.ids[session.index])
+      : null;
+
+  if (session && sessionTerm) {
+    const accent = areaAccent[sessionTerm.areaId];
+    return (
+      <div className="fixed inset-0 z-40 flex flex-col bg-[radial-gradient(ellipse_at_top,_#eef4f9_0%,_#f7f5f1_45%,_#f3efe8_100%)]">
+        <div className="mx-auto flex w-full max-w-lg flex-1 flex-col px-4 pb-6 pt-4">
+          <div className="mb-4 flex items-center justify-between gap-2">
+            <p className="text-xs font-medium text-slate-500">
+              {session.index + 1} / {session.ids.length}
+            </p>
+            <button
+              type="button"
+              onClick={() => setSession(null)}
+              className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-sm text-slate-600 hover:bg-white/70"
+            >
+              <X className="h-4 w-4" />
+              Avslutt
+            </button>
+          </div>
+
+          <div className="flex flex-1 flex-col justify-center">
+            <article
+              className={`rounded-2xl border ${accent.border} bg-white p-5 shadow-sm`}
+            >
+              <span
+                className={`mb-3 inline-flex rounded-md px-2 py-0.5 text-xs ${accent.soft} ${accent.text}`}
+              >
+                {labelForTermArea(sessionTerm.areaId)}
+              </span>
+              <h1 className="font-[family-name:var(--font-display)] text-3xl text-slate-900">
+                {sessionTerm.term}
+              </h1>
+              {sessionTerm.english && (
+                <p className="mt-1 text-sm text-slate-500">
+                  {sessionTerm.english}
+                </p>
+              )}
+
+              {!session.revealed ? (
+                <button
+                  type="button"
+                  onClick={() => setSession({ ...session, revealed: true })}
+                  className="mt-8 w-full rounded-xl bg-slate-900 py-3 text-sm font-medium text-white"
+                >
+                  Vis forklaring
+                </button>
+              ) : (
+                <div className="mt-6 space-y-4">
+                  <p className="text-base leading-relaxed text-slate-800">
+                    {sessionTerm.explanation ?? "Ingen forklaring lagret ennå."}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Hvordan gikk det? Sett status — neste kort kommer etterpå.
+                  </p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {statuses.map((s) => {
+                      const st = termStatusStyle[s];
+                      return (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => void gradeInSession(s)}
+                          className={`min-h-12 rounded-xl px-2 py-3 text-sm font-medium ${st.bg} ${st.text}`}
+                        >
+                          {s}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </article>
+            {!session.revealed && (
+              <p className="mt-4 text-center text-sm text-slate-500">
+                Si forklaringen høyt før du sjekker.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (session && !sessionTerm) {
+    return (
+      <div className="space-y-3">
+        <p className="text-sm text-slate-600">Økten er ferdig.</p>
+        <button
+          type="button"
+          onClick={() => setSession(null)}
+          className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white"
+        >
+          Tilbake til biblioteket
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-5">
       <header>
@@ -82,12 +231,20 @@ export function BegrepsbankenView() {
           Begrepsbanken
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
-          Alle begreper fra MesterPlan samlet på ett sted. Legg til nye
-          fortløpende. Filtrer på område for å repetere ett felt om gangen. Slik
-          repeterer du: Skjul forklaring, les begrepet, si forklaringen høyt og
-          sjekk. Oppdater status og sist repetert.
+          Ordlista di. Trykk <strong>Start repetisjon</strong>, si forklaringen
+          høyt, sjekk, og sett status.
         </p>
       </header>
+
+      <button
+        type="button"
+        disabled={!filtered.length}
+        onClick={() => startSession(filtered)}
+        className="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-white disabled:opacity-50 sm:w-auto"
+      >
+        Start repetisjon
+        {filtered.length > 0 ? ` (${filtered.length})` : ""}
+      </button>
 
       <div className="flex flex-wrap gap-2">
         {areaFilters.map((f) => (
@@ -121,17 +278,7 @@ export function BegrepsbankenView() {
             </option>
           ))}
         </select>
-        <label className="inline-flex items-center gap-2 text-xs text-slate-600">
-          <input
-            type="checkbox"
-            checked={hideExplanation}
-            onChange={(e) => {
-              setHideExplanation(e.target.checked);
-              setRevealId(null);
-            }}
-          />
-          Repetisjonsmodus (skjul forklaring)
-        </label>
+        <p className="text-xs text-slate-500">Bibliotek — filtrer og bla.</p>
       </div>
 
       {/* Mobile cards */}
@@ -140,9 +287,6 @@ export function BegrepsbankenView() {
           <TermCard
             key={t.id}
             term={t}
-            hideExplanation={hideExplanation}
-            revealed={revealId === t.id}
-            onReveal={() => setRevealId(t.id)}
             onStatus={(s) => void updateStatus(t, s)}
           />
         ))}
@@ -165,8 +309,6 @@ export function BegrepsbankenView() {
             {filtered.map((t) => {
               const accent = areaAccent[t.areaId];
               const st = termStatusStyle[t.status];
-              const show =
-                !hideExplanation || revealId === t.id;
               return (
                 <tr key={t.id} className="border-b border-slate-50 align-top">
                   <td className="px-3 py-2 font-medium text-slate-900">
@@ -174,23 +316,13 @@ export function BegrepsbankenView() {
                   </td>
                   <td className="px-3 py-2 text-slate-600">{t.english ?? "—"}</td>
                   <td className="px-3 py-2 text-slate-700">
-                    {show ? (
-                      t.explanation ?? "—"
-                    ) : (
-                      <button
-                        type="button"
-                        className="text-sky-700 underline"
-                        onClick={() => setRevealId(t.id)}
-                      >
-                        Vis
-                      </button>
-                    )}
+                    {t.explanation ?? "—"}
                   </td>
                   <td className="px-3 py-2">
                     <span
                       className={`inline-flex rounded-md px-2 py-0.5 text-xs ${accent.soft} ${accent.text}`}
                     >
-                      {t.areaId}
+                      {labelForTermArea(t.areaId)}
                     </span>
                   </td>
                   <td className="px-3 py-2">
@@ -220,7 +352,7 @@ export function BegrepsbankenView() {
 
       <section className="rounded-xl border border-dashed border-slate-300 bg-white/70 p-3">
         <h2 className="mb-2 text-sm font-semibold text-slate-800">
-          + Nytt begrep
+          Nytt begrep
         </h2>
         <div className="grid gap-2 sm:grid-cols-2">
           <input
@@ -237,7 +369,7 @@ export function BegrepsbankenView() {
           />
           <input
             className="rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none sm:col-span-2"
-            placeholder="Forklaring (dine ord)"
+            placeholder="Forklaring med egne ord (ikke lim inn AI-tekst)"
             value={draft.explanation}
             onChange={(e) =>
               setDraft({ ...draft, explanation: e.target.value })
@@ -274,43 +406,26 @@ export function BegrepsbankenView() {
 
 function TermCard({
   term,
-  hideExplanation,
-  revealed,
-  onReveal,
   onStatus,
 }: {
   term: Term;
-  hideExplanation: boolean;
-  revealed: boolean;
-  onReveal: () => void;
   onStatus: (s: TermStatus) => void;
 }) {
   const accent = areaAccent[term.areaId];
-  const show = !hideExplanation || revealed;
   return (
     <article className={`rounded-xl border ${accent.border} bg-white p-3 shadow-sm`}>
       <div className="mb-1 flex items-start justify-between gap-2">
         <h3 className="font-medium text-slate-900">{term.term}</h3>
         <span className={`rounded-md px-2 py-0.5 text-[10px] ${accent.soft} ${accent.text}`}>
-          {term.areaId}
+          {labelForTermArea(term.areaId)}
         </span>
       </div>
       {term.english && (
         <p className="mb-2 text-xs text-slate-500">{term.english}</p>
       )}
-      {show ? (
-        <p className="mb-3 text-sm leading-relaxed text-slate-700">
-          {term.explanation ?? "—"}
-        </p>
-      ) : (
-        <button
-          type="button"
-          onClick={onReveal}
-          className="mb-3 text-sm text-sky-700 underline"
-        >
-          Vis forklaring
-        </button>
-      )}
+      <p className="mb-3 text-sm leading-relaxed text-slate-700">
+        {term.explanation ?? "—"}
+      </p>
       <div className="flex flex-wrap gap-1.5">
         {statuses.map((s) => {
           const st = termStatusStyle[s];

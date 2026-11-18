@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Shuffle } from "lucide-react";
+import { BookOpen, ChevronDown, PenLine, Shuffle } from "lucide-react";
 import { db, ensureSeeded } from "@/lib/db";
 import { AreaIcon } from "@/components/AreaIcon";
 import { areaAccent } from "@/lib/theme";
@@ -22,6 +22,7 @@ export function HomeView() {
   const areas = useLiveQuery(() => db.areas.orderBy("order").toArray(), ready);
   const groups = useLiveQuery(() => db.groups.orderBy("order").toArray(), ready);
   const pages = useLiveQuery(() => db.pages.orderBy("order").toArray(), ready);
+  const terms = useLiveQuery(() => db.terms.toArray(), ready);
   const goals = useLiveQuery(
     () => db.careerGoals.orderBy("order").toArray(),
     ready
@@ -47,12 +48,26 @@ export function HomeView() {
     return map;
   }, [pages]);
 
-  async function randomTopic() {
-    const all = (pages ?? []).filter((p) => !isPageEmpty(p.content));
-    const pool = all.length > 0 ? all : pages ?? [];
-    if (!pool.length) return;
-    const pick = pool[Math.floor(Math.random() * pool.length)];
-    router.push(`/tema/${pick.id}?modus=blurt`);
+  const filledPages = useMemo(
+    () => (pages ?? []).filter((p) => !isPageEmpty(p.content)),
+    [pages]
+  );
+  const emptyPages = useMemo(
+    () => (pages ?? []).filter((p) => isPageEmpty(p.content)),
+    [pages]
+  );
+  const termCount = terms?.length ?? 0;
+
+  function openRandomEmpty() {
+    if (!emptyPages.length) return;
+    const pick = emptyPages[Math.floor(Math.random() * emptyPages.length)];
+    router.push(`/tema/${pick.id}`);
+  }
+
+  function randomTopic() {
+    if (!filledPages.length) return;
+    const pick = filledPages[Math.floor(Math.random() * filledPages.length)];
+    router.push(`/tema/${pick.id}?modus=test`);
   }
 
   if (!ready || !areas) {
@@ -79,24 +94,43 @@ export function HomeView() {
           MesterPlan
         </h1>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600">
-          Din økonomiske hukommelse — skriv med egne ord, blurt, og repeter
-          begreper. Alt lagres lokalt på denne enheten.
+          Skriv økonomi med egne ord. Repeter begreper. Test hva du husker. Alt
+          lagres bare på denne telefonen.
         </p>
-        <div className="mt-5 flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => void randomTopic()}
-            className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-3.5 py-2 text-sm font-medium text-white"
-          >
-            <Shuffle className="h-4 w-4" />
-            Tilfeldig tema
-          </button>
-          <Link
-            href="/begrepsbanken"
-            className="inline-flex items-center rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700"
-          >
-            Åpne Begrepsbanken
-          </Link>
+
+        <div className="mt-5 space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            I dag
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/begrepsbanken?okt=1"
+              className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-3.5 py-2.5 text-sm font-medium text-white"
+            >
+              <BookOpen className="h-4 w-4" />
+              Repeter begreper ({termCount})
+            </Link>
+            {emptyPages.length > 0 && (
+              <button
+                type="button"
+                onClick={openRandomEmpty}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-700"
+              >
+                <PenLine className="h-4 w-4" />
+                Skriv på et tomt tema
+              </button>
+            )}
+            {filledPages.length > 0 && (
+              <button
+                type="button"
+                onClick={randomTopic}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-3.5 py-2.5 text-sm font-medium text-slate-600"
+              >
+                <Shuffle className="h-4 w-4" />
+                Tilfeldig tema å teste
+              </button>
+            )}
+          </div>
         </div>
       </section>
 
@@ -255,7 +289,7 @@ function AreaCard({
         )}
         {pages.length === 0 && (
           <p className="rounded-lg bg-white/60 px-3 py-2 text-sm text-slate-500">
-            Tom — fang en idé med «+ Idé».
+            Ingen sider her ennå. Trykk + Idé for å fange noe fort.
           </p>
         )}
       </div>
@@ -276,8 +310,8 @@ function PageRow({ page }: { page: Page }) {
           <span className="truncate">{page.title}</span>
         </span>
         {empty && (
-          <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-slate-500">
-            Tom
+          <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-500">
+            Ikke skrevet ennå
           </span>
         )}
       </Link>
