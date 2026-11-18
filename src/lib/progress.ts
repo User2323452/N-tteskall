@@ -20,14 +20,37 @@ const PATH_KEY = "mesterplan.pathProgress.v1";
 const REVIEW_KEY = "mesterplan.reviewLog.v1";
 const ACTIVITY_KEY = "mesterplan.activity.v1";
 
+function localISO(date = new Date()): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
 function todayISO(): string {
-  return new Date().toISOString().slice(0, 10);
+  return localISO();
 }
 
 function addDays(isoDate: string, days: number): string {
-  const d = new Date(isoDate + "T12:00:00");
+  const d = new Date(isoDate.slice(0, 10) + "T12:00:00");
   d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
+  return localISO(d);
+}
+
+/** Kalenderdato på bokmål: «i dag, 18. nov.», «i morgen, 19. nov.» eller «24. nov.». */
+export function formatDueLabel(iso: string): string {
+  const day = iso.slice(0, 10);
+  const date = new Date(day + "T12:00:00");
+  const today = new Date(todayISO() + "T12:00:00");
+  const diff = Math.round((date.getTime() - today.getTime()) / 86_400_000);
+  const pretty = new Intl.DateTimeFormat("nb-NO", {
+    day: "numeric",
+    month: "short",
+  }).format(date);
+  if (diff < 0) return `forfalt ${pretty}`;
+  if (diff === 0) return `i dag, ${pretty}`;
+  if (diff === 1) return `i morgen, ${pretty}`;
+  return pretty;
 }
 
 function readMap<T>(key: string): Record<string, T> {
@@ -283,9 +306,36 @@ export function importLearningState(data: LearningBackup | undefined): void {
   if (Array.isArray(data.activity)) writeList(ACTIVITY_KEY, data.activity);
 }
 
+export interface ScheduledConcept {
+  id: string;
+  dueOn: string;
+  intervalDays?: number;
+  status: RecallStatus;
+}
+
+/** Begreper i køen, tidligste neste dato først. */
+export function listSchedule(): ScheduledConcept[] {
+  const map = getAllConceptProgress();
+  return Object.entries(map)
+    .filter((entry): entry is [string, ConceptProgress] =>
+      Boolean(entry[1]?.dueOn) && isIntroduced(entry[1])
+    )
+    .map(([id, progress]) => ({
+      id,
+      dueOn: progress.dueOn as string,
+      intervalDays: progress.intervalDays,
+      status: progress.status,
+    }))
+    .sort((a, b) => a.dueOn.localeCompare(b.dueOn) || a.id.localeCompare(b.id, "nb"));
+}
+
+/** Datoen denne vurderingen ville satt, med intervallengde. */
 export function gradeHint(conceptId: string, grade: RecallGrade): string {
   const days = nextIntervalDays(getConceptProgress(conceptId).intervalDays, grade);
-  return days === 1 ? "igjen om 1 dag" : `igjen om ${days} dager`;
+  const due = addDays(todayISO(), days);
+  const when = formatDueLabel(due);
+  const span = days === 1 ? "1 dag" : `${days} dager`;
+  return `${span} · ${when}`;
 }
 
 function assertSchedule() {
@@ -303,6 +353,12 @@ function assertSchedule() {
     if (actual !== expected) {
       throw new Error(`Intervall ${String(prev)} + ${grade} ble ${actual}, ventet ${expected}`);
     }
+  }
+  if (addDays("2026-01-15", 1) !== "2026-01-16") {
+    throw new Error("Én dag frem skal være neste kalenderdato");
+  }
+  if (addDays("2026-01-15", 6) !== "2026-01-21") {
+    throw new Error("Seks dager frem skal være 21. januar");
   }
 }
 

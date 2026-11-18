@@ -10,11 +10,13 @@ import {
   lessons,
 } from "@/data/learning";
 import {
+  formatDueLabel,
   getConceptProgress,
+  gradeHint,
   introduceConcepts,
   setConceptStatus,
 } from "@/lib/progress";
-import type { RecallGrade, RecallStatus } from "@/types/learning";
+import type { ConceptProgress, RecallGrade } from "@/types/learning";
 import { termStatusStyle } from "@/lib/theme";
 
 const grades: RecallGrade[] = ["Usikker", "OK", "Kan det"];
@@ -22,11 +24,11 @@ const grades: RecallGrade[] = ["Usikker", "OK", "Kan det"];
 export function ConceptView({ conceptId }: { conceptId: string }) {
   const concept = getConcept(conceptId);
   const [revealed, setRevealed] = useState(true);
-  const [status, setStatus] = useState<RecallStatus>("Ny");
+  const [progress, setProgress] = useState<ConceptProgress>({ status: "Ny" });
 
   useEffect(() => {
     if (!concept) return;
-    setStatus(getConceptProgress(concept.id).status);
+    setProgress(getConceptProgress(concept.id));
     setRevealed(true);
   }, [concept]);
 
@@ -51,13 +53,12 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
   );
 
   function grade(next: RecallGrade) {
-    const saved = setConceptStatus(concept!.id, next, concept!.term);
-    setStatus(saved.status);
+    setProgress(setConceptStatus(concept!.id, next, concept!.term));
   }
 
   function addToReview() {
     introduceConcepts([concept!.id]);
-    setStatus(getConceptProgress(concept!.id).status);
+    setProgress(getConceptProgress(concept!.id));
   }
 
   return (
@@ -86,10 +87,17 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <span
-          className={`rounded-md px-2 py-0.5 text-xs font-medium ${termStatusStyle[status]?.bg} ${termStatusStyle[status]?.text}`}
+          className={`rounded-md px-2 py-0.5 text-xs font-medium ${termStatusStyle[progress.status]?.bg} ${termStatusStyle[progress.status]?.text}`}
         >
-          {status}
+          {progress.status}
         </span>
+        {progress.dueOn ? (
+          <span className="text-sm text-slate-600">
+            Neste repetisjon: {formatDueLabel(progress.dueOn)}
+          </span>
+        ) : (
+          <span className="text-sm text-slate-500">Ikke i repetisjonskøen ennå.</span>
+        )}
         <button
           type="button"
           onClick={() => setRevealed((v) => !v)}
@@ -116,8 +124,9 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
           Repeter
         </h2>
         <p className="mt-1 text-sm text-slate-500">
-          Si forklaringen høyt, så sett status. Begrepet kommer tilbake i
-          Repeter når det forfaller.
+          Si forklaringen høyt, og velg hvor godt den satt. Datoen under
+          knappen er neste gang begrepet kommer i Repeter. Intervallet er kort
+          første gang, og blir lengre når det sitter.
         </p>
         <button
           type="button"
@@ -132,13 +141,20 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
               key={g}
               type="button"
               onClick={() => grade(g)}
-              className={`min-h-11 flex-1 rounded-xl border px-3 py-2.5 text-sm font-medium sm:flex-none ${
-                status === g
+              className={`min-h-11 flex-1 rounded-xl border px-3 py-2.5 text-center text-sm font-medium leading-tight sm:flex-none ${
+                progress.status === g
                   ? "border-slate-900 bg-slate-900 text-white"
                   : "border-slate-200 bg-white text-slate-700"
               }`}
             >
-              {g}
+              <span className="block">{g}</span>
+              <span
+                className={`mt-0.5 block text-[11px] font-normal ${
+                  progress.status === g ? "text-white/80" : "text-slate-400"
+                }`}
+              >
+                {gradeHint(concept.id, g)}
+              </span>
             </button>
           ))}
         </div>

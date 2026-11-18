@@ -5,44 +5,46 @@ import Link from "next/link";
 import { DataBackup } from "@/components/DataBackup";
 import { getConcept, getLessonsForPath, learningPaths } from "@/data/learning";
 import {
+  formatDueLabel,
   getActivity,
   getAllConceptProgress,
   getAllPathProgress,
   getReviews,
   isIntroduced,
+  listSchedule,
 } from "@/lib/progress";
 import type { RecallStatus } from "@/types/learning";
 
-function ScheduleSummary({
-  progress,
-  longest,
-}: {
-  progress: Record<string, { dueOn?: string; introduced?: boolean; status: string; lastReviewed?: string; intervalDays?: number }>;
-  longest: number;
-}) {
-  const today = new Date().toISOString().slice(0, 10);
-  const queued = Object.entries(progress).filter(([, item]) => item.dueOn);
-  const dueToday = queued.filter(([, item]) => item.dueOn! <= today);
-  const later = queued
-    .filter(([, item]) => item.dueOn! > today)
-    .sort((a, b) => a[1].dueOn!.localeCompare(b[1].dueOn!));
-  const next = later[0];
-  const nextTerm = next ? getConcept(next[0])?.term : undefined;
+function ScheduleSummary({ longest }: { longest: number }) {
+  const today = new Date();
+  const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const schedule = listSchedule();
+  const dueNow = schedule.filter((item) => item.dueOn <= todayIso);
+  const later = schedule.filter((item) => item.dueOn > todayIso).slice(0, 6);
 
   return (
-    <div className="mt-3 space-y-1 text-sm leading-relaxed text-[var(--muted)]">
+    <div className="mt-3 space-y-3 text-sm leading-relaxed text-[var(--muted)]">
       <p>
-        Intervallet starter kort. Hver gang du kan begrepet, blir det lengre.
-        Usikker setter det tilbake til én dag.
+        Intervallet starter kort (1–6 dager). Hver gang begrepet sitter, blir
+        datoen lenger frem. Usikker setter den tilbake til neste dag.
       </p>
-      {queued.length > 0 && (
+      {schedule.length > 0 && (
         <p className="text-[var(--ink)]">
-          {dueToday.length} venter i dag
-          {nextTerm && next
-            ? `. Neste etter det: ${nextTerm}, ${formatWhen(next[1].dueOn!)}`
-            : ""}
+          {dueNow.length} venter i dag
           {longest > 1 ? `. Lengste intervall er ${longest} dager.` : "."}
         </p>
+      )}
+      {later.length > 0 && (
+        <ul className="space-y-1.5">
+          {later.map((item) => (
+            <li key={item.id} className="flex items-baseline justify-between gap-3">
+              <Link href={`/begrep/${item.id}`} className="text-[var(--ink)] hover:text-[var(--accent)]">
+                {getConcept(item.id)?.term ?? item.id}
+              </Link>
+              <span className="shrink-0">{formatDueLabel(item.dueOn)}</span>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
@@ -182,7 +184,6 @@ export function ProfileView() {
           Usikker {counts.Usikker} · OK {counts.OK} · Kan det {counts["Kan det"]}
         </p>
         <ScheduleSummary
-          progress={conceptProgress}
           longest={introduced.reduce(
             (max, item) => Math.max(max, item.intervalDays ?? 0),
             0
