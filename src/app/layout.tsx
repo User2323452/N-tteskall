@@ -1,16 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Manrope } from "next/font/google";
+import { Outfit, Source_Sans_3 } from "next/font/google";
 import { AppShell } from "@/components/AppShell";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
-const display = Fraunces({
+const display = Outfit({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
 });
 
-const body = Manrope({
+const body = Source_Sans_3({
   variable: "--font-body",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -19,7 +19,7 @@ const body = Manrope({
 export const metadata: Metadata = {
   title: "MesterPlan",
   description:
-    "Din økonomiske hukommelse — notater, blurting og begrepsbank. Lokal-først PWA.",
+    "Læringsplattform for økonomi på bokmål — læringsløp, begreper og repetisjon. Lokal-først PWA.",
   applicationName: "MesterPlan",
   appleWebApp: {
     capable: true,
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1e3a5f",
+  themeColor: "#0f766e",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
