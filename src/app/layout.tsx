@@ -1,19 +1,32 @@
 import type { Metadata, Viewport } from "next";
-import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
+import localFont from "next/font/local";
 import { AppShell } from "@/components/AppShell";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
-const display = Source_Serif_4({
+/**
+ * Filene ligger i repoet. next/font/google henter CSS fra Google under build,
+ * og den parseren feiler på Vercel når en fil-URL ikke slutter på .woff2.
+ */
+const display = localFont({
+  src: [
+    { path: "../fonts/source-serif-4-latin-500.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/source-serif-4-latin-600.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/source-serif-4-latin-700.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  display: "swap",
 });
 
-const body = Source_Sans_3({
+const body = localFont({
+  src: [
+    { path: "../fonts/source-sans-3-latin-400.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/source-sans-3-latin-500.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/source-sans-3-latin-600.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/source-sans-3-latin-700.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-body",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
