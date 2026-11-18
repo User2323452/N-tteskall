@@ -1,7 +1,8 @@
+import { extraConcepts } from "@/data/concepts-extra";
 import type { Concept, LearningPath, Lesson } from "@/types/learning";
 
 /** Kuraterte begreper — korte, korrekte definisjoner på bokmål. */
-export const concepts: Concept[] = [
+const coreConcepts: Concept[] = [
   {
     id: "styringsrenten",
     term: "Styringsrenten",
@@ -52,24 +53,24 @@ export const concepts: Concept[] = [
     id: "handlingsregelen",
     term: "Handlingsregelen",
     english: "Fiscal rule",
-    category: "makro",
+    category: "olje",
     definition:
       "Retningslinje for hvor mye av Oljefondet staten kan bruke over statsbudsjettet hvert år.",
     explanation:
-      "Handlingsregelen sier at den forventede realavkastningen av Statens pensjonsfond utland (ofte omtalt rundt 3 prosent) skal styre bruken over tid. Målet er å jevne ut oljeinntekter, unngå å bruke opp fondet, og skjerme fastlandsøkonomien mot store svingninger.",
-    tip: "Pengepolitikk (Norges Bank) og finanspolitikk (statsbudsjettet/handlingsregelen) er to ulike verktøy.",
-    relatedIds: ["oljefondet"],
+      "Handlingsregelen sier at den forventede realavkastningen av Statens pensjonsfond utland (ofte omtalt rundt 3 prosent) skal styre bruken over tid. Målet er å jevne ut oljeinntekter, unngå å bruke opp fondet, og skjerme fastlandsøkonomien mot store svingninger. Dette er finanspolitikk, vedtatt over statsbudsjettet — ikke et virkemiddel Norges Bank bruker når den setter styringsrenten.",
+    tip: "Sjekk gjeldende anslag. 3 prosent er en tommelfinger for forventet realavkastning, ikke en fasit for hvert enkelt år.",
+    relatedIds: ["oljefondet", "finanspolitikk", "strukturelt-underskudd", "realavkastning"],
   },
   {
     id: "oljefondet",
-    term: "Oljefondet",
+    term: "Oljefondet (SPU)",
     english: "Government Pension Fund Global",
-    category: "makro",
+    category: "olje",
     definition:
       "Statens pensjonsfond utland — Norges sparefond investert i utlandet.",
     explanation:
       "Fondet eier aksjer, obligasjoner og eiendom utenfor Norge. Inntekter fra olje og gass settes inn; uttak styres av handlingsregelen via statsbudsjettet. Fondet skal komme kommende generasjoner til gode og er investert globalt for å spre risiko.",
-    relatedIds: ["handlingsregelen"],
+    relatedIds: ["handlingsregelen", "nbim", "finanspolitikk"],
   },
   {
     id: "nibor",
@@ -206,112 +207,125 @@ export const concepts: Concept[] = [
   },
 ];
 
+export const concepts: Concept[] = [...coreConcepts, ...extraConcepts];
+
 export const lessons: Lesson[] = [
-  // —— Path: norsk-pengepolitikk ——
   {
     id: "pp-1",
     pathId: "norsk-pengepolitikk",
-    title: "Hva er pengepolitikk?",
+    title: "Inflasjon og kjøpekraft",
     order: 0,
-    summary: "Hvem styrer renta, og hvorfor?",
+    summary: "Prisnivå, KPI og hva en krone faktisk rekker til.",
     body: [
-      "Pengepolitikk handler om hvordan Norges Bank bruker renta og andre verktøy for å holde prisveksten stabil og bidra til høy sysselsetting.",
-      "I Norge er målet at inflasjonen over tid skal være nær 2 prosent. Når prisene stiger for raskt, strammes politikken inn (høyere rente). Når aktiviteten er svak og inflasjonen lav, kan renta settes ned.",
-      "Du trenger ikke huske alle modellene — husk rollene: Norges Bank setter styringsrenten; bankene og markedet overfører effekten til boliglån, bedriftslån og krona.",
+      "Inflasjon er en vedvarende økning i det generelle prisnivået. Enkeltpriser hopper opp og ned hele tiden. Inflasjon handler om at prisene samlet sett stiger, slik at en krone rekker til mindre.",
+      "SSB måler dette med konsumprisindeksen (KPI). Indeksen følger en handlekurv av varer og tjenester husholdningene kjøper. Når nyhetene sier at prisveksten er så og så høy, er det som regel tolvmånedersveksten i KPI.",
+      "Kjøpekraft er hvor mye du får for pengene. Nominelle kroner er beløpet på konto eller lønnsslipp. Reelt er det samme beløpet etter prisvekst. Stiger prisene raskere enn lønna, faller kjøpekraften.",
     ],
-    conceptIds: ["styringsrenten", "inflasjon"],
+    conceptIds: ["inflasjon", "kpi", "kjopkraft"],
+    quiz: {
+      question: "Hva måler konsumprisindeksen (KPI)?",
+      options: [
+        "Avkastningen i pensjonsfondet",
+        "Prisutviklingen på husholdningenes varer og tjenester",
+        "Styringsrenten neste kvartal",
+        "Bare strømprisen",
+      ],
+      answerIndex: 1,
+      explain:
+        "KPI er SSBs indeks for prisene husholdningene møter. Energipriser er med i KPI, men indeksen er bredere enn strøm.",
+    },
   },
   {
     id: "pp-2",
     pathId: "norsk-pengepolitikk",
-    title: "Inflasjon og kjøpekraft",
+    title: "Inflasjonsmålet",
     order: 1,
-    summary: "Hvorfor 2 prosent er et mål — ikke «null».",
+    summary: "Nær 2 prosent over tid — og fleksibelt.",
     body: [
-      "Inflasjon er vedvarende oppgang i det generelle prisnivået. Litt inflasjon er normalt i en voksende økonomi; problemet oppstår når den blir høy og uforutsigbar.",
-      "Kjøpekraft forteller hva lønna di faktisk er verdt. Hvis prisene stiger raskere enn lønna, blir du fattigere i praksis selv om tallet på lønnsslippen er det samme.",
-      "Norges Bank ser på flere indikatorer (blant annet KPI og KPI justert for avgifter og energi). For deg som lærer: skill alltid mellom nominelle og reelle størrelser.",
+      "Norges Bank har et operativt mål om at konsumprisveksten skal ligge nær 2 prosent over tid. Tallet er et anker for forventningene. Det er ikke et krav om at KPI treffer 2 prosent hver eneste måned. Sjekk mandatet hvis du skal sitere tallet i et arbeid.",
+      "Styringen er fleksibel. Banken legger også vekt på produksjon og sysselsetting. Den prøver ikke å presse inflasjonen tilbake på én måned hvis det ville gitt et unødvendig hopp i ledigheten.",
+      "KPI-JAE er KPI uten energivarer og justert for avgiftsendringer. Den brukes ofte når man vil se den underliggende prisveksten, fordi strøm og avgifter svinger uten at det alltid sier noe om presset i økonomien.",
     ],
-    conceptIds: ["inflasjon", "kjopkraft"],
+    conceptIds: ["inflasjonsmal", "fleksibel-inflasjonsstyring", "kpi-jae"],
     quiz: {
-      question: "Hva er Norges Banks inflasjonsmål over tid?",
-      options: ["0 %", "Nær 2 %", "5 %", "Lik lønnsveksten hvert år"],
+      question: "Hva ligger i fleksibel inflasjonsstyring?",
+      options: [
+        "Inflasjonen skal være null hver måned",
+        "Hensyn til både inflasjon og aktivitet og sysselsetting",
+        "Styringsrenten er alltid lik boliglånsrenta",
+        "KPI-JAE er det eneste tallet som teller",
+      ],
       answerIndex: 1,
       explain:
-        "Målet er at inflasjonen skal være nær 2 prosent over tid — stabil, ikke null.",
+        "Fleksibel inflasjonsstyring veier inflasjon mot produksjon og sysselsetting, over en horisont på noen år.",
     },
   },
   {
     id: "pp-3",
     pathId: "norsk-pengepolitikk",
-    title: "Styringsrenten i praksis",
+    title: "Styringsrenten",
     order: 2,
-    summary: "Fra sentralbank til boliglånet ditt.",
+    summary: "Foliorenten — og hvorfor boliglånet ditt ligger høyere.",
     body: [
-      "Styringsrenten er renta på bankenes innskudd i Norges Bank. Den er ankeret for de korte pengemarkedsrentene.",
-      "Når styringsrenten heves, blir det dyrere å låne og mer lønnsomt å spare. Husholdninger og bedrifter bruker ofte mindre — etterspørselen dempes, og inflasjonspresset avtar med tid.",
-      "Effekten er ikke øyeblikkelig. Boliglånsrenter, kronekurs og forventninger spiller inn. Derfor kommuniserer Norges Bank også hva de tror om framtiden.",
+      "Styringsrenten er foliorenten: renta bankene får på innskudd i Norges Bank, opp til en kvote. Det er hovedverktøyet i pengepolitikken.",
+      "Pengepolitikk er styring av rente og likviditet i kronemarkedet. Når styringsrenten settes opp, blir det dyrere for bankene å finansiere seg, og utlånsrentene følger vanligvis etter. Sparing blir litt mer attraktivt, og nytt lån litt dyrere.",
+      "Boliglånsrenta ligger normalt over styringsrenten. Banken har egne kostnader, påslag og risiko. Styringsrenten trekker boliglånsrenta med seg, men de to tallene er ikke like.",
     ],
-    conceptIds: ["styringsrenten", "nibor", "nowa"],
+    conceptIds: ["styringsrenten", "pengepolitikk"],
   },
   {
     id: "pp-4",
     pathId: "norsk-pengepolitikk",
-    title: "Rentebanen",
+    title: "Transmisjonskanalene",
     order: 3,
-    summary: "Prognose — ikke løfte.",
+    summary: "Hvordan en renteendring når prisene.",
     body: [
-      "I Pengepolitisk rapport publiserer Norges Bank en rentebane: et anslag på styringsrenten framover gitt den informasjonen de har nå.",
-      "Markedet reagerer ofte mer på endringer i rentebanen enn på dagens rente alene. Hvis banen legges høyere, prises det inn strammere politikk framover.",
-      "Husk: ny informasjon (inflasjon, arbeidsmarked, krone) kan endre banen neste gang. Den er et arbeidsverktøy, ikke en kontrakt.",
+      "En renteendring virker ikke direkte på prislappen i butikken. Den går gjennom flere kanaler. Det kalles transmisjonsmekanismen.",
+      "Etterspørselskanalen: høyere rente demper forbruk og investering. Valutakurskanalen: høyere rente kan styrke krona, slik at importerte varer blir billigere i kroner — og omvendt når renta settes ned. Forventningskanalen: hvis husholdninger og bedrifter tror at inflasjonen holdes nær målet, setter det seg i lønns- og prisfastsetting.",
+      "Figuren under er en forenklet kjede, en pedagogisk modell. Den er ikke en prognose for hva som skjer neste kvartal.",
     ],
-    conceptIds: ["rentebanen", "styringsrenten"],
+    conceptIds: ["transmisjon"],
+    visual: "transmisjon",
+  },
+  {
+    id: "pp-5",
+    pathId: "norsk-pengepolitikk",
+    title: "Rentebanen og Pengepolitisk rapport",
+    order: 4,
+    summary: "Et anslag — ikke et løfte.",
+    body: [
+      "Rentebanen er Norges Banks prognose for styringsrenten de neste årene. Den oppdateres når ny informasjon kommer. Markedet reagerer ofte på endringen i banen, ikke bare på renta som gjelder i dag.",
+      "Prognosen publiseres i Pengepolitisk rapport, flere ganger i året, sammen med vurderingen fra rentemøtet. Komiteen setter renta. Rapporten forklarer analysen.",
+      "Usikkerheten er stor. Jo lenger fram i tid, jo videre er spennet. Banen er et arbeidsverktøy, ikke en kontrakt med boliglånskunden.",
+    ],
+    conceptIds: ["rentebanen", "ppr"],
     quiz: {
       question: "Hva er rentebanen?",
       options: [
         "Et lovfestet tak på boliglånsrenta",
         "Norges Banks prognose for styringsrenten framover",
         "Gjennomsnittlig NIBOR siste år",
-        "Renta på sparekonto i DNB",
+        "Renta på en sparekonto",
       ],
       answerIndex: 1,
       explain:
-        "Rentebanen er Norges Banks anslag på styringsrenten framover, ikke et løfte eller et boliglånstak.",
+        "Rentebanen er Norges Banks anslag, publisert i Pengepolitisk rapport. Den kan endres neste gang ny informasjon kommer.",
     },
-  },
-  {
-    id: "pp-5",
-    pathId: "norsk-pengepolitikk",
-    title: "Oljefondet og handlingsregelen",
-    order: 4,
-    summary: "Finanspolitikk — det andre store verktøyet.",
-    body: [
-      "Oljefondet (Statens pensjonsfond utland) er Norges sparefond investert i utlandet. Det skiller oljeformuen fra den løpende statsøkonomien.",
-      "Handlingsregelen styrer hvor mye av fondet som kan brukes over statsbudsjettet over tid — i tråd med forventet realavkastning. Poenget er jevn bruk og at fondet skal vare.",
-      "Pengepolitikk (rente) og finanspolitikk (budsjett/oljepenger) er ulike spor. Når du leser nyheter: spør «er dette Norges Bank eller statsbudsjettet?»",
-    ],
-    conceptIds: ["oljefondet", "handlingsregelen"],
   },
   {
     id: "pp-6",
     pathId: "norsk-pengepolitikk",
-    title: "Oppsummering",
+    title: "Avveiningen",
     order: 5,
-    summary: "Sett sammen bildet.",
+    summary: "Inflasjon og aktivitet peker ikke alltid samme vei.",
     body: [
-      "Du har nå kjernen: inflasjonsmål → styringsrente → gjennomslag i markedet → rentebanen som forventningsstyring. Ved siden ligger oljefondet og handlingsregelen som finanspolitisk ramme.",
-      "Neste steg: åpne begrepene under, test deg selv, og bruk «Repeter» senere så definisjonene setter seg.",
+      "Fleksibel inflasjonsstyring er en avveining. Høy prisvekst og høy aktivitet taler for høyere rente. Stigende ledighet og inflasjon under målet taler for lavere rente. Ofte peker hensynene hver sin vei, og komiteen må veie dem over horisonten.",
+      "Produksjonsgapet er et anslag på avviket mellom faktisk produksjon og det økonomien kan produsere uten at inflasjonspresset bygger seg opp. Positivt gap betyr press. Negativt gap betyr slakk.",
+      "Renta treffer husholdningene særlig via boliglån, forbruk og kronekurs. Hvor mye som brukes over statsbudsjettet, er et annet spor. Det ligger i oversikten under norsk økonomi.",
     ],
-    conceptIds: [
-      "styringsrenten",
-      "inflasjon",
-      "rentebanen",
-      "handlingsregelen",
-      "oljefondet",
-    ],
+    conceptIds: ["fleksibel-inflasjonsstyring", "produksjonsgap"],
     quiz: {
-      question:
-        "Hvilken institusjon har hovedansvaret for styringsrenten i Norge?",
+      question: "Hvem setter styringsrenten i Norge?",
       options: [
         "Finansdepartementet",
         "Norges Bank",
@@ -319,111 +333,122 @@ export const lessons: Lesson[] = [
         "Oslo Børs",
       ],
       answerIndex: 1,
-      explain: "Norges Bank setter styringsrenten som ledd i pengepolitikken.",
+      explain: "Norges Banks komité for pengepolitikk setter styringsrenten.",
     },
   },
-
-  // —— Path: personlig-sparing ——
   {
     id: "ps-1",
     pathId: "personlig-sparing",
-    title: "Hvorfor spare systematisk?",
-    order: 0,
-    summary: "Buffer, mål og pensjon — tre lag.",
-    body: [
-      "Personlig økonomi blir enklere når du skiller: (1) buffer til uforutsett, (2) sparing til konkrete mål, (3) langsiktig pensjon/formue.",
-      "Buffer bør stå trygt og tilgjengelig. Langsiktig sparing kan tåle mer svingninger fordi du har tid til å hente inn fall.",
-      "Du trenger ikke «slå markedet». Du trenger en plan du faktisk følger.",
-    ],
-    conceptIds: ["risiko-avkastning"],
-  },
-  {
-    id: "ps-2",
-    pathId: "personlig-sparing",
     title: "Renters rente",
-    order: 1,
-    summary: "Tid er den sterkeste faktoren.",
+    order: 0,
+    summary: "Avkastning på tidligere avkastning.",
     body: [
-      "Renters rente betyr at du får avkastning på tidligere avkastning. Små, jevne beløp tidlig kan slå store beløp sent.",
-      "Eksempelidé: beløp som vokser med fast prosent hvert år følger (1 + r)^n. Doblingstiden er omtrent 72 / (rente i prosent) — en tommelfingerregel, ikke en lov.",
-      "Praktisk råd: automatiser sparing den dagen lønna kommer, før resten av kontoen «forsvinner».",
+      "Renters rente betyr at du får avkastning også på tidligere avkastning. 100 kroner som vokser med 5 prosent, blir 105. Neste periode regnes prosenten av 105, ikke bare av de opprinnelige 100.",
+      "Effekten er liten det første året og større jo lenger pengene får stå. Derfor betyr tid og jevn sparing mer enn det føles som i starten.",
+      "En høy årlig kostnad, for eksempel et dyrt fond, spiser av den samme effekten. Lav kostnad og lang horisont hører sammen.",
     ],
     conceptIds: ["renters-rente"],
     quiz: {
-      question: "Hva beskriver renters rente best?",
+      question: "Hva beskriver renters rente?",
       options: [
-        "Kun renta banken tar på boliglån",
-        "At du får avkastning også på tidligere avkastning",
-        "At skatten alltid er null på aksjer",
+        "Renta banken tar på boliglån",
+        "Avkastning også på tidligere avkastning",
+        "At skatten på aksjer alltid er null",
         "At inflasjonen er null",
       ],
       answerIndex: 1,
       explain:
-        "Renters rente er avkastning på avkastning — derfor vokser beløpet raskere jo lenger tidshorisonten er.",
+        "Renters rente er avkastning på avkastning. Derfor vokser beløpet raskere jo lenger tidshorisonten er.",
     },
+  },
+  {
+    id: "ps-2",
+    pathId: "personlig-sparing",
+    title: "Risiko, avkastning og indeksfond",
+    order: 1,
+    summary: "Høyere forventet avkastning har en pris i svingninger.",
+    body: [
+      "Høyere forventet avkastning henger vanligvis sammen med større svingninger. Penger på konto svinger lite og har lav forventet avkastning. Aksjer svinger mer, og har historisk gitt høyere avkastning over lange perioder.",
+      "Et indeksfond følger en indeks, for eksempel et bredt aksjemarked, i stedet for at en forvalter plukker enkeltaksjer. Den årlige kostnaden er ofte lav. Fondet fjerner ikke markedsrisiko: det faller når markedet faller.",
+      "Risikospredning betyr å ikke legge alt i én aksje eller én sektor. Ett selskap kan gå i null. Et bredt fond gjør at enkeltutfall veier mindre. Hele markedet kan likevel falle.",
+    ],
+    conceptIds: ["risiko-avkastning", "indeksfond", "diversifisering"],
   },
   {
     id: "ps-3",
     pathId: "personlig-sparing",
-    title: "Risiko og avkastning",
+    title: "Aksjesparekonto (ASK)",
     order: 2,
-    summary: "Hva du tåler å se falle.",
+    summary: "Bytt verdipapirer uten å skatte ved hver handel.",
     body: [
-      "Forventet avkastning og risiko henger sammen. Aksjer har historisk gitt høyere avkastning enn bankinnskudd over lange perioder — med større svingninger underveis.",
-      "Diversifisering (for eksempel et bredt fond) reduserer risikoen for at ett selskap ødelegger sparingen. Det fjerner ikke markedsfall.",
-      "Velg risiko etter tidshorisont: penger du trenger om ett år bør ikke ligge som om du har tjue.",
+      "Aksjesparekonto (ASK) er en konto for aksjer og aksjefond. Du kan kjøpe og selge inne på kontoen uten at skatten utløses med en gang. Skatt på gevinst kommer når du tar ut mer enn du har satt inn, etter skjerming.",
+      "Det lar gevinsten stå igjen og jobbe, og forsterker renters rente. ASK er for penger som skal stå over tid, ikke for bufferen du trenger neste måned.",
+      "Skjermingsfradrag er en skattefri del av aksjeavkastningen, omtrent tilsvarende en risikofri avkastning. På ASK beregnes skjermingen av den laveste innskuddssaldoen i løpet av året. Selve skjermingsrenten endres — sjekk Skatteetaten for året du er i.",
     ],
-    conceptIds: ["risiko-avkastning", "diversifisering"],
+    conceptIds: ["ask", "skjermingsfradrag"],
+    quiz: {
+      question: "Når utløses skatt på gevinst på en aksjesparekonto?",
+      options: [
+        "Ved hver handel inne på kontoen",
+        "Når du tar ut mer enn innskuddet, etter skjerming",
+        "Aldri",
+        "Bare hvis fondet er et indeksfond",
+      ],
+      answerIndex: 1,
+      explain:
+        "Handel inne på ASK utsetter skatten. Gevinst skattlegges når du tar ut mer enn innskutt beløp, etter skjermingsfradrag.",
+    },
   },
   {
     id: "ps-4",
     pathId: "personlig-sparing",
-    title: "Aksjesparekonto (ASK)",
+    title: "Pensjon i korte trekk",
     order: 3,
-    summary: "Bytt fond uten å skatte for hver handel.",
+    summary: "Folketrygd, tjenestepensjon og egen sparing.",
     body: [
-      "ASK er laget for privat aksje- og aksjefondssparing. Du kan selge og kjøpe inne på kontoen uten at gevinst skattlegges ved hver handel.",
-      "Skatt på gevinst utløses når du tar ut mer enn innskutt beløp. Det gjør det enklere å rebalansere og holde en langsiktig plan.",
-      "ASK erstatter ikke bufferkontoen din — den er for penger som skal jobbe over tid.",
+      "Pensjonen i Norge er lag på lag. Folketrygden er den offentlige grunnpensjonen, knyttet til inntekt, botid og når du tar den ut. Grunnbeløpet (G) er beløpet Stortinget regulerer, og som ytelsene regnes ut fra.",
+      "Obligatorisk tjenestepensjon (OTP) er penger arbeidsgiver må spare for deg, ofte i fond, oppå folketrygden. Minstesatsen er lav. Mange arbeidsgivere sparer mer.",
+      "Individuell pensjonssparing (IPS) er privat sparing med fradrag i inntekten. Pengene er bundet til pensjonsalder. De er ikke en buffer du kan ta ut når du vil. AFP er et tillegg for mange med tariffavtale — sjekk om du er omfattet før du bytter jobb sent.",
     ],
-    conceptIds: ["ask", "skjermingsfradrag"],
-    quiz: {
-      question: "Når skattlegges typisk gevinst på en aksjesparekonto?",
-      options: [
-        "Ved hver handel inne på kontoen",
-        "Når du tar ut gevinst utover innskutt beløp",
-        "Aldri",
-        "Bare hvis du eier utenlandske aksjer",
-      ],
-      answerIndex: 1,
-      explain:
-        "Du kan bytte verdipapirer inne på ASK; skatt på gevinst knyttes til uttak av gevinst.",
-    },
+    conceptIds: ["folketrygd", "otp", "ips"],
   },
   {
     id: "ps-5",
     pathId: "personlig-sparing",
-    title: "Pensjon i korte trekk",
+    title: "BSU og boligvalg",
     order: 4,
-    summary: "Folketrygd, OTP og eventuelt AFP/IPS.",
+    summary: "Sparing med skattefradrag, øremerket bolig.",
     body: [
-      "Pensjonen din er vanligvis et puslespill: folketrygd + tjenestepensjon (OTP) + eventuelt AFP + egen sparing (f.eks. IPS eller ASK).",
-      "OTP er arbeidsgivers obligatoriske sparing. AFP er et verdifullt tillegg hvis du er omfattet av tariffavtale. IPS er frivillig sparing med egne skatteregler og binding.",
-      "Du trenger ikke optimalisere alt i dag — men du bør vite hvilke brikker du har.",
+      "BSU, boligsparing for ungdom, gir skattefradrag innenfor vilkår: alder, hvor mye du kan spare i året, og at pengene brukes til bolig. Satser og aldersgrense endres. Sjekk Skatteetaten for året du er i.",
+      "BSU er egenkapital til bolig, ikke et aksjefond. Formålet er låst, og forventet avkastning er lavere enn i aksjemarkedet. Derfor er det et annet valg enn ASK.",
+      "Belåningsgrad — lån delt på boligens verdi — avgjør hvor mye egenkapital du trenger når du kjøper. Det tas grundigere i løpet om boliglån. Her er poenget at BSU bygger den egenkapitalen.",
     ],
-    conceptIds: ["otp", "ips", "afp"],
+    conceptIds: ["bsu"],
+    quiz: {
+      question: "Hva er BSU først og fremst?",
+      options: [
+        "En aksjesparekonto uten binding",
+        "Sparing til bolig med skattefradrag, under vilkår",
+        "Det samme som IPS",
+        "Et krav om 3 prosent avkastning",
+      ],
+      answerIndex: 1,
+      explain:
+        "BSU er boligsparing for ungdom: skattefradrag mot at pengene brukes til bolig, innenfor alder og beløpsgrenser.",
+    },
   },
   {
     id: "ps-6",
     pathId: "personlig-sparing",
-    title: "Oppsummering",
+    title: "Sett det sammen",
     order: 5,
-    summary: "En enkel rekkefølge du kan huske.",
+    summary: "En rekkefølge du kan huske.",
     body: [
-      "1) Bygg buffer. 2) Automatiser sparing. 3) La renters rente og tid jobbe. 4) Bruk ASK til langsiktig aksjesparing. 5) Kjenn pensjonsbrikkene dine.",
-      "Repeter begrepene til du kan forklare dem uten å titte — det er målet, ikke å huske årstall.",
+      "Buffer først, på en konto du kan bruke. Deretter penger som skal stå: lav kostnad, lang horisont, renters rente.",
+      "ASK passer til aksjer og aksjefond du kan la stå. Pensjonen er folketrygd pluss det arbeidsgiver sparer, og eventuelt IPS hvis du vil binde mer. BSU er sporet mot bolig, ikke mot aksjemarkedet.",
+      "Du trenger ikke optimalisere alt i dag. Du trenger å kunne forklare de fem begrepene med egne ord: renters rente, indeksfond, ASK, folketrygd og BSU.",
     ],
-    conceptIds: ["renters-rente", "ask", "risiko-avkastning", "otp"],
+    conceptIds: ["renters-rente", "ask", "bsu"],
   },
 ];
 
@@ -432,20 +457,84 @@ export const learningPaths: LearningPath[] = [
     id: "norsk-pengepolitikk",
     title: "Norsk pengepolitikk",
     subtitle:
-      "Styringsrente, inflasjon, rentebanen og oljefondets handlingsregel.",
+      "Fra inflasjon og KPI til styringsrente, transmisjon og rentebane.",
     category: "makro",
-    estimatedMinutes: 25,
+    estimatedMinutes: 35,
     lessonIds: ["pp-1", "pp-2", "pp-3", "pp-4", "pp-5", "pp-6"],
   },
   {
     id: "personlig-sparing",
     title: "Personlig sparing",
-    subtitle: "Renters rente, risiko, ASK og pensjon — uten jargon-jungel.",
+    subtitle: "Renters rente, indeksfond, ASK, pensjon og BSU.",
     category: "personlig",
-    estimatedMinutes: 25,
+    estimatedMinutes: 30,
     lessonIds: ["ps-1", "ps-2", "ps-3", "ps-4", "ps-5", "ps-6"],
   },
 ];
+
+export const comingPaths: { id: string; title: string; subtitle: string; href: string }[] = [
+  {
+    id: "oljefondet-lop",
+    title: "Oljefondet og handlingsregelen",
+    subtitle: "Kommer. Finanspolitikk — eget spor, ikke en del av pengepolitikken.",
+    href: "/oversikt#olje",
+  },
+  {
+    id: "boliglan-lop",
+    title: "Boliglån og utlånsregler",
+    subtitle: "Kommer. Belåningsgrad, annuitet og utlånsforskriften.",
+    href: "/oversikt#boliglan",
+  },
+];
+
+/** Begreper som legges i Repeter når leksjonen er fullført. Maks et knippe per løp. */
+export const srsConceptIds = new Set<string>([
+  "inflasjon",
+  "kpi",
+  "kpi-jae",
+  "kjopkraft",
+  "inflasjonsmal",
+  "fleksibel-inflasjonsstyring",
+  "styringsrenten",
+  "transmisjon",
+  "rentebanen",
+  "ppr",
+  "renters-rente",
+  "risiko-avkastning",
+  "indeksfond",
+  "ask",
+  "skjermingsfradrag",
+  "folketrygd",
+  "otp",
+  "ips",
+  "bsu",
+]);
+
+const synonyms: Record<string, string[]> = {
+  oljefondet: ["spu", "pensjonsfondet", "oljefond", "statens pensjonsfond"],
+  styringsrenten: ["renta", "sentralbankrenta", "foliorente", "policy rate"],
+  inflasjon: ["prisvekst"],
+  kpi: ["konsumprisindeks", "cpi", "konsumpris"],
+  "kpi-jae": ["kpi jae", "cpi-ate", "underliggende inflasjon"],
+  ask: ["aksjesparekonto"],
+  bsu: ["boligsparing"],
+  omf: ["covered bond", "covered bonds"],
+  ekb: ["egenkapitalbevis", "primary capital certificate"],
+  belaningsgrad: ["ltv", "loan to value", "belåningsgrad"],
+  rentebanen: ["policy rate path"],
+  handlingsregelen: ["3-prosentregelen", "tre prosent", "fiscal rule"],
+  folketrygd: ["alderspensjon", "nav pensjon"],
+  transmisjon: ["transmisjonsmekanisme", "transmisjonskanaler"],
+  inflasjonsmal: ["inflasjonsmålet", "2 prosent"],
+};
+
+function fold(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/æ/g, "ae")
+    .replace(/ø/g, "o")
+    .replace(/å/g, "a");
+}
 
 export function getPath(id: string): LearningPath | undefined {
   return learningPaths.find((p) => p.id === id);
@@ -469,30 +558,70 @@ export function searchLearning(query: string): {
   concepts: Concept[];
   paths: LearningPath[];
   lessons: Lesson[];
+  coming: typeof comingPaths;
 } {
-  const q = query.trim().toLowerCase();
-  if (!q) return { concepts: [], paths: [], lessons: [] };
+  const q = fold(query.trim());
+  if (!q) return { concepts: [], paths: [], lessons: [], coming: [] };
 
   const conceptHits = concepts.filter((c) => {
-    const hay =
-      `${c.term} ${c.english ?? ""} ${c.definition} ${c.explanation}`.toLowerCase();
+    const syn = (synonyms[c.id] ?? []).join(" ");
+    const hay = fold(
+      `${c.term} ${c.english ?? ""} ${c.definition} ${c.explanation} ${syn}`
+    );
     return hay.includes(q);
   });
-  const pathHits = learningPaths.filter((p) => {
-    const hay = `${p.title} ${p.subtitle}`.toLowerCase();
-    return hay.includes(q);
-  });
-  const lessonHits = lessons.filter((l) => {
-    const hay = `${l.title} ${l.summary} ${l.body.join(" ")}`.toLowerCase();
-    return hay.includes(q);
-  });
-  return { concepts: conceptHits, paths: pathHits, lessons: lessonHits };
+  const pathHits = learningPaths.filter((p) =>
+    fold(`${p.title} ${p.subtitle}`).includes(q)
+  );
+  const lessonHits = lessons.filter((l) =>
+    fold(`${l.title} ${l.summary} ${l.body.join(" ")}`).includes(q)
+  );
+  const comingHits = comingPaths.filter((p) =>
+    fold(`${p.title} ${p.subtitle}`).includes(q)
+  );
+  return {
+    concepts: conceptHits,
+    paths: pathHits,
+    lessons: lessonHits,
+    coming: comingHits,
+  };
 }
 
 export const categoryLabel: Record<Concept["category"], string> = {
   makro: "Makro",
+  olje: "Norsk økonomi",
   marked: "Marked",
   bank: "Bank",
   personlig: "Personlig",
   metode: "Metode",
 };
+
+function assertLearning() {
+  const path = learningPaths.find((p) => p.id === "norsk-pengepolitikk");
+  if (!path) throw new Error("Mangler løp A");
+  const blob = [
+    path.title,
+    path.subtitle,
+    ...getLessonsForPath(path.id).flatMap((l) => [l.title, l.summary, ...l.body, l.quiz?.question ?? "", l.quiz?.explain ?? ""]),
+  ].join("\n");
+  if (/handlingsregel|oljefond/i.test(blob)) {
+    throw new Error("Løp A blander inn handlingsregelen eller oljefondet");
+  }
+  const required = [
+    "inflasjon",
+    "kpi",
+    "kpi-jae",
+    "inflasjonsmal",
+    "styringsrenten",
+    "ask",
+    "bsu",
+    "transmisjon",
+    "folketrygd",
+    "indeksfond",
+  ];
+  for (const id of required) {
+    if (!getConcept(id)) throw new Error(`Mangler begrep ${id}`);
+  }
+}
+
+assertLearning();

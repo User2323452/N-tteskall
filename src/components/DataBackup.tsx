@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Download, Upload } from "lucide-react";
 import { exportAll, importAll } from "@/lib/db";
+import { exportLearningState, importLearningState } from "@/lib/progress";
 import type { ExportPayload } from "@/types/mesterplan";
 
 export function DataBackup() {
@@ -10,14 +11,14 @@ export function DataBackup() {
   const [msg, setMsg] = useState<string | null>(null);
 
   async function onExport() {
-    const data = await exportAll();
+    const data = { ...(await exportAll()), learning: exportLearningState() };
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `mesterplan-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `notteskall-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     setMsg("Sikkerhetskopi lastet ned. På iPhone: bruk Del-arket om du vil lagre i Filer.");
@@ -35,6 +36,7 @@ export function DataBackup() {
         throw new Error("Ugyldig fil");
       }
       await importAll(payload);
+      importLearningState(payload.learning);
       setMsg("Gjenopprettet. Oppdaterer…");
       window.location.reload();
     } catch {

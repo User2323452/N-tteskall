@@ -1,12 +1,12 @@
-# MesterPlan
+# Nøtteskall
 
-Norsk læringsplattform for økonomi og finans: **læringsløp**, **begrepssøk** og lett **repetisjon**. Lokal-først (IndexedDB / localStorage), PWA-klar for iPhone Safari.
+Norsk læringsapp for økonomi: **læringsløp**, **begreper**, **oversikt** og **profil**. Lokal-først (IndexedDB og localStorage), PWA-klar for iPhone Safari.
 
 ## Stack
 
 - Next.js (App Router) + TypeScript + Tailwind CSS
-- Kuratert læringsinnhold (statisk) + lokal fremdrift/SRS
-- TipTap-notater (valgfritt / demotert)
+- Kuratert læringsinnhold (statisk) + lokal fremdrift og repetisjon
+- TipTap-notater under `/notater` (demotert)
 - Dexie / IndexedDB + JSON-backup (ingen innlogging)
 
 ## Lokal utvikling
@@ -20,10 +20,12 @@ npm run dev
 
 ## Hva du kan gjøre
 
-1. Velge et **læringsløp** (f.eks. Norsk pengepolitikk, Personlig sparing)
-2. **Søke** et økonomisk begrep og lese klar norsk forklaring
-3. **Repetere** begreper med enkel spaced repetition
-4. Valgfritt: egne notater under `/notater`
+1. Fortsette et **læringsløp** (Norsk pengepolitikk, Personlig sparing)
+2. Bla i **Oversikt** — områder, temaer og begreper
+3. **Søke** et begrep (også vanlige synonymer som «oljefondet» og «renta»)
+4. **Repetere** begreper du har møtt
+5. Se fremdrift under **Profil**
+6. Valgfritt: egne notater under `/notater`
 
 ## Deploy (Vercel)
 

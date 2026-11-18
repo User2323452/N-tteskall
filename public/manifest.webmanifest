@@ -1,11 +1,11 @@
 {
-  "name": "MesterPlan",
-  "short_name": "MesterPlan",
-  "description": "Økonomisk hukommelse — notater, blurting og begrepsbank",
+  "name": "Nøtteskall",
+  "short_name": "Nøtteskall",
+  "description": "Lær økonomi på bokmål. Løp, begreper og repetisjon.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f7f5f1",
-  "theme_color": "#1e3a5f",
+  "background_color": "#F7F8FA",
+  "theme_color": "#F7F8FA",
   "lang": "nb",
   "icons": [
     {

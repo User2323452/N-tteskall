@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Outfit, Source_Sans_3 } from "next/font/google";
+import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
 import { AppShell } from "@/components/AppShell";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
-const display = Outfit({
+const display = Source_Serif_4({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
@@ -17,14 +17,14 @@ const body = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "MesterPlan",
+  title: "Nøtteskall",
   description:
-    "Læringsplattform for økonomi på bokmål — læringsløp, begreper og repetisjon. Lokal-først PWA.",
-  applicationName: "MesterPlan",
+    "Lær økonomi på bokmål. Læringsløp, begreper og repetisjon — lagret lokalt på enheten.",
+  applicationName: "Nøtteskall",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "MesterPlan",
+    title: "Nøtteskall",
   },
   manifest: "/manifest.webmanifest",
   icons: {
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0f766e",
+  themeColor: "#F7F8FA",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
