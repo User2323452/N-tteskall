@@ -1,4 +1,16 @@
-import type { AreaId } from "@/types/mesterplan";
+import type { AreaId, TermAreaId } from "@/types/mesterplan";
+
+export const termAreaLabel: Record<TermAreaId, string> = {
+  makro: "Makro",
+  marked: "Marked",
+  bank: "Bank",
+  personlig: "Personlig",
+  metode: "Metode",
+};
+
+export function labelForTermArea(id: string): string {
+  return termAreaLabel[id as TermAreaId] ?? id;
+}
 
 export const areaAccent: Record<
   AreaId | string,

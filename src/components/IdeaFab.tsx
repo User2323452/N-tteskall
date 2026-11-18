@@ -1,14 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Plus, X } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
+import { X } from "lucide-react";
 import { v4 as uuid } from "uuid";
 import { db, ensureSeeded } from "@/lib/db";
 import type { AreaId } from "@/types/mesterplan";
-import { useRouter } from "next/navigation";
-
 const areaOptions: { id: AreaId | ""; label: string }[] = [
-  { id: "", label: "Innboks (standard)" },
+  { id: "", label: "Innboks — sorter senere" },
   { id: "makro", label: "Makro & pengepolitikk" },
   { id: "marked", label: "Marked & verdsettelse" },
   { id: "bank", label: "Bank & kreditt" },
@@ -52,11 +51,22 @@ export function IdeaFab() {
   const [text, setText] = useState("");
   const [areaId, setAreaId] = useState<AreaId | "">("");
   const [saving, setSaving] = useState(false);
-  const router = useRouter();
+  const [toast, setToast] = useState<string | null>(null);
+  const [lastId, setLastId] = useState<string | null>(null);
+  const clearToast = useCallback(() => {
+    setToast(null);
+    setLastId(null);
+  }, []);
 
   useEffect(() => {
     void ensureSeeded();
   }, []);
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(clearToast, 3200);
+    return () => clearTimeout(t);
+  }, [toast, clearToast]);
 
   async function save() {
     if (!text.trim()) return;
@@ -80,7 +90,8 @@ export function IdeaFab() {
     setAreaId("");
     setOpen(false);
     setSaving(false);
-    router.push(`/tema/${id}`);
+    setLastId(id);
+    setToast(target === "innboks" ? "Lagret i Innboks" : "Lagret");
   }
 
   return (
@@ -89,9 +100,9 @@ export function IdeaFab() {
         type="button"
         onClick={() => setOpen(true)}
         className="fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full bg-slate-900 px-4 py-3 text-sm font-medium text-white shadow-lg shadow-slate-900/20 hover:bg-slate-800"
+        aria-label="Ny idé"
       >
-        <Plus className="h-4 w-4" />
-        Idé
+        + Idé
       </button>
 
       {open && (
@@ -140,6 +151,32 @@ export function IdeaFab() {
               {saving ? "Lagrer…" : "Lagre idé"}
             </button>
           </div>
+        </div>
+      )}
+
+      {toast && (
+        <div
+          role="status"
+          className="fixed bottom-24 left-1/2 z-50 flex max-w-[90vw] -translate-x-1/2 items-center gap-3 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white shadow-lg"
+        >
+          <span>{toast}</span>
+          {lastId && (
+            <Link
+              href={`/tema/${lastId}`}
+              className="underline underline-offset-2"
+              onClick={clearToast}
+            >
+              Åpne
+            </Link>
+          )}
+          <button
+            type="button"
+            className="ml-1 text-white/70 hover:text-white"
+            onClick={clearToast}
+            aria-label="Lukk"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
       )}
     </>

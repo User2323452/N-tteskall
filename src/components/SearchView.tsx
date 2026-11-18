@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { db, ensureSeeded } from "@/lib/db";
 import { useLiveQuery } from "@/lib/useLiveQuery";
+import { labelForTermArea } from "@/lib/theme";
 
 export function SearchView() {
   const [ready, setReady] = useState(false);
@@ -42,6 +43,11 @@ export function SearchView() {
         onChange={(e) => setQ(e.target.value)}
         autoFocus
       />
+      {!q.trim() && (
+        <p className="text-sm text-slate-500">
+          Prøv styringsrenten, ASK, FinAut…
+        </p>
+      )}
       {q.trim() && (
         <div className="space-y-4">
           <section>
@@ -70,14 +76,19 @@ export function SearchView() {
             </h2>
             <ul className="space-y-1">
               {results.terms.map((t) => (
-                <li
-                  key={t.id}
-                  className="rounded-lg bg-white px-3 py-2 text-sm shadow-sm ring-1 ring-slate-100"
-                >
-                  <span className="font-medium text-slate-900">{t.term}</span>
-                  {t.english && (
-                    <span className="text-slate-500"> · {t.english}</span>
-                  )}
+                <li key={t.id}>
+                  <Link
+                    href="/begrepsbanken?okt=1"
+                    className="block rounded-lg bg-white px-3 py-2 text-sm shadow-sm ring-1 ring-slate-100"
+                  >
+                    <span className="font-medium text-slate-900">{t.term}</span>
+                    {t.english && (
+                      <span className="text-slate-500"> · {t.english}</span>
+                    )}
+                    <span className="mt-0.5 block text-xs text-slate-400">
+                      {labelForTermArea(t.areaId)}
+                    </span>
+                  </Link>
                 </li>
               ))}
               {results.terms.length === 0 && (

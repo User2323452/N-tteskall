@@ -20,10 +20,14 @@ export function DataBackup() {
     a.download = `mesterplan-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    setMsg("Eksportert.");
+    setMsg("Sikkerhetskopi lastet ned. På iPhone: bruk Del-arket om du vil lagre i Filer.");
   }
 
   async function onImport(file: File) {
+    const ok = window.confirm(
+      "Gjenoppretting overskriver dataene som ligger lokalt på denne enheten. Fortsette?"
+    );
+    if (!ok) return;
     try {
       const text = await file.text();
       const payload = JSON.parse(text) as ExportPayload;
@@ -31,10 +35,10 @@ export function DataBackup() {
         throw new Error("Ugyldig fil");
       }
       await importAll(payload);
-      setMsg("Importert. Oppdaterer…");
+      setMsg("Gjenopprettet. Oppdaterer…");
       window.location.reload();
     } catch {
-      setMsg("Kunne ikke importere filen.");
+      setMsg("Kunne ikke gjenopprette fra filen.");
     }
   }
 
@@ -46,7 +50,7 @@ export function DataBackup() {
         className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
       >
         <Download className="h-3.5 w-3.5" />
-        Eksporter JSON
+        Ta sikkerhetskopi
       </button>
       <button
         type="button"
@@ -54,7 +58,7 @@ export function DataBackup() {
         className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
       >
         <Upload className="h-3.5 w-3.5" />
-        Importer JSON
+        Gjenopprett fra sikkerhetskopi
       </button>
       <input
         ref={inputRef}
