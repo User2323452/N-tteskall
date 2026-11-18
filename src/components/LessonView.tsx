@@ -11,6 +11,7 @@ import {
   getLessonsForPath,
   getPath,
 } from "@/data/learning";
+import { useLessonMotion } from "@/components/lesson-motion";
 import {
   getPathProgress,
   introduceConcepts,
@@ -27,17 +28,20 @@ export function LessonView({
   lessonId: string;
 }) {
   const router = useRouter();
+  const motion = useLessonMotion();
   const path = getPath(pathId);
   const lesson = getLesson(lessonId);
   const lessons = getLessonsForPath(pathId);
   const [quizChoice, setQuizChoice] = useState<number | null>(null);
   const [quizChecked, setQuizChecked] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
     setQuizChoice(null);
     setQuizChecked(false);
     setSaved(false);
+    setLeaving(false);
   }, [lessonId]);
 
   useEffect(() => {
@@ -72,17 +76,31 @@ export function LessonView({
   const lessonTitle = lesson.title;
   const pathTitle = path.title;
 
-  async function completeAndGo(href: string) {
-    introduceConcepts(lessonConceptIds, { onlySrs: true });
-    markLessonComplete(pathId, lessonId, `Leksjon: ${lessonTitle}`);
-    if (!next) {
-      markPathComplete(
-        pathId,
-        lessons.map((l) => l.id),
-        `Fullførte ${pathTitle}`
-      );
+  function completeAndGo(href: string) {
+    if (leaving) return;
+    setLeaving(true);
+    const commit = () => {
+      introduceConcepts(lessonConceptIds, { onlySrs: true });
+      markLessonComplete(pathId, lessonId, `Leksjon: ${lessonTitle}`);
+      if (!next) {
+        markPathComplete(
+          pathId,
+          lessons.map((l) => l.id),
+          `Fullførte ${pathTitle}`
+        );
+      }
+      setSaved(true);
+    };
+    if (motion) {
+      motion.run({
+        href,
+        fromId: lessonId,
+        toId: next?.id ?? null,
+        commit,
+      });
+      return;
     }
-    setSaved(true);
+    commit();
     router.push(href);
   }
 
@@ -94,14 +112,25 @@ export function LessonView({
   const canAdvance = !lesson.quiz || quizOk || alreadyDone;
 
   return (
-    <article className="mx-auto max-w-2xl animate-[fadeUp_0.35s_ease-out]">
-      <Link
-        href={`/lop/${pathId}`}
-        className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        {path.title}
-      </Link>
+    <article className="mx-auto max-w-2xl">
+      {motion ? (
+        <button
+          type="button"
+          onClick={motion.close}
+          className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          {path.title}
+        </button>
+      ) : (
+        <Link
+          href={`/lop/${pathId}`}
+          className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          {path.title}
+        </Link>
+      )}
 
       <p className="mt-5 text-xs font-medium text-slate-400">
         Leksjon {index + 1} av {lessons.length}
@@ -219,7 +248,7 @@ export function LessonView({
         {next ? (
           <button
             type="button"
-            disabled={!canAdvance}
+            disabled={!canAdvance || leaving}
             onClick={() => completeAndGo(`/lop/${pathId}/${next.id}`)}
             className="inline-flex items-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-medium text-white disabled:opacity-40"
           >
@@ -228,7 +257,7 @@ export function LessonView({
         ) : (
           <button
             type="button"
-            disabled={!canAdvance}
+            disabled={!canAdvance || leaving}
             onClick={() => completeAndGo(`/lop/${pathId}`)}
             className="inline-flex items-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-medium text-white disabled:opacity-40"
           >
