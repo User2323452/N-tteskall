@@ -6,9 +6,10 @@ import { ArrowLeft } from "lucide-react";
 import { concepts, getConcept } from "@/data/learning";
 import {
   getDueConceptIds,
+  gradeHint,
   setConceptStatus,
 } from "@/lib/progress";
-import type { RecallStatus } from "@/types/learning";
+import type { RecallGrade } from "@/types/learning";
 
 export function RepeatView() {
   const [queue, setQueue] = useState<string[]>([]);
@@ -30,9 +31,9 @@ export function RepeatView() {
     [queue, index]
   );
 
-  function grade(status: RecallStatus) {
+  function grade(status: RecallGrade) {
     if (!current) return;
-    setConceptStatus(current.id, status);
+    setConceptStatus(current.id, status, current.term);
     if (index + 1 >= queue.length) {
       setIndex(queue.length);
       setRevealed(false);
@@ -50,25 +51,25 @@ export function RepeatView() {
     return (
       <div className="mx-auto max-w-lg space-y-4 py-8 text-center">
         <h1 className="font-[family-name:var(--font-display)] text-3xl text-slate-900">
-          Ferdig for nå
+          {queue.length === 0 ? "Ingenting venter" : "Ferdig for nå"}
         </h1>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm leading-relaxed text-slate-600">
           {queue.length === 0
-            ? "Ingen begreper forfaller i dag. Gå gjennom et læringsløp, eller åpne et begrep manuelt."
-            : "Bra jobbet — du har gått gjennom køen."}
+            ? "Fullfør en leksjon, så legges nøkkelbegrepene her. Du kan også legge et begrep i køen fra begrepssiden."
+            : "Du har gått gjennom det som forfalt i dag."}
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           <Link
             href="/"
-            className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white"
+            className="rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-medium text-white"
           >
             Til hjem
           </Link>
           <Link
-            href="/begrepsbanken"
+            href="/oversikt"
             className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700"
           >
-            Begrepsbibliotek
+            Oversikt
           </Link>
         </div>
       </div>
@@ -87,15 +88,9 @@ export function RepeatView() {
         Avslutt
       </Link>
 
-      <p className="mt-4 text-xs font-medium text-slate-400">
-        {index + 1} / {queue.length}
+      <p className="mt-4 text-sm text-slate-500">
+        Venter i dag: {queue.length - index}
       </p>
-      <div className="mt-2 h-1 overflow-hidden rounded-full bg-slate-100">
-        <div
-          className="h-full rounded-full bg-[var(--accent)] transition-all"
-          style={{ width: `${((index + 1) / queue.length) * 100}%` }}
-        />
-      </div>
 
       <div className="mt-10 flex flex-1 flex-col">
         <h1 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-slate-900">
@@ -129,8 +124,8 @@ export function RepeatView() {
         <div className="sticky bottom-20 mt-8 grid grid-cols-3 gap-2 pb-4">
           {(
             [
-              ["Ny", "Igjen"],
               ["Usikker", "Usikker"],
+              ["OK", "OK"],
               ["Kan det", "Kan det"],
             ] as const
           ).map(([status, label]) => (
@@ -138,9 +133,12 @@ export function RepeatView() {
               key={status}
               type="button"
               onClick={() => grade(status)}
-              className="min-h-12 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-800 shadow-sm active:scale-[0.98]"
+              className="min-h-12 rounded-xl border border-slate-200 bg-white px-1 text-sm font-medium text-slate-800 active:scale-[0.98]"
             >
-              {label}
+              <span className="block">{label}</span>
+              <span className="mt-0.5 block text-[10px] font-normal text-slate-400">
+                {gradeHint(current.id, status)}
+              </span>
             </button>
           ))}
         </div>

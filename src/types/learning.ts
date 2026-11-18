@@ -1,11 +1,14 @@
 export type ConceptCategory =
   | "makro"
+  | "olje"
   | "marked"
   | "bank"
   | "personlig"
   | "metode";
 
-export type RecallStatus = "Ny" | "Usikker" | "Kan det";
+export type RecallGrade = "Usikker" | "OK" | "Kan det";
+
+export type RecallStatus = "Ny" | RecallGrade;
 
 export interface Concept {
   id: string;
@@ -31,6 +34,8 @@ export interface Lesson {
   /** Avsnitt med læringsinnhold. */
   body: string[];
   conceptIds: string[];
+  /** Statisk figur i leksjonen. */
+  visual?: "transmisjon";
   /** Enkel flervalgsspørsmål (valgfritt). */
   quiz?: {
     question: string;
@@ -54,10 +59,37 @@ export interface ConceptProgress {
   status: RecallStatus;
   lastReviewed?: string;
   dueOn?: string;
+  /** Lagt i repetisjon etter leksjon eller «Legg i Repeter». */
+  introduced?: boolean;
+  reviewCount?: number;
+  /** Dager til neste visning. Vokser når begrepet sitter, settes til 1 ved usikker. */
+  intervalDays?: number;
 }
 
 export interface PathProgress {
   completedLessonIds: string[];
   startedAt?: string;
   completedAt?: string;
+}
+
+export interface ReviewEntry {
+  conceptId: string;
+  term: string;
+  grade: RecallGrade;
+  at: string;
+  /** Intervallet som ble satt ved denne vurderingen. */
+  intervalDays?: number;
+}
+
+export interface ActivityEntry {
+  label: string;
+  href: string;
+  at: string;
+}
+
+export interface LearningBackup {
+  conceptProgress: Record<string, ConceptProgress>;
+  pathProgress: Record<string, PathProgress>;
+  reviews: ReviewEntry[];
+  activity: ActivityEntry[];
 }

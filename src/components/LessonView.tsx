@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { TransmissionFigure } from "@/components/TransmissionFigure";
 import {
   getConcept,
   getLesson,
@@ -12,8 +13,10 @@ import {
 } from "@/data/learning";
 import {
   getPathProgress,
+  introduceConcepts,
   markLessonComplete,
   markPathComplete,
+  touchPath,
 } from "@/lib/progress";
 
 export function LessonView({
@@ -36,6 +39,11 @@ export function LessonView({
     setQuizChecked(false);
     setSaved(false);
   }, [lessonId]);
+
+  useEffect(() => {
+    if (!path) return;
+    touchPath(pathId, path.title);
+  }, [path, pathId]);
 
   const index = lessons.findIndex((l) => l.id === lessonId);
   const prev = index > 0 ? lessons[index - 1] : null;
@@ -60,13 +68,18 @@ export function LessonView({
   const concepts = lesson.conceptIds
     .map((id) => getConcept(id))
     .filter(Boolean);
+  const lessonConceptIds = lesson.conceptIds;
+  const lessonTitle = lesson.title;
+  const pathTitle = path.title;
 
   async function completeAndGo(href: string) {
-    markLessonComplete(pathId, lessonId);
+    introduceConcepts(lessonConceptIds, { onlySrs: true });
+    markLessonComplete(pathId, lessonId, `Leksjon: ${lessonTitle}`);
     if (!next) {
       markPathComplete(
         pathId,
-        lessons.map((l) => l.id)
+        lessons.map((l) => l.id),
+        `Fullførte ${pathTitle}`
       );
     }
     setSaved(true);
@@ -106,10 +119,12 @@ export function LessonView({
       <p className="mt-2 text-sm text-slate-500">{lesson.summary}</p>
 
       <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-slate-700">
-        {lesson.body.map((paragraph) => (
-          <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+        {lesson.body.map((paragraph, index) => (
+          <p key={index}>{paragraph}</p>
         ))}
       </div>
+
+      {lesson.visual === "transmisjon" && <TransmissionFigure />}
 
       {concepts.length > 0 && (
         <section className="mt-8">
@@ -171,7 +186,7 @@ export function LessonView({
               type="button"
               disabled={quizChoice === null}
               onClick={() => setQuizChecked(true)}
-              className="mt-3 rounded-xl bg-slate-900 px-3.5 py-2 text-sm font-medium text-white disabled:opacity-40"
+              className="mt-3 rounded-xl bg-[var(--accent)] px-3.5 py-2 text-sm font-medium text-white disabled:opacity-40"
             >
               Sjekk svar
             </button>
@@ -206,7 +221,7 @@ export function LessonView({
             type="button"
             disabled={!canAdvance}
             onClick={() => completeAndGo(`/lop/${pathId}/${next.id}`)}
-            className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white disabled:opacity-40"
+            className="inline-flex items-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-medium text-white disabled:opacity-40"
           >
             Neste leksjon <ArrowRight className="h-4 w-4" />
           </button>
@@ -215,7 +230,7 @@ export function LessonView({
             type="button"
             disabled={!canAdvance}
             onClick={() => completeAndGo(`/lop/${pathId}`)}
-            className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white disabled:opacity-40"
+            className="inline-flex items-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-medium text-white disabled:opacity-40"
           >
             Fullfør løpet <Check className="h-4 w-4" />
           </button>
@@ -226,6 +241,10 @@ export function LessonView({
           Svar riktig på spørsmålet for å gå videre — eller åpne begrepene over og prøv igjen.
         </p>
       )}
+      <p className="mt-6 text-xs leading-relaxed text-slate-400">
+        Læringstekst. Tall som endres, må sjekkes mot Norges Bank, SSB eller
+        Skatteetaten.
+      </p>
     </article>
   );
 }

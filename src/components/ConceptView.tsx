@@ -11,12 +11,13 @@ import {
 } from "@/data/learning";
 import {
   getConceptProgress,
+  introduceConcepts,
   setConceptStatus,
 } from "@/lib/progress";
-import type { RecallStatus } from "@/types/learning";
+import type { RecallGrade, RecallStatus } from "@/types/learning";
 import { termStatusStyle } from "@/lib/theme";
 
-const grades: RecallStatus[] = ["Ny", "Usikker", "Kan det"];
+const grades: RecallGrade[] = ["Usikker", "OK", "Kan det"];
 
 export function ConceptView({ conceptId }: { conceptId: string }) {
   const concept = getConcept(conceptId);
@@ -49,9 +50,14 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
     usedIn.some((l) => l.pathId === p.id)
   );
 
-  function grade(next: RecallStatus) {
-    setConceptStatus(concept!.id, next);
-    setStatus(next);
+  function grade(next: RecallGrade) {
+    const saved = setConceptStatus(concept!.id, next, concept!.term);
+    setStatus(saved.status);
+  }
+
+  function addToReview() {
+    introduceConcepts([concept!.id]);
+    setStatus(getConceptProgress(concept!.id).status);
   }
 
   return (
@@ -66,11 +72,13 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
 
       <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
         {categoryLabel[concept.category]}
-        {concept.english ? ` · ${concept.english}` : ""}
       </p>
       <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl tracking-tight text-slate-900 sm:text-4xl">
         {concept.term}
       </h1>
+      {concept.english && (
+        <p className="mt-1 text-sm text-slate-400">{concept.english}</p>
+      )}
 
       <p className="mt-4 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 text-[15px] font-medium leading-relaxed text-slate-800">
         {concept.definition}
@@ -105,12 +113,19 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
 
       <section className="mt-8">
         <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
-          Hvordan husker du det?
+          Repeter
         </h2>
         <p className="mt-1 text-sm text-slate-500">
-          Si forklaringen høyt, så sett status. Det styrer når begrepet dukker opp
-          igjen under Repeter.
+          Si forklaringen høyt, så sett status. Begrepet kommer tilbake i
+          Repeter når det forfaller.
         </p>
+        <button
+          type="button"
+          onClick={addToReview}
+          className="mt-3 text-sm font-medium text-[var(--accent)]"
+        >
+          Legg i Repeter
+        </button>
         <div className="mt-3 flex flex-wrap gap-2">
           {grades.map((g) => (
             <button
@@ -150,6 +165,11 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
           </ul>
         </section>
       )}
+
+      <p className="mt-8 text-xs leading-relaxed text-slate-400">
+        Læringstekst. Tall som endres, må sjekkes mot Norges Bank, SSB eller
+        Skatteetaten.
+      </p>
 
       {paths.length > 0 && (
         <section className="mt-8 border-t border-slate-200 pt-6">

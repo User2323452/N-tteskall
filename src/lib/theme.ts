@@ -66,6 +66,7 @@ export const termStatusStyle: Record<
 > = {
   Ny: { bg: "bg-slate-100", text: "text-slate-600", label: "Ny" },
   Usikker: { bg: "bg-amber-100", text: "text-amber-800", label: "Usikker" },
+  OK: { bg: "bg-slate-100", text: "text-slate-700", label: "OK" },
   "Kan det": {
     bg: "bg-emerald-100",
     text: "text-emerald-800",

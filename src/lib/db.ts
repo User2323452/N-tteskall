@@ -19,7 +19,7 @@ import type {
   Term,
 } from "@/types/mesterplan";
 
-export class MesterPlanDB extends Dexie {
+export class NotteskallDB extends Dexie {
   areas!: Table<Area, string>;
   groups!: Table<Group, string>;
   pages!: Table<Page, string>;
@@ -29,6 +29,7 @@ export class MesterPlanDB extends Dexie {
   meta!: Table<Meta, string>;
 
   constructor() {
+    // Databasenavnet beholdes, så eksisterende notater i nettleseren ikke forsvinner.
     super("mesterplan");
     this.version(1).stores({
       areas: "id, order",
@@ -42,7 +43,7 @@ export class MesterPlanDB extends Dexie {
   }
 }
 
-export const db = new MesterPlanDB();
+export const db = new NotteskallDB();
 
 let seedPromise: Promise<void> | null = null;
 

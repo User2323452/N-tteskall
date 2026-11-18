@@ -30,7 +30,7 @@ export function SearchView() {
       />
       {!q.trim() && (
         <p className="text-sm text-slate-500">
-          Prøv styringsrenten, inflasjon, ASK, renters rente…
+          Tips: prøv ASK, KPI, styringsrente, oljefondet.
         </p>
       )}
 
@@ -89,6 +89,29 @@ export function SearchView() {
               )}
             </ul>
           </section>
+
+          {results.coming.length > 0 && (
+            <section>
+              <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                I oversikten ({results.coming.length})
+              </h2>
+              <ul className="space-y-1.5">
+                {results.coming.map((path) => (
+                  <li key={path.id}>
+                    <Link
+                      href={path.href}
+                      className="block rounded-xl border border-slate-100 bg-white px-3.5 py-3 shadow-sm"
+                    >
+                      <span className="font-medium text-slate-900">{path.title}</span>
+                      <span className="mt-0.5 block text-sm text-slate-500">
+                        {path.subtitle}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {results.lessons.length > 0 && (
             <section>

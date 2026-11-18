@@ -1,3 +1,5 @@
+import type { LearningBackup } from "@/types/learning";
+
 export type AreaId =
   | "hukommelse"
   | "makro"
@@ -80,6 +82,8 @@ export interface ExportPayload {
   blurts: Blurt[];
   terms: Term[];
   careerGoals: CareerGoal[];
+  /** Læringsløp, repetisjon og aktivitet. Valgfritt i eldre filer. */
+  learning?: LearningBackup;
 }
 
 export const EMPTY_DOC = {

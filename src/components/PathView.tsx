@@ -60,7 +60,7 @@ export function PathView({ pathId }: { pathId: string }) {
         {next && (
           <Link
             href={`/lop/${path.id}/${next}`}
-            className="mt-5 inline-flex rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white"
+            className="mt-5 inline-flex rounded-xl bg-[var(--accent)] px-4 py-2.5 text-sm font-medium text-white"
           >
             {done.size > 0 ? "Fortsett der du slapp" : "Start læringsløpet"}
           </Link>
