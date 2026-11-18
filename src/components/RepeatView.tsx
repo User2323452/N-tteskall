@@ -6,25 +6,41 @@ import { ArrowLeft } from "lucide-react";
 import { concepts, getConcept } from "@/data/learning";
 import {
   formatDueLabel,
+  getConceptProgress,
   getDueConceptIds,
   gradeHint,
   listSchedule,
   setConceptStatus,
+  setRecallAttempt,
 } from "@/lib/progress";
 import type { RecallGrade } from "@/types/learning";
+
+function queueWithOpenRecallFirst(ids: string[]): string[] {
+  const open: string[] = [];
+  const rest: string[] = [];
+  for (const id of ids) {
+    if (getConceptProgress(id).recall) open.push(id);
+    else rest.push(id);
+  }
+  return [...open, ...rest];
+}
 
 export function RepeatView() {
   const [queue, setQueue] = useState<string[]>([]);
   const [index, setIndex] = useState(0);
+  const [draft, setDraft] = useState("");
   const [revealed, setRevealed] = useState(false);
+  const [needsText, setNeedsText] = useState(false);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const due = getDueConceptIds(concepts.map((c) => c.id));
-    // Prioritize "Ny" / never reviewed by keeping due order; shuffle lightly
+    const due = queueWithOpenRecallFirst(getDueConceptIds(concepts.map((c) => c.id)));
     setQueue(due);
     setIndex(0);
-    setRevealed(false);
+    const saved = due[0] ? getConceptProgress(due[0]).recall : undefined;
+    setDraft(saved?.text ?? "");
+    setRevealed(Boolean(saved?.revealed));
+    setNeedsText(false);
     setReady(true);
   }, []);
 
@@ -33,16 +49,59 @@ export function RepeatView() {
     [queue, index]
   );
 
+  function showCard(nextIndex: number) {
+    const id = queue[nextIndex];
+    const saved = id ? getConceptProgress(id).recall : undefined;
+    setDraft(saved?.text ?? "");
+    setRevealed(Boolean(saved?.revealed));
+    setNeedsText(false);
+    setIndex(nextIndex);
+  }
+
+  function updateDraft(value: string) {
+    setDraft(value);
+    setNeedsText(false);
+    if (!current) return;
+    if (!value.trim()) {
+      setRecallAttempt(current.id, null);
+      return;
+    }
+    setRecallAttempt(current.id, { text: value, revealed: false });
+  }
+
+  function checkAnswer() {
+    if (!current) return;
+    const text = draft.trim();
+    if (!text) {
+      setNeedsText(true);
+      return;
+    }
+    setDraft(text);
+    setRecallAttempt(current.id, { text, revealed: true });
+    setRevealed(true);
+    setNeedsText(false);
+  }
+
+  function revealAnswer() {
+    if (!current) return;
+    const text = draft.trim();
+    setDraft(text);
+    setRecallAttempt(current.id, { text, revealed: true });
+    setRevealed(true);
+    setNeedsText(false);
+  }
+
   function grade(status: RecallGrade) {
     if (!current) return;
     setConceptStatus(current.id, status, current.term);
     if (index + 1 >= queue.length) {
-      setIndex(queue.length);
+      setDraft("");
       setRevealed(false);
+      setNeedsText(false);
+      setIndex(queue.length);
       return;
     }
-    setIndex((i) => i + 1);
-    setRevealed(false);
+    showCard(index + 1);
   }
 
   if (!ready) {
@@ -90,6 +149,8 @@ export function RepeatView() {
 
   if (!current) return null;
 
+  const attempt = draft.trim();
+
   return (
     <div className="mx-auto flex min-h-[70dvh] max-w-lg flex-col">
       <Link
@@ -113,21 +174,70 @@ export function RepeatView() {
         )}
 
         {!revealed ? (
-          <button
-            type="button"
-            onClick={() => setRevealed(true)}
-            className="mt-12 rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-10 text-sm font-medium text-slate-600 transition hover:border-slate-400"
+          <form
+            key={current.id}
+            className="mt-8 flex flex-1 flex-col"
+            onSubmit={(event) => {
+              event.preventDefault();
+              checkAnswer();
+            }}
           >
-            Vis forklaring
-          </button>
+            <label htmlFor="recall" className="text-sm font-medium text-slate-700">
+              Hva betyr dette?
+            </label>
+            <textarea
+              id="recall"
+              value={draft}
+              onChange={(event) => updateDraft(event.target.value)}
+              placeholder="Skriv med egne ord"
+              rows={5}
+              autoFocus
+              aria-invalid={needsText || undefined}
+              aria-describedby={needsText ? "recall-hint" : undefined}
+              className="mt-2 w-full resize-y rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] leading-relaxed text-slate-800 outline-none placeholder:text-slate-400 focus:border-[var(--accent)]"
+            />
+            {needsText && (
+              <p id="recall-hint" role="status" className="mt-2 text-sm text-slate-500">
+                Skriv noe, eller vis fasiten.
+              </p>
+            )}
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <button
+                type="submit"
+                className="min-h-12 rounded-xl bg-[var(--accent)] text-sm font-medium text-white active:scale-[0.98]"
+              >
+                Sjekk
+              </button>
+              <button
+                type="button"
+                onClick={revealAnswer}
+                className="min-h-12 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 active:scale-[0.98]"
+              >
+                Vis fasiten
+              </button>
+            </div>
+          </form>
         ) : (
           <div className="mt-8 space-y-3 animate-[fadeUp_0.3s_ease-out]">
-            <p className="text-[15px] font-medium leading-relaxed text-slate-800">
-              {current.definition}
-            </p>
-            <p className="text-sm leading-relaxed text-slate-600">
-              {current.explanation}
-            </p>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <section className="rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                <h2 className="text-xs font-medium text-slate-400">Du skrev</h2>
+                <p
+                  className={`mt-2 whitespace-pre-wrap text-[15px] leading-relaxed ${
+                    attempt ? "text-slate-800" : "text-slate-400"
+                  }`}
+                >
+                  {attempt || "Ingenting skrevet"}
+                </p>
+              </section>
+              <section className="rounded-2xl border border-[var(--accent)]/25 bg-[var(--accent-soft)] px-4 py-3">
+                <h2 className="text-xs font-medium text-[var(--accent)]">Fasiten</h2>
+                <p className="mt-2 text-[15px] font-medium leading-relaxed text-slate-800">
+                  {current.definition}
+                </p>
+              </section>
+            </div>
+            <p className="text-sm leading-relaxed text-slate-600">{current.explanation}</p>
           </div>
         )}
       </div>

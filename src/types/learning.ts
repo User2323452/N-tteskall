@@ -55,6 +55,13 @@ export interface LearningPath {
   lessonIds: string[];
 }
 
+/** Teksten brukeren skrev på det åpne repetisjonskortet, før vurdering. */
+export interface RecallAttempt {
+  text: string;
+  /** Satt når brukeren har sjekket svaret, eller valgt å vise fasiten. */
+  revealed: boolean;
+}
+
 export interface ConceptProgress {
   status: RecallStatus;
   lastReviewed?: string;
@@ -64,6 +71,8 @@ export interface ConceptProgress {
   reviewCount?: number;
   /** Dager til neste visning. Vokser når begrepet sitter, settes til 1 ved usikker. */
   intervalDays?: number;
+  /** Uferdig gjenkalling. Følger med i sikkerhetskopien av fremdrift, og fjernes ved vurdering. */
+  recall?: RecallAttempt;
 }
 
 export interface PathProgress {
