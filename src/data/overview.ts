@@ -4,6 +4,8 @@ export interface OverviewTheme {
   id: string;
   name: string;
   conceptIds: string[];
+  /** Ferdig læringsløp gjennom temaet. */
+  pathId?: string;
 }
 
 export interface OverviewArea {
@@ -25,7 +27,7 @@ export const overviewAreas: OverviewArea[] = [
   {
     id: "makro",
     name: "Makro og pengepolitikk",
-    summary: "Priser, styringsrente og hvordan renta når økonomien.",
+    summary: "Priser, styringsrente, lønnsdannelse og hvordan renta når økonomien.",
     accent: "#0284C7",
     note: "Oljefondet og handlingsregelen ligger under Norsk økonomi. Det er finanspolitikk, ikke pengepolitikk.",
     themes: [
@@ -48,12 +50,23 @@ export const overviewAreas: OverviewArea[] = [
           "produksjonsgap",
         ],
       },
+      {
+        id: "arbeidsliv",
+        name: "Arbeidsliv",
+        pathId: "arbeidsliv",
+        conceptIds: [
+          "frontfagsmodellen",
+          "lonnsoppgjor",
+          "sykepenger",
+          "dagpenger",
+        ],
+      },
     ],
   },
   {
     id: "olje",
     name: "Norsk økonomi og oljeformue",
-    summary: "Fondet, handlingsregelen og verdiskapingen på fastlandet.",
+    summary: "Fondet, handlingsregelen, kraftpriser og verdiskapingen på fastlandet.",
     accent: "#0F766E",
     themes: [
       {
@@ -67,6 +80,13 @@ export const overviewAreas: OverviewArea[] = [
           "finanspolitikk",
           "realavkastning",
         ],
+        pathId: "oljefondet-og-handlingsregelen",
+      },
+      {
+        id: "strom-og-kraft",
+        name: "Strøm og kraft",
+        pathId: "strom-og-kraft",
+        conceptIds: ["spotpris", "prisomrader", "stromstotte"],
       },
       {
         id: "verdiskaping",
@@ -112,7 +132,8 @@ export const overviewAreas: OverviewArea[] = [
       {
         id: "valuta",
         name: "Valuta og derivater",
-        conceptIds: ["kronekurs", "rentebytte"],
+        pathId: "kronekurs-og-eos",
+        conceptIds: ["kronekurs", "importpriser", "eos", "rentebytte"],
       },
       {
         id: "portefolje",
@@ -169,7 +190,8 @@ export const overviewAreas: OverviewArea[] = [
       {
         id: "pensjon",
         name: "Pensjon",
-        conceptIds: ["folketrygd", "grunnbelop", "otp", "ips", "afp"],
+        pathId: "pensjon",
+        conceptIds: ["folketrygd", "tjenestepensjon", "grunnbelop", "otp", "ips", "afp"],
       },
       {
         id: "boliglan",
@@ -183,15 +205,22 @@ export const overviewAreas: OverviewArea[] = [
           "gjeldsgrad",
           "rentefradrag",
           "utlansforskriften",
+          "egenkapital",
+          "fellesgjeld",
+          "leie-mot-eie",
         ],
+        pathId: "bolig",
       },
       {
         id: "skatt",
         name: "Skatt",
+        pathId: "skatt-for-privatpersoner",
         conceptIds: [
           "alminnelig-inntekt",
           "personfradrag",
           "minstefradrag",
+          "trinnskatt",
+          "formuesskatt",
           "skjermingsfradrag",
           "rentefradrag",
         ],

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getConcept } from "@/data/learning";
+import { getConcept, getPath } from "@/data/learning";
 import { overviewAreas } from "@/data/overview";
 
 export function OverviewView() {
@@ -35,11 +35,21 @@ export function OverviewView() {
           )}
 
           <div className="mt-5 space-y-5">
-            {area.themes.map((theme) => (
+            {area.themes.map((theme) => {
+              const path = theme.pathId ? getPath(theme.pathId) : undefined;
+              return (
               <div key={theme.id} id={theme.id} className="scroll-mt-20">
                 <h3 className="text-sm font-semibold text-[var(--ink)]">
                   {theme.name}
                 </h3>
+                {path && (
+                  <Link
+                    href={`/lop/${path.id}`}
+                    className="mt-1 inline-block text-sm text-[var(--accent)]"
+                  >
+                    Løp: {path.title}
+                  </Link>
+                )}
                 <ul className="mt-2 space-y-1">
                   {theme.conceptIds.map((id) => {
                     const concept = getConcept(id);
@@ -64,7 +74,8 @@ export function OverviewView() {
                   })}
                 </ul>
               </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       ))}
