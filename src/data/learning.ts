@@ -321,7 +321,7 @@ export const lessons: Lesson[] = [
     body: [
       "Fleksibel inflasjonsstyring er en avveining. Høy prisvekst og høy aktivitet taler for høyere rente. Stigende ledighet og inflasjon under målet taler for lavere rente. Ofte peker hensynene hver sin vei, og komiteen må veie dem over horisonten.",
       "Produksjonsgapet er et anslag på avviket mellom faktisk produksjon og det økonomien kan produsere uten at inflasjonspresset bygger seg opp. Positivt gap betyr press. Negativt gap betyr slakk.",
-      "Renta treffer husholdningene særlig via boliglån, forbruk og kronekurs. Hvor mye som brukes over statsbudsjettet, er et annet spor. Det ligger i oversikten under norsk økonomi.",
+      "Renta treffer husholdningene særlig via boliglån, forbruk og kronekurs. Hvor mye som brukes over statsbudsjettet, er et annet spor. Det ligger på kartet under norsk økonomi.",
     ],
     conceptIds: ["fleksibel-inflasjonsstyring", "produksjonsgap"],
     quiz: {
@@ -486,7 +486,7 @@ export const lessons: Lesson[] = [
       "Fradraget skal grovt dekke vanlige kostnader ved å være i jobb, slik at du slipper å dokumentere dem. Har du høyere kostnader av den typen fradraget dekker, kan faktiske kostnader brukes i stedet.",
       "Prosentsats og tak settes i skattereglene og endres. Sjekk Skatteetaten for året du er i.",
     ],
-    conceptIds: ["minstefradrag"],
+    conceptIds: ["minstefradrag", "personfradrag"],
   },
   {
     id: "sk-3",

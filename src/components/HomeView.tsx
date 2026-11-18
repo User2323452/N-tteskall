@@ -1,15 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-import {
-  comingPaths,
-  getLessonsForPath,
-  learningPaths,
-  searchLearning,
-} from "@/data/learning";
+import { getLessonsForPath, learningPaths, searchLearning } from "@/data/learning";
+import { areaPictures, overviewAreas, pathsInArea } from "@/data/overview";
 import { getAllPathProgress, nextLessonId } from "@/lib/progress";
 
 export function HomeView() {
@@ -57,10 +54,6 @@ export function HomeView() {
       finishedAll: true,
     };
   }, [pathProgress]);
-
-  const otherPaths = learningPaths.filter(
-    (path) => path.id !== continueTarget.path.id
-  );
 
   const liveSearch = useMemo(() => searchLearning(q), [q]);
 
@@ -131,7 +124,7 @@ export function HomeView() {
                 href={path.href}
                 className="block rounded-xl px-3 py-2 text-sm hover:bg-[var(--accent-soft)]"
               >
-                <span className="text-xs text-[var(--muted)]">I oversikten</span>
+                <span className="text-xs text-[var(--muted)]">På kartet</span>
                 <span className="block text-[var(--ink)]">{path.title}</span>
               </Link>
             ))}
@@ -195,54 +188,83 @@ export function HomeView() {
         )}
       </section>
 
-      <section>
-        <h2 className="text-sm font-semibold text-[var(--ink)]">Andre løp</h2>
-        <ul className="mt-2 divide-y divide-[var(--line)]">
-          {otherPaths.map((path) => {
-            const total = getLessonsForPath(path.id).length;
-            const done = pathProgress[path.id]?.completedLessonIds.length ?? 0;
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold text-[var(--ink)]">Områdene</h2>
+        <p className="text-sm text-[var(--muted)]">
+          Løpene ligger i kartet, samlet etter område.
+        </p>
+        <ul className="space-y-3">
+          {overviewAreas.map((area) => {
+            const picture = areaPictures[area.id];
+            const paths = pathsInArea(area);
             return (
-              <li key={path.id}>
-                <Link
-                  href={`/lop/${path.id}`}
-                  className="flex items-baseline justify-between gap-3 py-3"
-                >
-                  <span>
-                    <span className="block text-[15px] text-[var(--ink)]">
-                      {path.title}
+              <li key={area.id} className="overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
+                <Link href={`/kart#${area.id}`} className="flex gap-3 p-3">
+                  {picture && (
+                    <Image
+                      src={picture.src}
+                      alt=""
+                      width={160}
+                      height={120}
+                      className="h-16 w-20 shrink-0 rounded-xl object-cover"
+                    />
+                  )}
+                  <span className="min-w-0">
+                    <span className="block font-[family-name:var(--font-display)] text-xl text-[var(--ink)]">
+                      {area.name}
                     </span>
-                    <span className="text-sm text-[var(--muted)]">
-                      {total} leksjoner
-                      {done > 0 ? ` · ${done} ferdige` : ""}
+                    <span className="mt-0.5 block text-sm leading-relaxed text-[var(--muted)]">
+                      {area.summary}
                     </span>
-                  </span>
-                  <span aria-hidden className="text-[var(--muted)]">
-                    →
                   </span>
                 </Link>
+                <ul className="border-t border-[var(--line)] px-3">
+                  {paths.length > 0 ? (
+                    paths.map((path) => {
+                      const total = getLessonsForPath(path.id).length;
+                      const done = pathProgress[path.id]?.completedLessonIds.length ?? 0;
+                      const current =
+                        path.id === continueTarget.path.id &&
+                        continueTarget.started &&
+                        !continueTarget.finishedAll;
+                      return (
+                        <li key={path.id}>
+                          <Link
+                            href={`/lop/${path.id}`}
+                            className="flex items-baseline justify-between gap-3 py-2.5"
+                          >
+                            <span>
+                              <span className="block text-[15px] text-[var(--ink)]">
+                                {path.title}
+                                {current ? " · pågår" : ""}
+                              </span>
+                              <span className="text-sm text-[var(--muted)]">
+                                {total} leksjoner
+                                {done > 0 ? ` · ${done} ferdige` : ""}
+                              </span>
+                            </span>
+                            <span aria-hidden className="text-[var(--muted)]">
+                              →
+                            </span>
+                          </Link>
+                        </li>
+                      );
+                    })
+                  ) : (
+                    <li>
+                      <Link
+                        href={`/kart#${area.id}`}
+                        className="flex items-baseline justify-between gap-3 py-2.5 text-sm text-[var(--muted)]"
+                      >
+                        Temaer og begreper
+                        <span aria-hidden>→</span>
+                      </Link>
+                    </li>
+                  )}
+                </ul>
               </li>
             );
           })}
-          {comingPaths.map((path) => (
-            <li key={path.id}>
-              <Link
-                href={path.href}
-                className="flex items-baseline justify-between gap-3 py-3"
-              >
-                <span>
-                  <span className="block text-[15px] text-[var(--ink)]">
-                    {path.title}
-                  </span>
-                  <span className="text-sm text-[var(--muted)]">
-                    Kommer · se i oversikten
-                  </span>
-                </span>
-                <span aria-hidden className="text-[var(--muted)]">
-                  →
-                </span>
-              </Link>
-            </li>
-          ))}
         </ul>
       </section>
     </div>

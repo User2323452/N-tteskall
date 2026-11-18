@@ -72,4 +72,9 @@ export const termStatusStyle: Record<
     text: "text-emerald-800",
     label: "Kan det",
   },
+  Sitter: {
+    bg: "bg-emerald-200",
+    text: "text-emerald-950",
+    label: "Sitter",
+  },
 };

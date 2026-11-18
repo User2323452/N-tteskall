@@ -104,9 +104,11 @@ export function getConceptProgress(id: string): ConceptProgress {
 }
 
 /**
- * Kort intervall første gang, lengre for hver gang begrepet sitter.
- * Usikker nullstiller til 1 dag.
- * 0/1 dag → OK 3, Kan det 6. Deretter ×2 (OK) eller ×2,5 (Kan det).
+ * Kort intervall første gang, lengre når det sitter.
+ * Usikker er alltid neste dag.
+ * Første treff (ingen intervall, eller 1 dag): OK 3, Kan det 12, Sitter 30.
+ * Deretter ×2 for OK (maks 60) og ×2,5 for Kan det (maks 120).
+ * Sitter er minst 30 dager, og dobles videre (maks 180).
  */
 export function nextIntervalDays(
   previous: number | undefined,
@@ -114,9 +116,16 @@ export function nextIntervalDays(
 ): number {
   if (grade === "Usikker") return 1;
   const current = previous && previous > 0 ? previous : 0;
-  if (current <= 1) return grade === "OK" ? 3 : 6;
-  if (grade === "OK") return Math.min(60, current * 2);
-  return Math.min(120, Math.round(current * 2.5));
+  if (grade === "OK") {
+    if (current <= 1) return 3;
+    return Math.min(60, current * 2);
+  }
+  if (grade === "Kan det") {
+    if (current <= 1) return 12;
+    return Math.min(120, Math.round(current * 2.5));
+  }
+  if (current < 30) return 30;
+  return Math.min(180, current * 2);
 }
 
 export function setConceptStatus(
@@ -369,7 +378,11 @@ function assertSchedule() {
   const cases: [number | undefined, RecallGrade, number][] = [
     [undefined, "Usikker", 1],
     [undefined, "OK", 3],
-    [undefined, "Kan det", 6],
+    [undefined, "Kan det", 12],
+    [undefined, "Sitter", 30],
+    [1, "Sitter", 30],
+    [12, "Sitter", 30],
+    [30, "Sitter", 60],
     [6, "Kan det", 15],
     [15, "Usikker", 1],
     [1, "OK", 3],

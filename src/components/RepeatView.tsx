@@ -13,7 +13,7 @@ import {
   setConceptStatus,
   setRecallAttempt,
 } from "@/lib/progress";
-import type { RecallGrade } from "@/types/learning";
+import { recallGrades, type RecallGrade } from "@/types/learning";
 
 function queueWithOpenRecallFirst(ids: string[]): string[] {
   const open: string[] = [];
@@ -137,10 +137,10 @@ export function RepeatView() {
             Til hjem
           </Link>
           <Link
-            href="/oversikt"
+            href="/kart"
             className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700"
           >
-            Oversikt
+            Kart
           </Link>
         </div>
       </div>
@@ -243,21 +243,15 @@ export function RepeatView() {
       </div>
 
       {revealed && (
-        <div className="sticky bottom-20 mt-8 grid grid-cols-3 gap-2 pb-4">
-          {(
-            [
-              ["Usikker", "Usikker"],
-              ["OK", "OK"],
-              ["Kan det", "Kan det"],
-            ] as const
-          ).map(([status, label]) => (
+        <div className="sticky bottom-20 mt-8 grid grid-cols-2 gap-2 pb-4 sm:grid-cols-4">
+          {recallGrades.map((status) => (
             <button
               key={status}
               type="button"
               onClick={() => grade(status)}
               className="min-h-12 rounded-xl border border-slate-200 bg-white px-1 text-sm font-medium text-slate-800 active:scale-[0.98]"
             >
-              <span className="block">{label}</span>
+              <span className="block">{status}</span>
               <span className="mt-0.5 block text-[10px] font-normal text-slate-400">
                 {gradeHint(current.id, status)}
               </span>

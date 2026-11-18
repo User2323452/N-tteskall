@@ -1,4 +1,5 @@
-import { getConcept } from "@/data/learning";
+import { getConcept, learningPaths } from "@/data/learning";
+import type { LearningPath } from "@/types/learning";
 
 export interface OverviewTheme {
   id: string;
@@ -246,6 +247,45 @@ export const overviewAreas: OverviewArea[] = [
     ],
   },
 ];
+
+/** Løp som hører til området, enten via temaet eller kategorien. */
+export function pathsInArea(area: OverviewArea): LearningPath[] {
+  const linked = new Set(
+    area.themes
+      .map((theme) => theme.pathId)
+      .filter((id): id is string => Boolean(id))
+  );
+  return learningPaths.filter(
+    (path) => linked.has(path.id) || path.category === area.id
+  );
+}
+
+export const areaPictures: Record<string, { src: string; alt: string }> = {
+  makro: {
+    src: "/bilder/kart-makro.jpg",
+    alt: "Brød, melk og epler på et kjøkkenbord, med en nøkkel. Priser og bolig i hverdagen.",
+  },
+  olje: {
+    src: "/bilder/kart-olje.jpg",
+    alt: "En oljeplattform i rolig sjø. Oljeinntektene som fondet kommer fra.",
+  },
+  marked: {
+    src: "/bilder/kart-marked.jpg",
+    alt: "En vekt med ulike ting i den ene skålen og én stein i den andre. Avveining i markedet.",
+  },
+  bank: {
+    src: "/bilder/kart-bank.jpg",
+    alt: "En lys skranke med en lukket notatbok. Banken som mellomledd.",
+  },
+  personlig: {
+    src: "/bilder/kart-personlig.jpg",
+    alt: "Et glass med mynter, et lite trehus og nøkler. Sparing og bolig.",
+  },
+  metode: {
+    src: "/bilder/kart-metode.jpg",
+    alt: "Tre blanke notatbøker på rad. Resultat, balanse og kontantstrøm.",
+  },
+};
 
 function assertOverview() {
   for (const area of overviewAreas) {
