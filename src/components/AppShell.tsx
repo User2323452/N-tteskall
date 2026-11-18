@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { BookOpen, Home, Map, Search } from "lucide-react";
 import { IdeaFab } from "@/components/IdeaFab";
+import { LogoMark } from "@/components/LogoMark";
 import { usePathname } from "next/navigation";
 
 const nav = [
@@ -39,14 +40,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="mx-auto flex h-12 max-w-xl items-center justify-between gap-3 px-5">
           <div className="min-w-0">
             {onHome ? (
-              <span className="hidden font-[family-name:var(--font-display)] text-lg text-[var(--accent)] sm:inline">
-                Nøtteskall
+              <span className="flex items-center gap-2">
+                <LogoMark className="h-8 w-8 shrink-0" />
+                <span className="hidden font-[family-name:var(--font-display)] text-lg text-[var(--accent)] sm:inline">
+                  Nøtteskall
+                </span>
               </span>
             ) : (
               <Link
                 href="/"
-                className="font-[family-name:var(--font-display)] text-lg text-[var(--accent)]"
+                className="flex items-center gap-2 font-[family-name:var(--font-display)] text-lg text-[var(--accent)]"
               >
+                <LogoMark className="h-8 w-8 shrink-0" />
                 Nøtteskall
               </Link>
             )}

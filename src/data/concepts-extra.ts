@@ -403,8 +403,8 @@ export const extraConcepts: Concept[] = [
     "NOK exchange rate",
     "marked",
     "Prisen på norske kroner mot andre valutaer.",
-    "En svakere krone gjør import dyrere i kroner og kan løfte inflasjonen. Det er valutakurskanalen i transmisjonen. I-44 er en handelsvektet indeks for krona.",
-    ["transmisjon", "inflasjon"]
+    "Svakere krone vil si flere kroner per euro eller dollar. Kronen styrkes ofte når renta i Norge er høyere enn ute, når oljeprisen er høy, eller når markedene er rolige. Den svekkes når rentedifferansen faller, oljeprisen faller, eller uro sender kapital mot større valutaer. Svakere krone gjør import dyrere. I-44 er Norges Banks handelsvektede indeks, og den stiger når kronen svekker seg. Dette er tendenser, ikke en lov.",
+    ["transmisjon", "inflasjon", "importpriser", "styringsrenten", "eos"]
   ),
   c(
     "rentenetto",
@@ -522,5 +522,144 @@ export const extraConcepts: Concept[] = [
     "Regresjon som finner linja som minimerer summen av kvadrerte avvik.",
     "I finans brukes OLS blant annet til å estimere beta: hvor mye en aksje har samvariert med markedet. Korrelasjon er ikke det samme som årsak.",
     ["beta"]
+  ),
+  c(
+    "trinnskatt",
+    "Trinnskatt",
+    "Bracket tax",
+    "personlig",
+    "Progressiv skatt på personinntekt, i tillegg til den flate skatten på alminnelig inntekt.",
+    "Trinnskatten gjelder lønn, trygd og annen personinntekt. Inntekt over et trinn får en høyere sats. Den høyeste satsen gjelder bare den delen som ligger over trinnet, ikke hele inntekten. Satser og grenser vedtas hvert år. Skatteetaten viser gjeldende trinn.",
+    ["minstefradrag", "alminnelig-inntekt", "formuesskatt"],
+    "Den høyeste satsen gjelder bare inntekten over trinnet."
+  ),
+  c(
+    "formuesskatt",
+    "Formuesskatt",
+    "Wealth tax",
+    "personlig",
+    "Skatt på nettoformue — eiendeler minus gjeld — over et bunnfradrag.",
+    "Formueskatt er samme skatt. Grunnlaget er ligningsverdi, ikke nødvendigvis markedsverdi: primærbolig og aksjer verdsettes lavere. Gjeld trekkes fra. Skatten har en kommunal og en statlig del. Bunnfradrag og satser står i budsjettet. Sjekk Skatteetaten for året.",
+    ["trinnskatt", "ask", "alminnelig-inntekt"]
+  ),
+  c(
+    "tjenestepensjon",
+    "Tjenestepensjon",
+    "Occupational pension",
+    "personlig",
+    "Pensjon fra jobben, i tillegg til folketrygden.",
+    "I privat sektor er en minstesparing lovpålagt: obligatorisk tjenestepensjon (OTP). Mange arbeidsgivere sparer mer. Den vanlige ordningen er innskuddspensjon: innskuddet er avtalt, utbetalingen avhenger av avkastning. Offentlig sektor har egne ordninger. AFP kan komme i tillegg der tariffavtalen gir det.",
+    ["otp", "folketrygd", "ips", "afp"]
+  ),
+  c(
+    "egenkapital",
+    "Egenkapital",
+    "Equity (home purchase)",
+    "personlig",
+    "Den delen av boligkjøpet du stiller med selv, ikke låner.",
+    "Egenkapital er boligverdi minus lån. Belåningsgrad er lånet delt på verdien. Utlånsforskriften setter et krav til egenkapitalen. Pengene kan komme fra sparing, salg av bolig eller gave. Annet lån regnes ikke som egenkapital.",
+    ["belaningsgrad", "utlansforskriften", "bsu", "fellesgjeld"],
+    "Egenkapital = verdi − lån. Belåningsgrad = lån / verdi."
+  ),
+  c(
+    "fellesgjeld",
+    "Fellesgjeld",
+    "Shared debt (housing co-op)",
+    "personlig",
+    "Din andel av lånet i borettslaget eller sameiet.",
+    "Prisantydningen er ofte bare innskuddet. Totalpris er innskudd pluss fellesgjeld. Gjelden betjenes gjennom felleskostnadene. Noen lag lar deg betale ned din andel (IN-ordning). Banken tar normalt fellesgjelden med når den vurderer lån og belåningsgrad.",
+    ["egenkapital", "belaningsgrad", "utlansforskriften"],
+    "Se på totalpris, ikke bare innskuddet i annonsen."
+  ),
+  c(
+    "leie-mot-eie",
+    "Leie mot eie",
+    "Rent-to-own",
+    "personlig",
+    "Avtale der du leier boligen en periode, med rett eller plikt til å kjøpe den senere.",
+    "Også kalt leie til eie. En del av leien kan være avtalt å telle som egenkapital. Vilkårene varierer. Du må fortsatt oppfylle bankens krav, inkludert utlånsforskriften, når kjøpet skal gjennomføres. Det er ikke en vanlig leiekontrakt.",
+    ["egenkapital", "utlansforskriften"]
+  ),
+  c(
+    "frontfagsmodellen",
+    "Frontfagsmodellen",
+    "Front-runner wage bargaining",
+    "makro",
+    "Lønnsdannelse der konkurranseutsatt industri forhandler først og setter normen.",
+    "Frontfaget er industrien som konkurrerer med utlandet. Oppgjøret der blir en ramme for lønnsveksten i sektorene som følger, slik at lønningene ikke løper fra konkurranseevnen. Frontfaget er i praksis industrioverenskomsten mellom partene i industrien.",
+    ["lonnsoppgjor"]
+  ),
+  c(
+    "lonnsoppgjor",
+    "Lønnsoppgjør",
+    "Wage settlement",
+    "makro",
+    "Forhandlingene om lønn og tariffavtaler mellom partene i arbeidslivet.",
+    "Hovedoppgjør annet hvert år tar hele avtalen. Mellomoppgjør i året mellom gjelder i hovedsak lønn. Frontfaget går først. Rammen oppgis ofte som årslønnsvekst, inkludert overheng. Den lokale økningen din kan avvike fra rammen.",
+    ["frontfagsmodellen"]
+  ),
+  c(
+    "sykepenger",
+    "Sykepenger",
+    "Sickness benefit",
+    "makro",
+    "Inntekt fra folketrygden når du ikke kan jobbe på grunn av sykdom.",
+    "For arbeidstakere betaler arbeidsgiver som regel de første 16 dagene. Deretter kan NAV overta. Ytelsen har tak knyttet til grunnbeløpet (G) og en avgrenset periode. Du må som hovedregel være sykmeldt. Selvstendige har andre satser.",
+    ["dagpenger", "folketrygd", "grunnbelop"]
+  ),
+  c(
+    "dagpenger",
+    "Dagpenger",
+    "Unemployment benefit",
+    "makro",
+    "Folketrygdens ytelse når du har mistet arbeidstid og søker jobb.",
+    "NAV krever tilstrekkelig tidligere inntekt, at du er registrert som arbeidssøker, og at du er reell jobbsøker. Ytelsen er en andel av tidligere inntekt, med tak, i en avgrenset periode. Det er ikke sykepenger: her er du arbeidsfør.",
+    ["sykepenger", "folketrygd"]
+  ),
+  c(
+    "spotpris",
+    "Spotpris",
+    "Spot price (electricity)",
+    "olje",
+    "Timeprisen på kraft i døgnmarkedet, i prisområdet der du bor.",
+    "Prisen settes time for time på kraftbørsen Nord Pool, ut fra tilbud og etterspørsel. En spotavtale følger den, pluss leverandørens påslag. Nettleie, avgifter og merverdiavgift kommer i tillegg og er ikke spotpris.",
+    ["prisomrader", "stromstotte"]
+  ),
+  c(
+    "prisomrader",
+    "Prisområder",
+    "Bidding zones",
+    "olje",
+    "Norge er delt i fem kraftområder der spotprisen kan være ulik.",
+    "Områdene er NO1 (Østlandet), NO2 (Sør- og Sørvest-Norge), NO3 (Midt-Norge), NO4 (Nord-Norge) og NO5 (Vestlandet). Begrenset kapasitet i nettet gjør at kraften ikke flyter fritt. Sør-Norge i nyhetene er særlig NO1, NO2 og NO5. Nord-Norge er NO4.",
+    ["spotpris", "stromstotte"]
+  ),
+  c(
+    "stromstotte",
+    "Strømstøtte",
+    "Electricity support",
+    "olje",
+    "Statlig støtte som dekker en del av høy spotpris for husholdninger.",
+    "Også kalt strømstønad. Når spotprisen i prisområdet ditt ligger over en terskel, dekker staten en andel av det overskytende for et vanlig forbruk. Støtten går vanligvis via nettselskapet. Terskel og andel vedtas av Stortinget og kan endres.",
+    ["spotpris", "prisomrader"],
+    "Støtten demper regningen. Den fjerner ikke spotprisen."
+  ),
+  c(
+    "importpriser",
+    "Importpriser",
+    "Import prices",
+    "marked",
+    "Prisen i kroner på varer og tjenester vi kjøper fra utlandet.",
+    "Mye import fra EØS-området prises i euro. Kronerprisen er den utenlandske prisen omregnet med kronekursen, pluss frakt og norske avgifter. Svakere krone løfter importprisene og kan løfte KPI. Sterkere krone gjør det motsatte.",
+    ["kronekurs", "inflasjon", "eos", "styringsrenten"]
+  ),
+  c(
+    "eos",
+    "EØS",
+    "EEA",
+    "marked",
+    "Avtalen som knytter Norge til EUs indre marked, uten at Norge er medlem av EU.",
+    "Varer, tjenester, kapital og personer kan i hovedsak bevege seg fritt. De fleste industrivarer handles uten toll mot EU. Landbruk og fisk har unntak, og Norge har egen toll mot land utenfor. Pengepolitikken er fortsatt Norges Banks.",
+    ["kronekurs", "importpriser"]
   ),
 ];

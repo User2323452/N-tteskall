@@ -156,10 +156,10 @@ export function HomeView() {
               Løp
             </p>
             <h2 className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
-              Begge løpene er ferdige
+              Løpene er ferdige
             </h2>
             <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">
-              Repeter begrepene, eller bla i oversikten mens neste løp skrives.
+              Repeter begrepene du har lagt i køen.
             </p>
             <p className="mt-3 text-sm font-medium text-[var(--accent)]">
               Til repetisjon →
