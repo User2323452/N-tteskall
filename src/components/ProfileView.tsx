@@ -317,6 +317,16 @@ export function ProfileView() {
         <DataBackup />
       </Section>
 
+      <Link
+        href="/notater"
+        className="block rounded-2xl border border-[var(--line)] bg-white px-4 py-4"
+      >
+        <span className="block text-sm font-semibold text-[var(--ink)]">Mine notater</span>
+        <span className="mt-0.5 block text-sm text-[var(--muted)]">
+          Egne sider fra det gamle oppsettet
+        </span>
+      </Link>
+
       <p className="px-1 pt-1 text-xs leading-relaxed text-slate-400">
         Repetisjonen bygger på glemselskurven til Hermann Ebbinghaus.
       </p>
