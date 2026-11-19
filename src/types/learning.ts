@@ -72,7 +72,7 @@ export interface ConceptProgress {
   /** Lagt i repetisjon etter leksjon eller «Legg i Repeter». */
   introduced?: boolean;
   reviewCount?: number;
-  /** Dager til neste visning. Vokser når begrepet sitter, settes til 1 ved usikker. */
+  /** Dager til neste visning. Vokser når konseptet sitter, settes til 1 ved usikker. */
   intervalDays?: number;
   /** Uferdig gjenkalling. Følger med i sikkerhetskopien av fremdrift, og fjernes ved vurdering. */
   recall?: RecallAttempt;

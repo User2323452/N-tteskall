@@ -23,7 +23,7 @@ const headerNav = [
   {
     href: "/sok",
     label: "Søk",
-    match: (p: string) => p.startsWith("/sok") || p.startsWith("/begrep"),
+    match: (p: string) => p.startsWith("/sok") || p.startsWith("/konsept"),
   },
 ];
 
@@ -62,7 +62,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname.startsWith("/notater") || pathname.startsWith("/tema");
   const onHome = pathname === "/";
   const detail =
-    /^\/lop\/[^/]+/.test(pathname) || pathname.startsWith("/begrep/");
+    /^\/lop\/[^/]+/.test(pathname) || pathname.startsWith("/konsept/");
 
   return (
     <NavMemory>
