@@ -3,13 +3,14 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Check, Search } from "lucide-react";
-import { concepts, learningPaths, searchLearning } from "@/data/learning";
+import { BookOpen, Check, ChevronRight, Search } from "lucide-react";
+import { concepts, getConcept, learningPaths, searchLearning } from "@/data/learning";
 import { pickContinueTarget } from "@/lib/continue-path";
 import { LogoMark } from "@/components/LogoMark";
 import { StreakFlame } from "@/components/StreakFlame";
 import {
   ackSitterNotices,
+  currentStreak,
   dismissInstallHint,
   formatDueLabel,
   getAllConceptProgress,
@@ -19,18 +20,13 @@ import {
   hasLessonToday,
   hasReviewToday,
   installHintDismissed,
-  listCompletedDays,
   listSchedule,
   needsHomeScreenHint,
   peekSitterNotices,
   sitterHomeLine,
   todayReviewCount,
-  currentStreak,
 } from "@/lib/progress";
 import type { SitterNotice } from "@/types/learning";
-
-/** Ca. to minutter per konsept som venter. */
-const MINUTES_PER_CONCEPT = 2;
 
 function timeGreeting(date: Date) {
   const hour = date.getHours();
@@ -40,8 +36,24 @@ function timeGreeting(date: Date) {
   return "God natt";
 }
 
-function conceptCount(count: number) {
-  return count === 1 ? "1 konsept" : `${count} konsepter`;
+function localToday() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+
+function norwegianDate(date: Date) {
+  const label = new Intl.DateTimeFormat("nb-NO", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  }).format(date);
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
+function shortDue(iso: string) {
+  const label = formatDueLabel(iso);
+  if (label.startsWith("i morgen")) return "i morgen";
+  return label;
 }
 
 export function HomeView() {
@@ -75,11 +87,14 @@ export function HomeView() {
     router.push(trimmed ? `/sok?q=${encodeURIComponent(trimmed)}` : "/sok");
   }
 
+  const now = ready ? new Date() : null;
   const target = ready ? pickContinueTarget() : null;
   const schedule = ready ? listSchedule() : [];
-  const dueCount = ready
-    ? getDueConceptIds(concepts.map((concept) => concept.id)).length
-    : 0;
+  const dueIds = ready ? getDueConceptIds(concepts.map((concept) => concept.id)) : [];
+  const dueTerms = schedule
+    .filter((item) => dueIds.includes(item.id))
+    .map((item) => getConcept(item.id)?.term)
+    .filter((term): term is string => Boolean(term));
   const reviewedToday = ready ? hasReviewToday() : false;
   const lessonDoneToday = ready ? hasLessonToday() : false;
   const reviewedCount = ready ? todayReviewCount() : 0;
@@ -87,9 +102,7 @@ export function HomeView() {
     ? Object.values(getAllConceptProgress()).filter((item) => item.status === "Sitter").length
     : 0;
   const streak = ready ? currentStreak() : null;
-  const freshStart =
-    ready && (streak?.count ?? 0) === 0 && listCompletedDays().length === 0;
-  const dayComplete = Boolean(target && lessonDoneToday && dueCount === 0);
+  const dayComplete = Boolean(target && lessonDoneToday && dueIds.length === 0);
   const minutes =
     target && target.total > 0
       ? Math.max(
@@ -101,161 +114,28 @@ export function HomeView() {
         )
       : null;
   const nextDue = schedule.find((item) => item.dueOn.slice(0, 10) > localToday());
-  const hello = ready ? `${timeGreeting(new Date())}${name ? `, ${name}` : ""}` : "";
+  const greeting = now ? timeGreeting(now) : "";
+  const lessonAction = Boolean(target && !dayComplete && !target.finishedAll);
 
   return (
-    <div className="mx-auto max-w-xl space-y-4">
-      <div className="flex min-h-12 items-center gap-3">
-        <LogoMark className="h-9 w-9 shrink-0" />
-        {hello && (
-          <h1 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-[var(--ink)]">
-            {hello}
+    <div className="mx-auto max-w-xl space-y-6">
+      <header className="flex items-start justify-between gap-3">
+        <div className="min-w-0 pt-1">
+          <p className="text-sm text-[var(--muted)]">{now ? norwegianDate(now) : "\u00a0"}</p>
+          <h1 className="mt-1 text-[2.35rem] font-bold leading-[1.05] tracking-tight text-[var(--ink)]">
+            {greeting ? (
+              <>
+                {greeting}
+                {name ? "," : ""}
+                {name && <span className="block">{name}</span>}
+              </>
+            ) : (
+              "\u00a0"
+            )}
           </h1>
-        )}
-      </div>
-
-      {installHint && (
-        <div className="flex items-start justify-between gap-3 text-sm leading-relaxed text-[var(--muted)]">
-          <p>
-            Legg Nøtteskall på Hjem-skjermen, så blir fremdriften værende. Trykk Del,
-            så Legg til på Hjem-skjerm.
-          </p>
-          <button
-            type="button"
-            onClick={() => {
-              dismissInstallHint();
-              setInstallHint(false);
-            }}
-            className="shrink-0 text-sm text-[var(--ink)] underline-offset-2 hover:underline"
-          >
-            Skjul
-          </button>
         </div>
-      )}
-
-      {target && dayComplete && (
-        <div className="rounded-2xl bg-[var(--accent-soft)] px-4 py-4">
-          <p className="flex items-center gap-2 font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--accent)] text-white">
-              <Check className="h-4 w-4" strokeWidth={3} />
-            </span>
-            Ferdig for i dag
-          </p>
-          {!target.finishedAll && (
-            <p className="mt-2 text-sm text-[var(--muted)]">Neste: {target.lessonTitle}</p>
-          )}
-        </div>
-      )}
-
-      {target && !dayComplete && !target.finishedAll && (
-        <Link
-          href={`/lop/${target.pathId}/${target.lessonId}`}
-          className="block rounded-2xl bg-[var(--accent-soft)] px-4 py-4"
-        >
-          <p className="text-xs font-medium text-[var(--accent)]">
-            Dagens leksjon{minutes ? ` · ca. ${minutes} min` : ""}
-          </p>
-          <h2 className="mt-2 font-[family-name:var(--font-display)] text-3xl tracking-tight text-[var(--ink)]">
-            {target.lessonTitle}
-          </h2>
-          <p className="mt-1 text-sm text-[var(--muted)]">
-            {target.pathTitle} · {target.index} av {target.total}
-          </p>
-          <div className="mt-4 flex gap-1.5" aria-hidden>
-            {Array.from({ length: target.total }, (_, index) => {
-              const done = index < target.done;
-              const next = index === target.done;
-              return (
-                <span
-                  key={index}
-                  className={`h-1.5 flex-1 rounded-full ${
-                    done ? "bg-[var(--accent)]" : next ? "bg-[var(--accent)]/35" : "bg-white"
-                  }`}
-                />
-              );
-            })}
-          </div>
-          <span className="sr-only">
-            {target.done} av {target.total} leksjoner er ferdige.
-          </span>
-          <span className="mt-4 flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[var(--accent)] text-sm font-medium text-white">
-            {target.started ? "Fortsett" : "Start"}
-            <ArrowRight className="h-4 w-4" />
-          </span>
-        </Link>
-      )}
-
-      {target && !dayComplete && target.finishedAll && (
-        <div className="rounded-2xl border border-[var(--line)] bg-white px-4 py-4">
-          <p className="flex items-center gap-2 font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--accent)] text-white">
-              <Check className="h-4 w-4" strokeWidth={3} />
-            </span>
-            {target.pathTitle}
-          </p>
-          <p className="mt-2 text-sm text-[var(--muted)]">Ferdig</p>
-        </div>
-      )}
-
-      <div className="grid grid-cols-2 gap-2">
-        <Link
-          href="/repeter"
-          className="rounded-2xl border border-[var(--line)] bg-white px-3 py-3"
-        >
-          {dueCount > 0 ? (
-            <>
-              <p className="text-xs text-[var(--muted)]">Til repetisjon</p>
-              <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
-                {conceptCount(dueCount)}
-              </p>
-              <p className="mt-0.5 text-sm text-[var(--muted)]">
-                ca. {Math.max(MINUTES_PER_CONCEPT, dueCount * MINUTES_PER_CONCEPT)} min
-              </p>
-            </>
-          ) : reviewedToday ? (
-            <>
-              <p className="text-xs text-[var(--muted)]">Repetert i dag</p>
-              <p className="mt-2 flex items-center gap-1.5 text-lg font-semibold text-[var(--ink)]">
-                <Check className="h-4 w-4 text-[var(--accent)]" strokeWidth={3} />
-                {conceptCount(reviewedCount)}
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="text-xs text-[var(--muted)]">Neste repetisjon</p>
-              <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
-                {nextDue ? shortDue(nextDue.dueOn) : "Ingen venter"}
-              </p>
-            </>
-          )}
-        </Link>
-        <Link
-          href="/profil"
-          className="rounded-2xl border border-[var(--line)] bg-white px-3 py-3"
-        >
-          <p className="text-xs text-[var(--muted)]">Konsepter som sitter</p>
-          <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
-            {sitting} av {concepts.length}
-          </p>
-        </Link>
-      </div>
-
-      {sitter.length > 0 && (
-        <ul className="space-y-1">
-          {sitter.map((item) => (
-            <li key={`${item.conceptId}@${item.at}`} className="text-sm text-[var(--muted)]">
-              {sitterHomeLine(item.term)}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {streak && !freshStart && (
-        <Link href="/profil" className="inline-flex items-center gap-1.5 text-sm text-[var(--ink)]">
-          {streak.count > 0 && <StreakFlame className="h-4 w-4" />}
-          {streak.label}
-        </Link>
-      )}
+        <LogoMark className="h-11 w-11 shrink-0" />
+      </header>
 
       <form onSubmit={onSearchSubmit}>
         <div className="relative">
@@ -263,8 +143,8 @@ export function HomeView() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Søk konsept eller løp"
-            className="w-full rounded-2xl border border-[var(--line)] bg-white py-3.5 pl-10 pr-4 text-sm text-[var(--ink)] outline-none ring-[var(--accent)] placeholder:text-[var(--muted)] focus:ring-2"
+            placeholder="Søk"
+            className="w-full rounded-2xl border border-[var(--line)] bg-white py-3 pl-10 pr-4 text-sm text-[var(--ink)] outline-none ring-[var(--accent)] placeholder:text-[var(--muted)] focus:ring-2"
             aria-label="Søk etter konsept eller læringsløp"
           />
         </div>
@@ -312,17 +192,203 @@ export function HomeView() {
           </div>
         )}
       </form>
+
+      {installHint && (
+        <div className="flex items-start justify-between gap-3 text-sm leading-relaxed text-[var(--muted)]">
+          <p>
+            Legg Nøtteskall på Hjem-skjermen, så blir fremdriften værende. Trykk Del,
+            så Legg til på Hjem-skjerm.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              dismissInstallHint();
+              setInstallHint(false);
+            }}
+            className="shrink-0 text-sm text-[var(--ink)] underline-offset-2 hover:underline"
+          >
+            Skjul
+          </button>
+        </div>
+      )}
+
+      <section>
+        <h2 className="px-1 text-sm text-[var(--muted)]">I dag</h2>
+        <div className="mt-2 overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
+          {target && (
+            <LessonRow
+              href={lessonAction ? `/lop/${target.pathId}/${target.lessonId}` : undefined}
+              title={
+                dayComplete
+                  ? "Ferdig for i dag"
+                  : target.finishedAll
+                    ? target.pathTitle
+                    : target.lessonTitle
+              }
+              meta={
+                dayComplete
+                  ? target.finishedAll
+                    ? "Alt i løpet er tatt"
+                    : `Neste: ${target.lessonTitle}`
+                  : target.finishedAll
+                    ? "Ferdig"
+                    : `Leksjon ${target.index} av ${target.total}${minutes ? ` · ${minutes} min` : ""}`
+              }
+              done={dayComplete || target.finishedAll ? target.total : target.done}
+              total={target.total}
+              complete={dayComplete || target.finishedAll}
+              action={lessonAction ? (target.started ? "Fortsett" : "Start") : undefined}
+            />
+          )}
+          <Link
+            href="/repeter"
+            className="flex items-center gap-3 border-t border-[var(--line)] px-4 py-3.5 first:border-t-0"
+          >
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-soft)] text-[var(--accent)]">
+              <BookOpen className="h-5 w-5" aria-hidden />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-semibold text-[var(--ink)]">
+                {dueIds.length > 0 ? "Repeter" : reviewedToday ? "Repetert i dag" : "Neste repetisjon"}
+              </span>
+              <span className="mt-0.5 block text-sm leading-snug text-[var(--muted)]">
+                {dueIds.length > 0
+                  ? dueTerms.slice(0, 3).join(", ")
+                  : reviewedToday
+                    ? reviewedCount === 1
+                      ? "1 konsept"
+                      : `${reviewedCount} konsepter`
+                    : nextDue
+                      ? shortDue(nextDue.dueOn)
+                      : "Ingen venter"}
+              </span>
+            </span>
+            <span className="flex shrink-0 items-center gap-1 text-[var(--ink)]">
+              {dueIds.length > 0 && <span className="text-base font-semibold">{dueIds.length}</span>}
+              {dueIds.length === 0 && reviewedToday && (
+                <Check className="h-4 w-4 text-[var(--accent)]" strokeWidth={3} />
+              )}
+              <ChevronRight className="h-4 w-4 text-[var(--muted)]" aria-hidden />
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="px-1 text-sm text-[var(--muted)]">Fremgang</h2>
+        <div className="mt-2 overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
+          <Link
+            href="/profil"
+            className="flex min-h-14 items-center justify-between gap-3 px-4 py-4"
+          >
+            <span className="font-semibold text-[var(--ink)]">Konsepter som sitter</span>
+            <span className="shrink-0 font-semibold text-[var(--ink)]">
+              {sitting} av {concepts.length}
+            </span>
+          </Link>
+          <Link
+            href="/profil"
+            className="flex min-h-14 items-center justify-between gap-3 border-t border-[var(--line)] px-4 py-4"
+          >
+            <span className="font-semibold text-[var(--ink)]">Dager på rad</span>
+            <span className="flex shrink-0 items-center gap-1.5 font-semibold text-[var(--ink)]">
+              {(streak?.count ?? 0) > 0 && <StreakFlame className="h-4 w-4" />}
+              {streak?.count ?? 0}
+            </span>
+          </Link>
+        </div>
+        {sitter.length > 0 && (
+          <ul className="mt-2 space-y-1 px-1">
+            {sitter.map((item) => (
+              <li key={`${item.conceptId}@${item.at}`} className="text-sm text-[var(--muted)]">
+                {sitterHomeLine(item.term)}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }
 
-function localToday() {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+function LessonRow({
+  href,
+  title,
+  meta,
+  done,
+  total,
+  complete,
+  action,
+}: {
+  href?: string;
+  title: string;
+  meta: string;
+  done: number;
+  total: number;
+  complete: boolean;
+  action?: string;
+}) {
+  const body = (
+    <>
+      <ProgressRing done={done} total={total} complete={complete} />
+      <span className="min-w-0 flex-1">
+        <span className="block font-semibold leading-snug text-[var(--ink)]">{title}</span>
+        <span className="mt-0.5 block text-sm leading-snug text-[var(--muted)]">{meta}</span>
+      </span>
+      {action && (
+        <span className="shrink-0 rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white">
+          {action}
+        </span>
+      )}
+    </>
+  );
+  const className = "flex items-center gap-3 px-4 py-3.5";
+  if (!href) return <div className={className}>{body}</div>;
+  return (
+    <Link href={href} className={className}>
+      {body}
+    </Link>
+  );
 }
 
-function shortDue(iso: string) {
-  const label = formatDueLabel(iso);
-  if (label.startsWith("i morgen")) return "i morgen";
-  return label;
+function ProgressRing({
+  done,
+  total,
+  complete,
+}: {
+  done: number;
+  total: number;
+  complete: boolean;
+}) {
+  const radius = 9;
+  const length = 2 * Math.PI * radius;
+  const pct = complete ? 1 : total > 0 ? Math.min(1, done / total) : 0;
+  return (
+    <svg viewBox="0 0 24 24" className="h-7 w-7 shrink-0" aria-hidden>
+      <circle cx="12" cy="12" r={radius} fill="none" stroke="var(--line)" strokeWidth="2.25" />
+      {pct > 0 && (
+        <circle
+          cx="12"
+          cy="12"
+          r={radius}
+          fill="none"
+          stroke="var(--accent)"
+          strokeWidth="2.25"
+          strokeLinecap="round"
+          strokeDasharray={`${Math.max(pct * length, 1)} ${length}`}
+          transform="rotate(-90 12 12)"
+        />
+      )}
+      {complete && (
+        <path
+          d="M8 12.2 10.6 14.8 16 9.4"
+          fill="none"
+          stroke="var(--accent)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
+    </svg>
+  );
 }
