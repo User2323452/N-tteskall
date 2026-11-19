@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { InteractiveId } from "@/data/concept-figures";
 import {
   AKSJE_FAKTOR,
@@ -14,6 +14,10 @@ import {
 } from "@/data/glass";
 import { kroner, tall } from "@/lib/format";
 import { RangeField } from "@/components/figures/RangeField";
+import { BondFigure } from "@/components/figures/BondFigure";
+import { HousingFigure } from "@/components/figures/HousingFigure";
+import { LoanTimeFigure } from "@/components/figures/LoanTimeFigure";
+import { RealWageFigure } from "@/components/figures/RealWageFigure";
 
 function Card({
   title,
@@ -461,22 +465,6 @@ function DeductionFigure() {
   );
 }
 
-function YieldFigure() {
-  const [yieldPct, setYieldPct] = useState(4);
-  const price = (100 * 4) / yieldPct;
-  return (
-    <Card
-      title="Fast kupong, bevegelig pris"
-      note="En evig obligasjon med 4 kr kupong per 100 kr pålydende. Når avkastningskravet stiger, faller prisen. Forenklet figur."
-    >
-      <RangeField label="Avkastningskrav" min={1} max={10} step={0.1} value={yieldPct} display={`${tall(yieldPct, 1)} %`} onChange={setYieldPct} />
-      <p className="text-sm text-[var(--ink)]">
-        Prisen blir om lag {kroner(price)} når kravet er {tall(yieldPct, 1)} %. Høyere krav, lavere pris.
-      </p>
-    </Card>
-  );
-}
-
 function NominalFigure() {
   const [nominal, setNominal] = useState(6);
   const effective = ((1 + nominal / 100 / 12) ** 12 - 1) * 100;
@@ -489,66 +477,6 @@ function NominalFigure() {
       <p className="text-sm text-[var(--ink)]">
         {tall(nominal, 1)} % nominelt blir om lag {tall(effective, 2)} % effektivt når renta legges til hver måned.
       </p>
-    </Card>
-  );
-}
-
-function payment(principal: number, rate: number, years: number) {
-  if (rate === 0) return principal / years;
-  return (principal * rate) / (1 - (1 + rate) ** -years);
-}
-
-function loanYear(kind: "annuitet" | "serie", year: number) {
-  const principal = 1_000_000;
-  const rate = 0.05;
-  const years = 20;
-  if (kind === "serie") {
-    const avdrag = principal / years;
-    const rest = principal - (year - 1) * avdrag;
-    const renter = rest * rate;
-    return { renter, avdrag, total: renter + avdrag };
-  }
-  const term = payment(principal, rate, years);
-  let balance = principal;
-  let renter = 0;
-  let avdrag = 0;
-  for (let i = 1; i <= year; i += 1) {
-    renter = balance * rate;
-    avdrag = term - renter;
-    balance -= avdrag;
-  }
-  return { renter, avdrag, total: term };
-}
-
-function LoanFigure({ focus }: { focus: "annuitet" | "serie" }) {
-  const [year, setYear] = useState(1);
-  const serie = useMemo(() => loanYear("serie", year), [year]);
-  const ann = useMemo(() => loanYear("annuitet", year), [year]);
-  return (
-    <Card
-      title="Samme lån, to former"
-      year="1 000 000 kr, 5 % årlig rente, 20 år. Forenklet, uten gebyr."
-      note="Annuitet holder terminbeløpet jevnt: mye renter først, mer avdrag siden. Serielån har fast avdrag, så terminbeløpet faller. Figuren er årlig, ikke bankens månedlige plan."
-    >
-      <RangeField label="År i lånet" min={1} max={20} step={1} value={year} display={`År ${year}`} onChange={setYear} />
-      <div className="grid grid-cols-2 gap-2">
-        {(
-          [
-            ["annuitet", "Annuitet", ann],
-            ["serie", "Serielån", serie],
-          ] as const
-        ).map(([id, label, row]) => (
-          <div
-            key={id}
-            className={`rounded-xl p-2 ${focus === id ? "bg-[var(--accent-soft)] ring-1 ring-[var(--accent)]" : "bg-[var(--background)]"}`}
-          >
-            <p className="text-xs font-semibold text-[var(--ink)]">{label}</p>
-            <p className="mt-1 text-[11px] text-[var(--muted)]">Renter {kroner(row.renter)}</p>
-            <p className="text-[11px] text-[var(--muted)]">Avdrag {kroner(row.avdrag)}</p>
-            <p className="mt-1 text-xs font-medium text-[var(--ink)]">Termin {kroner(row.total)}</p>
-          </div>
-        ))}
-      </div>
     </Card>
   );
 }
@@ -568,7 +496,9 @@ export function InteractiveFigure({
   if (id === "inflasjon") return <InflationFigure />;
   if (id === "naverdi") return <PresentValueFigure />;
   if (id === "minstefradrag") return <DeductionFigure />;
-  if (id === "yield") return <YieldFigure />;
+  if (id === "yield") return <BondFigure />;
   if (id === "nominell") return <NominalFigure />;
-  return <LoanFigure focus={focus ?? "annuitet"} />;
+  if (id === "reallonn") return <RealWageFigure />;
+  if (id === "bolig") return <HousingFigure />;
+  return <LoanTimeFigure focus={focus ?? "annuitet"} />;
 }
