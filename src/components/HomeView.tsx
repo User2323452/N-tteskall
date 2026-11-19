@@ -6,15 +6,20 @@ import { useRouter } from "next/navigation";
 import { Check, Search } from "lucide-react";
 import { concepts, getConcept, searchLearning } from "@/data/learning";
 import { pickTodaysPath } from "@/lib/continue-path";
+import { StreakFlame } from "@/components/StreakFlame";
 import {
   ackSitterNotices,
+  currentStreak,
   formatDueLabel,
   getDueConceptIds,
-  listSchedule,
+  hasLessonToday,
+  hasReviewToday,
   idleWaitingLabel,
+  listSchedule,
   peekSitterNotices,
   sitterHomeLine,
-  streakLabelForToday,
+  streakWorkLines,
+  type StreakWorkLine,
 } from "@/lib/progress";
 import type { SitterNotice } from "@/types/learning";
 
@@ -64,7 +69,16 @@ export function HomeView() {
     todayPath && todayPath.total
       ? Math.round((todayPath.done / todayPath.total) * 100)
       : 0;
-  const streakText = ready ? streakLabelForToday() : null;
+  const streak = ready ? currentStreak() : null;
+  const work = ready
+    ? streakWorkLines({
+        pathFinished: Boolean(todayPath?.finished),
+        pathOpen: Boolean(todayPath && !todayPath.finished),
+        lessonDoneToday: hasLessonToday(),
+        dueCount: due.length,
+        reviewedToday: hasReviewToday(),
+      })
+    : null;
   const waitingText = ready && due.length === 0 ? idleWaitingLabel(schedule) : null;
 
   return (
@@ -135,6 +149,8 @@ export function HomeView() {
         )}
       </section>
 
+      {streak && work && <StreakPanel streak={streak} lines={work} />}
+
       <section className="space-y-3">
         {sitter.length > 0 && (
           <ul className="space-y-1">
@@ -145,14 +161,9 @@ export function HomeView() {
             ))}
           </ul>
         )}
-        <div className="flex items-baseline justify-between gap-3">
-          <h2 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-[var(--ink)]">
-            Dagens løp
-          </h2>
-          {streakText && (
-            <p className="shrink-0 whitespace-nowrap text-sm text-[var(--muted)]">{streakText}</p>
-          )}
-        </div>
+        <h2 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-[var(--ink)]">
+          Dagens løp
+        </h2>
         {!todayPath ? (
           <div className="h-36 rounded-2xl bg-[var(--accent-soft)]" />
         ) : todayPath.finished ? (
@@ -234,5 +245,57 @@ export function HomeView() {
         </section>
       )}
     </div>
+  );
+}
+
+function StreakPanel({
+  streak,
+  lines,
+}: {
+  streak: { count: number; days: string[]; label: string };
+  lines: StreakWorkLine[];
+}) {
+  return (
+    <Link
+      href="/profil"
+      className="block rounded-2xl border border-[var(--line)] bg-white px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+    >
+      {streak.days.length > 0 && (
+        <ul className="flex flex-wrap gap-1.5" aria-hidden>
+          {streak.days.map((day) => (
+            <li
+              key={day}
+              className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFF6ED]"
+            >
+              <StreakFlame className="h-6 w-6" />
+            </li>
+          ))}
+        </ul>
+      )}
+      <p
+        className={
+          streak.count > 0
+            ? "mt-2 text-sm font-medium text-[var(--ink)]"
+            : "text-sm text-[var(--muted)]"
+        }
+      >
+        {streak.label}
+      </p>
+      <ul className="mt-3 space-y-1.5 border-t border-[var(--line)] pt-3">
+        {lines.map((line) => (
+          <li key={line.key} className="flex items-baseline justify-between gap-3 text-sm">
+            <span className="text-[var(--ink)]">{line.title}</span>
+            <span
+              className={
+                line.remaining ? "shrink-0 font-medium text-[var(--ink)]" : "shrink-0 text-[var(--muted)]"
+              }
+            >
+              {line.status}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <span className="sr-only">Se dagene på profilen.</span>
+    </Link>
   );
 }
