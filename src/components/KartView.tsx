@@ -81,7 +81,14 @@ export function KartView() {
                 <button
                   type="button"
                   aria-expanded={open}
-                  onClick={() => setOpenId(open ? null : area.id)}
+                  onClick={() => {
+                    const next = open ? null : area.id;
+                    setOpenId(next);
+                    const url = next
+                      ? `#${next}`
+                      : `${window.location.pathname}${window.location.search}`;
+                    window.history.replaceState(null, "", url);
+                  }}
                   className="block w-full text-left"
                 >
                   {picture && (
@@ -137,6 +144,9 @@ export function KartView() {
                                   key={id}
                                   href={`/konsept/${concept.id}`}
                                   className={conceptChip}
+                                  onClick={() => {
+                                    window.history.replaceState(null, "", `#${theme.id}`);
+                                  }}
                                 >
                                   {seen.has(id) && (
                                     <span
@@ -157,7 +167,13 @@ export function KartView() {
                               );
                             })}
                             {path && (
-                              <Link href={`/lop/${path.id}`} className={pathChip}>
+                              <Link
+                                href={`/lop/${path.id}`}
+                                className={pathChip}
+                                onClick={() => {
+                                  window.history.replaceState(null, "", `#${theme.id}`);
+                                }}
+                              >
                                 {path.title}
                               </Link>
                             )}
