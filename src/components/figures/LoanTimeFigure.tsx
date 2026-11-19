@@ -101,8 +101,8 @@ export function LoanTimeFigure({ focus }: { focus: "annuitet" | "serie" }) {
           <Panel label="Annuitet" rows={ann} year={year} max={max} y0={0} />
           <Panel label="Serielån" rows={serie} year={year} max={max} y0={PANEL + 12} />
           <line x1={markerX} x2={markerX} y1={14} y2={PANEL * 2 + 14} stroke="#1A2332" strokeWidth="1" strokeDasharray="2 2" />
-          <text x={LEFT} y={H - 2} fontSize="11" fill="#5C6B7A">År 1</text>
-          <text x={RIGHT} y={H - 2} textAnchor="end" fontSize="11" fill="#5C6B7A">År {YEARS}</text>
+          <text x={LEFT} y={H - 2} fontSize="12" fill="#5C6B7A">År 1</text>
+          <text x={RIGHT} y={H - 2} textAnchor="end" fontSize="12" fill="#5C6B7A">År {YEARS}</text>
         </svg>
         <div className="flex gap-4 text-xs text-[var(--ink)]">
           <span><Swatch color={RENTER} />Renter</span>

@@ -61,10 +61,10 @@ export function RealWageFigure() {
         >
           <line x1={LEFT} x2={RIGHT} y1={BOTTOM} y2={BOTTOM} stroke="#CBD5E1" />
           <line x1={LEFT} x2={LEFT} y1={TOP} y2={BOTTOM} stroke="#CBD5E1" />
-          <text x={LEFT - 4} y={BOTTOM + 4} textAnchor="end" fontSize="11" fill="#5C6B7A">100</text>
-          <text x={LEFT - 4} y={TOP + 4} textAnchor="end" fontSize="11" fill="#5C6B7A">{top}</text>
-          <text x={LEFT} y={H - 6} fontSize="11" fill="#5C6B7A">År 0</text>
-          <text x={RIGHT} y={H - 6} textAnchor="end" fontSize="11" fill="#5C6B7A">År {YEARS}</text>
+          <text x={LEFT - 4} y={BOTTOM + 4} textAnchor="end" fontSize="12" fill="#5C6B7A">100</text>
+          <text x={LEFT - 4} y={TOP + 4} textAnchor="end" fontSize="12" fill="#5C6B7A">{top}</text>
+          <text x={LEFT} y={H - 6} fontSize="12" fill="#5C6B7A">År 0</text>
+          <text x={RIGHT} y={H - 6} textAnchor="end" fontSize="12" fill="#5C6B7A">År {YEARS}</text>
           <path d={band} fill={fill} opacity="0.18" />
           <path d={line(kpi)} fill="none" stroke={KPI} strokeWidth="2.5" strokeDasharray="5 4" />
           <path d={line(lonn)} fill="none" stroke={LONN} strokeWidth="2.5" />

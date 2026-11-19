@@ -64,12 +64,12 @@ export function BondFigure() {
           <line x1={LEFT} x2={LEFT} y1={TOP} y2={BOTTOM} stroke="#CBD5E1" />
           <line x1={LEFT} x2={RIGHT} y1={y(100)} y2={y(100)} stroke="#94A3B8" strokeDasharray="3 3" />
           <line x1={x(KUPONG)} x2={x(KUPONG)} y1={TOP} y2={BOTTOM} stroke="#94A3B8" strokeDasharray="3 3" />
-          <text x={LEFT - 4} y={y(100) + 4} textAnchor="end" fontSize="11" fill="#5C6B7A">100</text>
-          <text x={LEFT - 4} y={y(140) + 4} textAnchor="end" fontSize="11" fill="#5C6B7A">140</text>
-          <text x={LEFT - 4} y={y(70) + 4} textAnchor="end" fontSize="11" fill="#5C6B7A">70</text>
-          <text x={LEFT} y={H - 6} fontSize="11" fill="#5C6B7A">0 %</text>
-          <text x={x(KUPONG)} y={H - 6} textAnchor="middle" fontSize="11" fill="#5C6B7A">kupong 4 %</text>
-          <text x={RIGHT} y={H - 6} textAnchor="end" fontSize="11" fill="#5C6B7A">10 %</text>
+          <text x={LEFT - 4} y={y(100) + 4} textAnchor="end" fontSize="12" fill="#5C6B7A">100</text>
+          <text x={LEFT - 4} y={y(140) + 4} textAnchor="end" fontSize="12" fill="#5C6B7A">140</text>
+          <text x={LEFT - 4} y={y(70) + 4} textAnchor="end" fontSize="12" fill="#5C6B7A">70</text>
+          <text x={LEFT} y={H - 6} fontSize="12" fill="#5C6B7A">0 %</text>
+          <text x={x(KUPONG)} y={H - 6} textAnchor="middle" fontSize="12" fill="#5C6B7A">kupong 4 %</text>
+          <text x={RIGHT} y={H - 6} textAnchor="end" fontSize="12" fill="#5C6B7A">10 %</text>
           <path d={curve(1)} fill="none" stroke={KORT} strokeWidth="2.5" />
           <path d={curve(10)} fill="none" stroke={LANG} strokeWidth="2.5" />
           <line x1={x(rente)} x2={x(rente)} y1={TOP} y2={BOTTOM} stroke="#1A2332" strokeWidth="1" />

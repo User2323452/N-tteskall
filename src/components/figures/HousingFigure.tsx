@@ -81,7 +81,7 @@ export function HousingFigure() {
     Math.abs(l.maksPrisBelaning - l.maksPrisGjeld) < 1
       ? "Begge reglene stopper deg samtidig."
       : l.maksPrisBelaning < l.maksPrisGjeld
-        ? "Egenkapitalen stopper deg først (90 %-regelen)."
+        ? "Egenkapitalen stopper deg først (90-prosentregelen)."
         : "Inntekten stopper deg først (fem ganger inntekten).";
 
   return (
@@ -105,12 +105,26 @@ export function HousingFigure() {
             <li className="flex justify-between gap-2"><span><Swatch color={FELLES} />Fellesgjeld</span><span className="tabular-nums">{kroner(fellesgjeld)}</span></li>
           )}
           <li className="text-[var(--muted)]">Den stiplete streken er 10 % av verdien. Egenkapitalen må nå opp til den.</li>
+          {egenkapital > pris && (
+            <li className="text-[var(--muted)]">Egenkapitalen er større enn prisen, så lånet er 0 kr.</li>
+          )}
+          {fellesgjeld > 0 && (
+            <li className="text-[var(--muted)]">Fellesgjelden ligger inni lånet. Belåningsgraden regner med den.</li>
+          )}
         </ul>
       </StickyView>
       <RangeField label="Totalpris" min={1_000_000} max={10_000_000} step={50_000} value={pris} display={kroner(pris)} onChange={setPris} />
       <RangeField label="Egenkapital" min={0} max={3_000_000} step={25_000} value={egenkapital} display={kroner(egenkapital)} onChange={setEgenkapital} />
       <RangeField label="Brutto årsinntekt" min={200_000} max={2_000_000} step={25_000} value={inntekt} display={kroner(inntekt)} onChange={setInntekt} />
-      <RangeField label="Fellesgjeld (borettslag)" min={0} max={3_000_000} step={50_000} value={felles} display={kroner(fellesgjeld)} onChange={setFelles} />
+      <RangeField
+        label="Fellesgjeld (borettslag)"
+        min={0}
+        max={Math.max(0, Math.min(3_000_000, l.gjeld))}
+        step={50_000}
+        value={fellesgjeld}
+        display={kroner(fellesgjeld)}
+        onChange={setFelles}
+      />
       <div className="space-y-1 rounded-xl bg-[var(--background)] p-3 text-sm text-[var(--ink)]">
         <p>Høyeste totalpris med {kroner(egenkapital)} i egenkapital: {kroner(l.maksPrisBelaning)} (10 × egenkapitalen).</p>
         <p>Høyeste totalpris med {kroner(inntekt)} i inntekt: {kroner(l.maksPrisGjeld)} (5 × inntekten + egenkapitalen).</p>
