@@ -1,4 +1,5 @@
 import { getLessonsForPath, learningPaths } from "@/data/learning";
+import type { LearningPath, Lesson } from "@/types/learning";
 import { getAllPathProgress, nextLessonId } from "@/lib/progress";
 
 export type ContinueTarget = {
@@ -78,4 +79,100 @@ export function pickContinueTarget(): ContinueTarget | null {
     done: lessons.length,
     finishedAll: true,
   };
+}
+
+export type TodaysPath = {
+  pathId: string;
+  pathTitle: string;
+  pathSubtitle: string;
+  index: number;
+  total: number;
+  done: number;
+  /** Hele løpet er gjort. Vises avhuket, ikke som en ny start. */
+  finished: boolean;
+};
+
+type PathRow = {
+  path: LearningPath;
+  lessons: Lesson[];
+  doneIds: string[];
+  startedAt: string;
+  completedAt: string;
+  complete: boolean;
+};
+
+function localDay(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function dayOf(iso: string): string {
+  if (!iso) return "";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return iso.slice(0, 10);
+  return localDay(date);
+}
+
+function toTodaysPath(row: PathRow, finished: boolean): TodaysPath {
+  const { path, lessons, doneIds } = row;
+  const total = lessons.length;
+  const done = path.lessonIds.filter((id) => doneIds.includes(id)).length;
+  const next = nextLessonId(path.lessonIds, doneIds);
+  const found = next ? lessons.findIndex((lesson) => lesson.id === next) : -1;
+  return {
+    pathId: path.id,
+    pathTitle: path.title,
+    pathSubtitle: path.subtitle,
+    index: found >= 0 ? found + 1 : total,
+    total,
+    done: finished ? total : done,
+    finished,
+  };
+}
+
+/**
+ * Løpet hjem skal vise i dag.
+ * Et påbegynt løp går foran. Er dagens løp ferdig, blir det stående
+ * avhuket ut dagen, i stedet for at neste løp blir en ny start.
+ */
+export function pickTodaysPath(): TodaysPath | null {
+  if (learningPaths.length === 0) return null;
+  const progress = getAllPathProgress();
+  const rows: PathRow[] = learningPaths.map((path) => {
+    const prog = progress[path.id];
+    const doneIds = prog?.completedLessonIds ?? [];
+    const done = new Set(doneIds);
+    const complete =
+      path.lessonIds.length > 0 &&
+      (Boolean(prog?.completedAt) || path.lessonIds.every((id) => done.has(id)));
+    return {
+      path,
+      lessons: getLessonsForPath(path.id),
+      doneIds,
+      startedAt: prog?.startedAt ?? "",
+      completedAt: prog?.completedAt ?? "",
+      complete,
+    };
+  });
+
+  const active = rows
+    .filter((row) => !row.complete && (row.startedAt || row.doneIds.length > 0))
+    .sort((a, b) => b.startedAt.localeCompare(a.startedAt));
+  if (active[0]) return toTodaysPath(active[0], false);
+
+  const today = localDay(new Date());
+  const finishedToday = rows
+    .filter((row) => row.complete && dayOf(row.completedAt) === today)
+    .sort((a, b) => b.completedAt.localeCompare(a.completedAt));
+  if (finishedToday[0]) return toTodaysPath(finishedToday[0], true);
+
+  const nextOpen = rows.find((row) => !row.complete);
+  if (nextOpen) return toTodaysPath(nextOpen, false);
+
+  const lastDone = [...rows].sort((a, b) =>
+    b.completedAt.localeCompare(a.completedAt)
+  )[0];
+  return lastDone ? toTodaysPath(lastDone, true) : null;
 }

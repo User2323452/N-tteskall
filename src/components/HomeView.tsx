@@ -3,15 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
+import { Check, Search } from "lucide-react";
 import { concepts, getConcept, searchLearning } from "@/data/learning";
-import { pickContinueTarget } from "@/lib/continue-path";
+import { pickTodaysPath } from "@/lib/continue-path";
 import { formatDueLabel, getDueConceptIds, listSchedule } from "@/lib/progress";
-
-function todayIso() {
-  const today = new Date();
-  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-}
 
 export function HomeView() {
   const router = useRouter();
@@ -34,7 +29,7 @@ export function HomeView() {
     router.push(`/sok?q=${encodeURIComponent(trimmed)}`);
   }
 
-  const continueTarget = ready ? pickContinueTarget() : null;
+  const todayPath = ready ? pickTodaysPath() : null;
   const schedule = ready ? listSchedule() : [];
   const dueIds = new Set(
     ready ? getDueConceptIds(concepts.map((concept) => concept.id)) : []
@@ -46,13 +41,10 @@ export function HomeView() {
       term: getConcept(item.id)?.term ?? item.id,
       dueOn: item.dueOn,
     }));
-  const today = todayIso();
-  const upcoming = schedule.find((item) => item.dueOn > today);
-  const upcomingTerm = upcoming ? getConcept(upcoming.id)?.term : undefined;
 
   const pct =
-    continueTarget && continueTarget.total
-      ? Math.round((continueTarget.done / continueTarget.total) * 100)
+    todayPath && todayPath.total
+      ? Math.round((todayPath.done / todayPath.total) * 100)
       : 0;
 
   return (
@@ -124,43 +116,46 @@ export function HomeView() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-[var(--ink)]">I dag</h2>
-        {!continueTarget ? (
+        <h2 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-[var(--ink)]">
+          Dagens løp
+        </h2>
+        {!todayPath ? (
           <div className="h-36 rounded-2xl bg-[var(--accent-soft)]" />
-        ) : continueTarget.finishedAll ? (
+        ) : todayPath.finished ? (
           <Link
-            href="/repeter"
-            className="block rounded-2xl bg-[var(--accent-soft)] px-4 py-4"
+            href={`/lop/${todayPath.pathId}`}
+            className="block rounded-2xl border border-[var(--line)] bg-white px-4 py-4"
           >
-            <p className="text-[11px] font-semibold tracking-[0.16em] text-[var(--accent)]">
-              Løp
-            </p>
-            <h3 className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
-              Løpene er ferdige
-            </h3>
-            <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">
-              Repeter begrepene du har lagt i køen.
-            </p>
-            <p className="mt-3 text-sm font-medium text-[var(--accent)]">
-              Til repetisjon →
-            </p>
+            <p className="text-xs font-semibold text-[var(--accent)]">Løp</p>
+            <span className="mt-1 flex items-start gap-3">
+              <span
+                className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[var(--accent)] text-white"
+                aria-hidden
+              >
+                <Check className="h-3.5 w-3.5" strokeWidth={3} />
+              </span>
+              <span className="min-w-0">
+                <span className="block font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
+                  {todayPath.pathTitle}
+                </span>
+                <span className="mt-1 block text-sm text-[var(--muted)]">Ferdig</span>
+              </span>
+            </span>
           </Link>
         ) : (
           <Link
-            href={`/lop/${continueTarget.pathId}/${continueTarget.lessonId}`}
+            href={`/lop/${todayPath.pathId}`}
             className="block rounded-2xl bg-[var(--accent-soft)] px-4 py-4"
           >
-            <p className="text-[11px] font-semibold tracking-[0.16em] text-[var(--accent)]">
-              {continueTarget.started ? "Fortsett" : "Start"}
-            </p>
+            <p className="text-xs font-semibold text-[var(--accent)]">Løp</p>
             <h3 className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
-              {continueTarget.lessonTitle}
+              {todayPath.pathTitle}
             </h3>
             <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">
-              {continueTarget.pathTitle}
+              {todayPath.pathSubtitle}
             </p>
             <p className="mt-4 text-sm text-[var(--ink)]">
-              Leksjon {continueTarget.index} av {continueTarget.total}
+              Leksjon {todayPath.index} av {todayPath.total}
             </p>
             <div className="mt-2 h-1 overflow-hidden rounded-full bg-white">
               <div
@@ -168,40 +163,27 @@ export function HomeView() {
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <p className="mt-3 text-sm font-medium text-[var(--accent)]">
-              {continueTarget.started ? "Fortsett" : "Start"} →
-            </p>
           </Link>
         )}
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-[var(--ink)]">Til repetisjon</h2>
-        {!ready ? (
-          <div className="h-24 rounded-2xl border border-[var(--line)] bg-white" />
-        ) : due.length === 0 ? (
-          <div className="rounded-2xl border border-[var(--line)] bg-white px-4 py-4">
-            <p className="text-sm text-[var(--ink)]">Ingenting venter i dag.</p>
-            <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">
-              {upcoming && upcomingTerm
-                ? `Neste er ${upcomingTerm}, ${formatDueLabel(upcoming.dueOn)}.`
-                : "Fullfør en leksjon, så legger vi nøkkelbegrepene her."}
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
+      {due.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold text-[var(--ink)]">Til repetisjon</h2>
+          <Link
+            href="/repeter"
+            className="block overflow-hidden rounded-2xl border border-[var(--line)] bg-white"
+          >
             <ul className="px-4">
               {due.slice(0, 5).map((item) => (
-                <li key={item.id} className="border-t border-[var(--line)] first:border-t-0">
-                  <Link
-                    href={`/begrep/${item.id}`}
-                    className="flex min-h-12 items-baseline justify-between gap-3 py-3"
-                  >
-                    <span className="text-[15px] text-[var(--ink)]">{item.term}</span>
-                    <span className="shrink-0 text-sm text-[var(--muted)]">
-                      {item.dueOn ? formatDueLabel(item.dueOn) : "i dag"}
-                    </span>
-                  </Link>
+                <li
+                  key={item.id}
+                  className="flex min-h-12 items-baseline justify-between gap-3 border-t border-[var(--line)] py-3 first:border-t-0"
+                >
+                  <span className="text-[15px] text-[var(--ink)]">{item.term}</span>
+                  <span className="shrink-0 text-sm text-[var(--muted)]">
+                    {item.dueOn ? formatDueLabel(item.dueOn) : "i dag"}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -210,15 +192,12 @@ export function HomeView() {
                 og {due.length - 5} til
               </p>
             )}
-            <Link
-              href="/repeter"
-              className="block border-t border-[var(--line)] px-4 py-3 text-sm font-medium text-[var(--accent)]"
-            >
-              Repeter →
-            </Link>
-          </div>
-        )}
-      </section>
+            <p className="border-t border-[var(--line)] px-4 py-3 text-sm text-[var(--muted)]">
+              Repeter
+            </p>
+          </Link>
+        </section>
+      )}
     </div>
   );
 }
