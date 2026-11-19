@@ -1,7 +1,7 @@
 import { extraConcepts } from "@/data/concepts-extra";
 import type { Concept, LearningPath, Lesson } from "@/types/learning";
 
-/** Kuraterte begreper — korte, korrekte definisjoner på bokmål. */
+/** Kuraterte konsepter — korte, korrekte definisjoner på bokmål. */
 const coreConcepts: Concept[] = [
   {
     id: "styringsrenten",
@@ -13,7 +13,7 @@ const coreConcepts: Concept[] = [
     explanation:
       "Når Norges Bank hever styringsrenten, blir det dyrere for bankene å låne og mer attraktivt å plassere penger i sentralbanken. Bankene hever vanligvis utlåns- og innskuddsrenter. Det demper etterspørsel og presser inflasjonen ned over tid. Motsatt når styringsrenten senkes.",
     tip: "Tenk «pris på penger» i banksystemet — ikke boliglånsrenta direkte, men den som trekker boliglånsrenta med seg.",
-    relatedIds: ["inflasjon", "rentebanen", "nibor"],
+    relatedIds: ["inflasjon", "rentebanen", "nibor", "renteniva"],
   },
   {
     id: "inflasjon",
@@ -25,7 +25,7 @@ const coreConcepts: Concept[] = [
     explanation:
       "I Norge måles inflasjon blant annet med konsumprisindeksen (KPI). Norges Banks mål er at inflasjonen over tid skal være nær 2 prosent. Høy inflasjon svekker kjøpekraft; for lav inflasjon eller deflasjon kan hemme økonomien. Pengepolitikken brukes for å holde inflasjonen stabil.",
     tip: "Skill nominell lønn (tallet på lønnsslippen) fra reell lønn (hva du faktisk får kjøpt).",
-    relatedIds: ["styringsrenten", "kjopkraft"],
+    relatedIds: ["styringsrenten", "kjopkraft", "deflasjon"],
   },
   {
     id: "kjopkraft",
@@ -36,7 +36,7 @@ const coreConcepts: Concept[] = [
       "Hvor mye varer og tjenester du får for en gitt mengde penger.",
     explanation:
       "Hvis prisene stiger raskere enn inntekten din, faller kjøpekraften. Inflasjonsjusterte (reelle) størrelser brukes for å sammenligne over tid. For husholdninger merkes kjøpekraft særlig i mat, energi, husleie og renter.",
-    relatedIds: ["inflasjon"],
+    relatedIds: ["inflasjon", "reallonn"],
   },
   {
     id: "rentebanen",
@@ -70,7 +70,7 @@ const coreConcepts: Concept[] = [
       "Statens pensjonsfond utland — Norges sparefond investert i utlandet.",
     explanation:
       "Fondet eier aksjer, obligasjoner og eiendom utenfor Norge. Inntekter fra olje og gass settes inn; uttak styres av handlingsregelen via statsbudsjettet. Fondet skal komme kommende generasjoner til gode og er investert globalt for å spre risiko.",
-    relatedIds: ["handlingsregelen", "nbim", "finanspolitikk"],
+    relatedIds: ["handlingsregelen", "nbim", "finanspolitikk", "oljepris", "petroleumsinntekter"],
   },
   {
     id: "nibor",
@@ -149,7 +149,7 @@ const coreConcepts: Concept[] = [
       "Å spre investeringene slik at ett enkelt utfall ikke ødelegger hele porteføljen.",
     explanation:
       "Ved å eie mange selskaper, sektorer eller land reduserer du risikoen knyttet til én enkelt aksje. Et bredt aksjefond er en praktisk måte å diversifisere på. Diversifisering fjerner ikke at hele markedet kan falle, men demper «én dårlig nyhet»-risiko.",
-    relatedIds: ["risiko-avkastning"],
+    relatedIds: ["risiko-avkastning", "korrelasjon"],
   },
   {
     id: "otp",
@@ -446,7 +446,7 @@ export const lessons: Lesson[] = [
     body: [
       "Buffer først, på en konto du kan bruke. Deretter penger som skal stå: lav kostnad, lang horisont, renters rente.",
       "ASK passer til aksjer og aksjefond du kan la stå. Pensjonen er folketrygd pluss det arbeidsgiver sparer, og eventuelt IPS hvis du vil binde mer. BSU er sporet mot bolig, ikke mot aksjemarkedet.",
-      "Du trenger ikke optimalisere alt i dag. Du trenger å kunne forklare de fem begrepene med egne ord: renters rente, indeksfond, ASK, folketrygd og BSU.",
+      "Du trenger ikke optimalisere alt i dag. Du trenger å kunne forklare de fem konseptene med egne ord: renters rente, indeksfond, ASK, folketrygd og BSU.",
     ],
     conceptIds: ["renters-rente", "ask", "bsu"],
   },
@@ -459,7 +459,7 @@ export const lessons: Lesson[] = [
     body: [
       "Skatt på lønn er to lag. Alminnelig inntekt, etter fradrag, skattlegges med en flat sats. Trinnskatt kommer på toppen, og bare på personinntekt — lønn, trygd og lignende.",
       "Trinnskatten er progressiv. Inntekt over et trinn skattlegges med en høyere sats enn inntekten under. Den høyeste satsen gjelder bare den delen som ligger over trinnet, ikke hele lønna.",
-      "Satser og grenser vedtas hvert år. Skatteetaten viser gjeldende trinn. Begrepet er mekanismen, ikke årets tall.",
+      "Satser og grenser vedtas hvert år. Skatteetaten viser gjeldende trinn. Konseptet er mekanismen, ikke årets tall.",
     ],
     conceptIds: ["trinnskatt"],
     quiz: {
@@ -497,7 +497,7 @@ export const lessons: Lesson[] = [
     body: [
       "BSU, boligsparing for ungdom, gir fradrag i skatt for det du setter inn, innenfor et årlig tak. Ordningen har også et samlet tak og en aldersgrense. Pengene skal brukes til å kjøpe bolig eller nedbetale boliglån.",
       "Bruker du pengene til noe annet, kan tidligere fradrag bli tilbakeført. BSU er bundet sparing, ikke en vanlig sparekonto og ikke en aksjesparekonto.",
-      "Fradragssats, tak og alder står hos Skatteetaten og kan endres. Renta på kontoen er et bankprodukt. Skattefradraget er det som gjør ordningen til et skattebegrep.",
+      "Fradragssats, tak og alder står hos Skatteetaten og kan endres. Renta på kontoen er et bankprodukt. Skattefradraget er det som gjør ordningen til et konsept i skatten.",
     ],
     conceptIds: ["bsu"],
     quiz: {
@@ -535,7 +535,7 @@ export const lessons: Lesson[] = [
     body: [
       "Formuesskatt — også kalt formueskatt — er skatt på nettoformue: ligningsverdi av eiendeler minus gjeld, over et bunnfradrag. Den har en kommunal og en statlig del.",
       "Primærbolig og aksjer verdsettes lavere enn markedsverdi. Skattegrunnlaget er derfor ikke det samme som det du kunne solgt for. Gjeld reduserer grunnlaget.",
-      "Bunnfradrag, rabatter og satser vedtas i budsjettet. Sjekk Skatteetaten for året. Formuesskatt treffer formue, ikke årets lønn. Begrepene fra løpet ligger i repetisjonen.",
+      "Bunnfradrag, rabatter og satser vedtas i budsjettet. Sjekk Skatteetaten for året. Formuesskatt treffer formue, ikke årets lønn. Konseptene fra løpet ligger i repetisjonen.",
     ],
     conceptIds: ["formuesskatt"],
     quiz: {
@@ -611,7 +611,7 @@ export const lessons: Lesson[] = [
     body: [
       "Pensjonen er folketrygd, pluss tjenestepensjon fra jobben, pluss det du sparer selv. Ingen av lagene erstatter de andre.",
       "Folketrygden følger inntekten din over tid. Tjenestepensjonen følger jobben. IPS er frivillig og bundet.",
-      "Når løpet er ferdig, ligger begrepene i repetisjonen. Si dem med egne ord: hvem som sparer, og om pengene er låst.",
+      "Når løpet er ferdig, ligger konseptene i repetisjonen. Si dem med egne ord: hvem som sparer, og om pengene er låst.",
     ],
     conceptIds: ["folketrygd", "tjenestepensjon", "ips"],
   },
@@ -687,7 +687,7 @@ export const lessons: Lesson[] = [
     body: [
       "Leie mot eie, også kalt leie til eie, er en avtale der du leier boligen en periode og siden kan eller skal kjøpe den. En del av leien kan være avtalt å telle som egenkapital. Vilkårene varierer mellom utbyggere og kommuner.",
       "Det er ikke en vanlig leiekontrakt. Du må fortsatt oppfylle bankens krav når kjøpet skal skje, inkludert utlånsforskriften. Får du ikke lån, avhenger resten av det som står i avtalen.",
-      "Les hva leien dekker, om prisen er låst, og hva som skjer hvis du ikke kjøper. Ordningen er et spor mot eie, ikke en garanti for boliglån. Begrepene fra løpet ligger i repetisjonen.",
+      "Les hva leien dekker, om prisen er låst, og hva som skjer hvis du ikke kjøper. Ordningen er et spor mot eie, ikke en garanti for boliglån. Konseptene fra løpet ligger i repetisjonen.",
     ],
     conceptIds: ["leie-mot-eie"],
   },
@@ -738,7 +738,7 @@ export const lessons: Lesson[] = [
     body: [
       "Det som sammenlignes med handlingsregelen, er det strukturelle oljekorrigerte underskuddet: underskuddet uten oljeinntekter, justert for konjunktur.",
       "Overføringen fra Statens pensjonsfond utland er lik det oljekorrigerte underskuddet, altså det faktiske underskuddet uten oljeinntekter. Det strukturelle underskuddet er det samme tallet justert for konjunktur, og det er dette som sammenlignes med handlingsregelen. I anslaget for 2026 er det strukturelle underskuddet 583,4 milliarder kroner, og overføringen 454,8 milliarder kroner. Finansdepartementet foreslår tallene. Stortinget vedtar budsjettet.",
-      "Pengebruken er ikke det samme som fondets avkastning et enkelt år. Fondet kan falle i verdi i markedet samtidig som budsjettet bruker penger etter regelen. Begrepene fra løpet ligger i repetisjonen.",
+      "Pengebruken er ikke det samme som fondets avkastning et enkelt år. Fondet kan falle i verdi i markedet samtidig som budsjettet bruker penger etter regelen. Konseptene fra løpet ligger i repetisjonen.",
     ],
     conceptIds: ["strukturelt-underskudd", "finanspolitikk"],
   },
@@ -802,7 +802,7 @@ export const lessons: Lesson[] = [
     body: [
       "Dagpenger er folketrygdens ytelse når du har mistet arbeidstid. NAV krever at du har hatt tilstrekkelig inntekt, at du registrerer deg som arbeidssøker, og at du er reell jobbsøker.",
       "Ytelsen er en andel av tidligere inntekt, med tak, og den varer i en avgrenset periode. Reglene står hos NAV og kan endres.",
-      "Dagpenger er ikke sykepenger. Her er du arbeidsfør og søker jobb. Begrepene fra løpet ligger i repetisjonen.",
+      "Dagpenger er ikke sykepenger. Her er du arbeidsfør og søker jobb. Konseptene fra løpet ligger i repetisjonen.",
     ],
     conceptIds: ["dagpenger"],
   },
@@ -853,7 +853,7 @@ export const lessons: Lesson[] = [
     body: [
       "Strømstøtte, også kalt strømstønad, er en statlig ordning for husholdninger. Når spotprisen i prisområdet ligger over en terskel, dekker staten en andel av det som ligger over, for et vanlig forbruk.",
       "Støtten går vanligvis via nettselskapet, så den trekkes fra på regningen. Terskel og andel vedtas av Stortinget og kan endres. Ordningen fjerner ikke spotprisen.",
-      "Nettleie og avgifter er ikke det samme som spotprisen støtten regnes av. Sjekk gjeldende regler hvis du skal bruke tallene. Begrepene fra løpet ligger i repetisjonen.",
+      "Nettleie og avgifter er ikke det samme som spotprisen støtten regnes av. Sjekk gjeldende regler hvis du skal bruke tallene. Konseptene fra løpet ligger i repetisjonen.",
     ],
     conceptIds: ["stromstotte"],
   },
@@ -904,7 +904,7 @@ export const lessons: Lesson[] = [
     body: [
       "Når Norges Bank hever styringsrenten, kan kronen styrkes fordi plasseringer i kroner blir mer attraktive. Sterkere krone demper importprisene, og det trekker inflasjonen ned. Settes renta ned, kan kronen svekke seg og løfte importert prispress.",
       "Det er valutakurskanalen. Den virker sammen med etterspørselen: høyere rente demper også lån og forbruk.",
-      "Norges Bank styrer mot inflasjonsmålet, ikke mot en bestemt kronekurs. En renteendring er ikke et løfte om at kronen beveger seg. Begrepene fra løpet ligger i repetisjonen.",
+      "Norges Bank styrer mot inflasjonsmålet, ikke mot en bestemt kronekurs. En renteendring er ikke et løfte om at kronen beveger seg. Konseptene fra løpet ligger i repetisjonen.",
     ],
     conceptIds: ["styringsrenten", "kronekurs"],
   },
@@ -988,7 +988,7 @@ export const learningPaths: LearningPath[] = [
 
 export const comingPaths: { id: string; title: string; subtitle: string; href: string }[] = [];
 
-/** Begreper som legges i Repeter når leksjonen er fullført. Maks et knippe per løp. */
+/** Konsepter som legges i Repeter når leksjonen er fullført. Maks et knippe per løp. */
 export const srsConceptIds = new Set<string>([
   "inflasjon",
   "kpi",
@@ -1067,6 +1067,42 @@ const synonyms: Record<string, string[]> = {
   "strukturelt-underskudd": ["oljepengebruk", "oljepenger"],
   utlansforskriften: ["boliglånsforskriften", "boliglansforskriften"],
   kronekurs: ["kronekursen", "nok", "i-44"],
+  renteniva: ["rentenivå", "rentenivået"],
+  deflasjon: ["prisnedgang"],
+  reallonn: ["reallønn", "reallønnsvekst", "reell lønn"],
+  arbeidsledighet: ["ledighet", "aku", "arbeidskraftundersøkelsen", "helt ledige"],
+  konjunktur: ["høykonjunktur", "lavkonjunktur", "konjunkturene"],
+  "noytral-rente": ["nøytral rente", "nøytrale renten"],
+  "importert-inflasjon": ["importert prisvekst"],
+  "tilbud-og-ettersporsel": ["tilbudskurve", "etterspørselskurve"],
+  bytteforhold: ["bytteforholdet", "terms of trade"],
+  handelsbalanse: ["handelsbalansen", "vare- og tjenestebalansen"],
+  oljepris: ["oljeprisen", "brent", "råolje"],
+  petroleumsinntekter: ["petroleumsinntekt", "oljeinntekter", "gassinntekter"],
+  "automatiske-stabilisatorer": ["automatisk stabilisator", "automatiske stabilisatorer"],
+  nettleie: ["nettleia", "nettleien", "nettselskap"],
+  fastprisavtale: ["fastpris", "fastprisavtale strøm"],
+  utbytte: ["utbyttet", "dividende"],
+  borsverdi: ["børsverdi", "børsverdien", "markedsverdi", "market cap"],
+  pe: ["p/e", "pris/fortjeneste", "price earnings"],
+  risikopremie: ["risikopremien", "equity risk premium"],
+  volatilitet: ["volatiliteten"],
+  korrelasjon: ["korrelasjonen"],
+  kupongrente: ["kupong", "kupongen"],
+  innskuddsgaranti: ["innskuddsgarantien", "sikringsfondet", "bankenes sikringsfond"],
+  rentemargin: ["rentemarginen"],
+  provisjonsinntekter: ["provisjon", "gebyrinntekter"],
+  "motsyklisk-buffer": ["motsyklisk kapitalbuffer", "motsyklisk buffer"],
+  fastrente: ["fast rente", "fastrentelån"],
+  buffer: ["bufferkonto", "kontantreserve"],
+  innskuddspensjon: ["innskuddsbasert", "innskuddspensjonen"],
+  ytelsespensjon: ["ytelsesbasert", "ytelsespensjonen"],
+  oppjusteringsfaktor: ["oppjustering", "oppjusteringsfaktoren"],
+  verdsettingsrabatt: ["verdsettelsesrabatt", "verdsettingsrabatten"],
+  avskrivning: ["avskrivninger", "avskrivningen"],
+  arbeidskapital: ["arbeidskapitalen", "working capital"],
+  driftsmargin: ["driftsmarginen", "ebit-margin"],
+  standardavvik: ["standardavviket"],
 };
 
 function fold(value: string): string {
@@ -1161,7 +1197,7 @@ function assertLearning() {
     "indeksfond",
   ];
   for (const id of required) {
-    if (!getConcept(id)) throw new Error(`Mangler begrep ${id}`);
+    if (!getConcept(id)) throw new Error(`Mangler konsept ${id}`);
   }
 }
 

@@ -23,7 +23,7 @@ export function SearchView() {
       </h1>
       <input
         className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm outline-none ring-[var(--accent)] focus:ring-2"
-        placeholder="Søk begreper og læringsløp…"
+        placeholder="Søk konsepter og læringsløp…"
         value={q}
         onChange={(e) => setQ(e.target.value)}
         autoFocus
@@ -38,13 +38,13 @@ export function SearchView() {
         <div className="space-y-6">
           <section>
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-              Begreper ({results.concepts.length})
+              Konsepter ({results.concepts.length})
             </h2>
             <ul className="space-y-1.5">
               {results.concepts.map((c) => (
                 <li key={c.id}>
                   <Link
-                    href={`/begrep/${c.id}`}
+                    href={`/konsept/${c.id}`}
                     className="block rounded-xl border border-slate-100 bg-white px-3.5 py-3 shadow-sm"
                   >
                     <span className="font-medium text-slate-900">{c.term}</span>
@@ -61,7 +61,7 @@ export function SearchView() {
                 </li>
               ))}
               {results.concepts.length === 0 && (
-                <p className="text-sm text-slate-500">Ingen begreper.</p>
+                <p className="text-sm text-slate-500">Ingen konsepter.</p>
               )}
             </ul>
           </section>

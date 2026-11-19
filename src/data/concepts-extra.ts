@@ -13,7 +13,7 @@ function c(
   return { id, term, english, category, definition, explanation, relatedIds, tip };
 }
 
-/** Begreper utover kjerneløpene — korte definisjoner til oversikt og søk. */
+/** Konsepter utover kjerneløpene — korte definisjoner til oversikt og søk. */
 export const extraConcepts: Concept[] = [
   c(
     "kpi",
@@ -86,7 +86,7 @@ export const extraConcepts: Concept[] = [
     "makro",
     "Avvik mellom faktisk produksjon og det økonomien kan produsere uten tiltagende inflasjonspress.",
     "Positivt gap betyr press: aktiviteten er høyere enn det som er holdbart uten at prisene skyter fart. Negativt gap betyr slakk. Gapet er et anslag, ikke et tall du kan lese av en kassalapp.",
-    ["fleksibel-inflasjonsstyring", "inflasjon"]
+    ["fleksibel-inflasjonsstyring", "inflasjon", "konjunktur", "arbeidsledighet"]
   ),
   c(
     "nbim",
@@ -323,7 +323,7 @@ export const extraConcepts: Concept[] = [
     "marked",
     "Avkastningskrav = risikofri rente + beta × markedets risikopremie.",
     "Modellen sier at det er den systematiske risikoen — beta — du får betalt for. Selskapsspesifikk risiko kan spres bort.",
-    ["beta", "wacc", "risiko-avkastning"]
+    ["beta", "wacc", "risiko-avkastning", "risikopremie"]
   ),
   c(
     "beta",
@@ -349,8 +349,8 @@ export const extraConcepts: Concept[] = [
     "Yield to maturity",
     "marked",
     "Årlig avkastning på en obligasjon hvis du kjøper til dagens pris og holder til forfall.",
-    "Yield er ikke det samme som kupongrenten. Hvis prisen er under pålydende, ligger yield over kupongen. Dette er obligasjonsmarkedet — effektiv rente på et boliglån er et annet begrep.",
-    ["obligasjon", "durasjon", "nominell-effektiv"]
+    "Yield er ikke det samme som kupongrenten. Hvis prisen er under pålydende, ligger yield over kupongen. Dette er obligasjonsmarkedet — effektiv rente på et boliglån er et annet konsept.",
+    ["obligasjon", "durasjon", "nominell-effektiv", "kupongrente"]
   ),
   c(
     "kredittpaslag",
@@ -377,7 +377,7 @@ export const extraConcepts: Concept[] = [
     "marked",
     "Et lån som er gjort om til et omsettelig papir, med kupong og forfall.",
     "Kjøperen låner ut penger. Prisen i markedet faller når rentene stiger, og omvendt. Yielden er den effektive avkastningen gitt prisen du betaler.",
-    ["yield", "durasjon", "omf"]
+    ["yield", "durasjon", "omf", "kupongrente"]
   ),
   c(
     "rentebytte",
@@ -395,7 +395,7 @@ export const extraConcepts: Concept[] = [
     "marked",
     "Meravkastning over risikofri rente, delt på standardavviket.",
     "Tallet sier noe om avkastning per enhet svingning. Høyere er bedre i denne målestokken, men det fanger ikke all risiko — for eksempel skjeve tap.",
-    ["risiko-avkastning", "diversifisering"]
+    ["risiko-avkastning", "diversifisering", "volatilitet", "standardavvik"]
   ),
   c(
     "kronekurs",
@@ -449,7 +449,7 @@ export const extraConcepts: Concept[] = [
     "bank",
     "Den reneste egenkapitalen delt på risikovektede eiendeler.",
     "CET1 er hovedmålet på hvor mye tap en bank kan ta før egenkapitalen er brukt opp. Kravet inkluderer buffere og er høyere enn et nakent minimum.",
-    ["roe", "tap-pa-utlan"]
+    ["roe", "tap-pa-utlan", "motsyklisk-buffer"]
   ),
   c(
     "tap-pa-utlan",
@@ -540,7 +540,7 @@ export const extraConcepts: Concept[] = [
     "personlig",
     "Skatt på nettoformue — eiendeler minus gjeld — over et bunnfradrag.",
     "Formueskatt er samme skatt. Grunnlaget er ligningsverdi, ikke nødvendigvis markedsverdi: primærbolig og aksjer verdsettes lavere. Gjeld trekkes fra. Skatten har en kommunal og en statlig del. Bunnfradrag og satser står i budsjettet. Sjekk Skatteetaten for året.",
-    ["trinnskatt", "ask", "alminnelig-inntekt"]
+    ["trinnskatt", "ask", "alminnelig-inntekt", "verdsettingsrabatt"]
   ),
   c(
     "tjenestepensjon",
@@ -549,7 +549,7 @@ export const extraConcepts: Concept[] = [
     "personlig",
     "Pensjon fra jobben, i tillegg til folketrygden.",
     "I privat sektor er en minstesparing lovpålagt: obligatorisk tjenestepensjon (OTP). Mange arbeidsgivere sparer mer. Den vanlige ordningen er innskuddspensjon: innskuddet er avtalt, utbetalingen avhenger av avkastning. Offentlig sektor har egne ordninger. AFP kan komme i tillegg der tariffavtalen gir det.",
-    ["otp", "folketrygd", "ips", "afp"]
+    ["otp", "folketrygd", "ips", "afp", "innskuddspensjon", "ytelsespensjon"]
   ),
   c(
     "egenkapital",
@@ -623,7 +623,7 @@ export const extraConcepts: Concept[] = [
     "olje",
     "Timeprisen på kraft i døgnmarkedet, i prisområdet der du bor.",
     "Prisen settes time for time på kraftbørsen Nord Pool, ut fra tilbud og etterspørsel. En spotavtale følger den, pluss leverandørens påslag. Nettleie, avgifter og merverdiavgift kommer i tillegg og er ikke spotpris.",
-    ["prisomrader", "stromstotte"]
+    ["prisomrader", "stromstotte", "nettleie", "fastprisavtale"]
   ),
   c(
     "prisomrader",
@@ -651,7 +651,7 @@ export const extraConcepts: Concept[] = [
     "marked",
     "Prisen i kroner på varer og tjenester vi kjøper fra utlandet.",
     "Mye import fra EØS-området prises i euro. Kronerprisen er den utenlandske prisen omregnet med kronekursen, pluss frakt og norske avgifter. Svakere krone løfter importprisene og kan løfte KPI. Sterkere krone gjør det motsatte.",
-    ["kronekurs", "inflasjon", "eos", "styringsrenten"]
+    ["kronekurs", "inflasjon", "eos", "styringsrenten", "importert-inflasjon"]
   ),
   c(
     "eos",
@@ -661,5 +661,333 @@ export const extraConcepts: Concept[] = [
     "Avtalen som knytter Norge til EUs indre marked, uten at Norge er medlem av EU.",
     "Varer, tjenester, kapital og personer kan i hovedsak bevege seg fritt. De fleste industrivarer handles uten toll mot EU. Landbruk og fisk har unntak, og Norge har egen toll mot land utenfor. Pengepolitikken er fortsatt Norges Banks.",
     ["kronekurs", "importpriser"]
+  ),
+  c(
+    "renteniva",
+    "Rentenivå",
+    "Interest rate level",
+    "makro",
+    "Det samlede nivået på rentene, fra styringsrenten til renta husholdningene betaler.",
+    "Når en sak sier at rentene er høye eller lave, samler ordet hele rekken: styringsrenten, pengemarkedsrenta og boliglånsrenta. De er ikke samme tall. Styringsrenten er Norges Banks rente til bankene. Pengemarkedsrenta, som NIBOR, er det bankene betaler seg imellom. Boliglånsrenta er det husholdningen betaler, og den ligger vanligvis høyere.",
+    ["styringsrenten", "nibor", "nominell-effektiv"]
+  ),
+  c(
+    "deflasjon",
+    "Deflasjon",
+    "Deflation",
+    "makro",
+    "Vedvarende fall i det generelle prisnivået.",
+    "Inflasjon er at prisnivået stiger, slik at en krone rekker til mindre. Deflasjon er at prisnivået faller over tid. Ett tilbud eller ett hopp ned i strømprisen er ikke deflasjon. Penger du allerede har, rekker da lenger, og kjøp kan bli utsatt fordi folk venter at prisene faller videre.",
+    ["inflasjon", "kjopkraft", "kpi"]
+  ),
+  c(
+    "reallonn",
+    "Reallønn",
+    "Real wage",
+    "makro",
+    "Lønna etter at prisveksten er trukket fra.",
+    "Nominell lønn er kronene på lønnsslippen. Reallønn er hva de kronene rekker til etter prisvekst. Stiger lønna mindre enn KPI, faller reallønna selv om beløpet på slippen er høyere. Lønnsoppgjøret avtaler kroner. Reallønna sier om kjøpekraften fulgte med.",
+    ["lonnsoppgjor", "kjopkraft", "kpi"]
+  ),
+  c(
+    "arbeidsledighet",
+    "Arbeidsledighet",
+    "Unemployment",
+    "makro",
+    "Andelen av arbeidsstyrken som er uten arbeid og søker jobb.",
+    "Ledigheten er antall ledige delt på arbeidsstyrken. SSB måler den i arbeidskraftundersøkelsen (AKU): personer uten arbeid som har søkt jobb og kan begynne. NAV teller dem som er registrert som helt ledige. De to tallene skiller lag, og de skal ikke byttes om. Norges Bank leser ledigheten ved siden av produksjonsgapet når den vurderer presset i økonomien.",
+    ["produksjonsgap", "dagpenger"]
+  ),
+  c(
+    "konjunktur",
+    "Konjunktur",
+    "Business cycle",
+    "makro",
+    "Svingningen i aktiviteten rundt det økonomien kan holde over tid.",
+    "Høykonjunktur er når aktiviteten ligger over det som er holdbart uten at prispresset bygger seg opp. Lavkonjunktur er når den ligger under, med mer slakk. Produksjonsgapet er anslaget på dette avviket. Trenden er den jevne utviklingen under svingningen.",
+    ["produksjonsgap", "fleksibel-inflasjonsstyring"]
+  ),
+  c(
+    "noytral-rente",
+    "Nøytral rente",
+    "Neutral interest rate",
+    "makro",
+    "Rentenivået som verken strammer eller slipper opp i økonomien.",
+    "Norges Bank sammenligner styringsrenten med den nøytrale renta når den vurderer om pengepolitikken er stram eller romslig. Ligger styringsrenten over, dempes etterspørselen. Ligger den under, stimuleres den. Nivået er et anslag, ikke en rente du får i banken, og det oppdateres i pengepolitisk rapport.",
+    ["styringsrenten", "ppr", "produksjonsgap"]
+  ),
+  c(
+    "importert-inflasjon",
+    "Importert inflasjon",
+    "Imported inflation",
+    "makro",
+    "Prisvekst som kommer fra varer og tjenester kjøpt i utlandet.",
+    "En svakere krone gjør importen dyrere i kroner. Høyere importpriser kan løfte KPI selv om presset hjemme er uendret. Sterkere krone virker den andre veien. Importert inflasjon er denne veien, fra kronekurs til importpris og videre til prisene husholdningene møter.",
+    ["kronekurs", "importpriser", "kpi", "inflasjon"]
+  ),
+  c(
+    "tilbud-og-ettersporsel",
+    "Tilbud og etterspørsel",
+    "Supply and demand",
+    "makro",
+    "Prisen og mengden der tilbudet møter etterspørselen.",
+    "Tilbudet er hvor mye som selges ved ulike priser. Etterspørselen er hvor mye som kjøpes. Krysset er prisen og mengden der de to stemmer. Når styringsrenten virker gjennom etterspørselen, er det dette krysset som flytter seg: høyere rente demper kjøpelysten, og pris og aktivitet følger etter. Kurvene er en forenkling av et marked.",
+    ["transmisjon", "styringsrenten"]
+  ),
+  c(
+    "bytteforhold",
+    "Bytteforhold",
+    "Terms of trade",
+    "olje",
+    "Forholdet mellom prisene på det Norge selger til utlandet og det Norge kjøper derfra.",
+    "Bytteforholdet er eksportpris delt på importpris. Stiger prisen på det Norge selger mer enn prisen på det Norge kjøper, kan samme eksport betale mer import. Oljeprisen flytter ofte telleren. Derfor er bytteforholdet leddet mellom oljeprisen og kjøpekraften i nasjonalregnskapet. Det er et prisforhold, ikke et mål på hvor mange fat som er solgt.",
+    ["oljepris", "bnp", "importpriser"]
+  ),
+  c(
+    "handelsbalanse",
+    "Handelsbalanse",
+    "Trade balance",
+    "olje",
+    "Eksport minus import.",
+    "Er eksporten større enn importen, er balansen positiv. I nasjonalregnskapet er vare- og tjenestebalansen denne differansen for både varer og tjenester. Olje og gass gjør at norsk eksport svinger med prisene på sokkelen, så balansen kan være stor selv når fastlandet importerer mye. Den står ved siden av BNP fordi utenrikshandelen synes i tallene. Driftsbalansen er et videre mål: den tar også med renter og overføringer.",
+    ["bnp", "oljepris", "bytteforhold"]
+  ),
+  c(
+    "oljepris",
+    "Oljepris",
+    "Oil price",
+    "olje",
+    "Prisen på råolje i markedet.",
+    "Oljeprisen settes i verdensmarkedet og oppgis ofte i dollar per fat. Den flytter statens inntekter fra sokkelen, hvor mye som går inn i oljefondet, og ofte kronen. Høyere pris gir høyere petroleumsinntekter når volumet er det samme. Prisen er ikke fondets avkastning. Fondet er investert i utlandet, mens prisen bestemmer mye av det som betales inn.",
+    ["oljefondet", "petroleumsinntekter", "kronekurs"]
+  ),
+  c(
+    "petroleumsinntekter",
+    "Petroleumsinntekter",
+    "Petroleum revenues",
+    "olje",
+    "Statens inntekter fra olje og gass.",
+    "Skatt og statens eierskap på sokkelen gir inntektene. De går inn i oljefondet. Handlingsregelen sier noe om bruken etterpå, ikke om hvor mye som kommer inn. Inntektene svinger med pris, produksjon og kostnader. De er ikke det samme som avkastningen fondet får på aksjene sine.",
+    ["oljefondet", "handlingsregelen", "oljepris"]
+  ),
+  c(
+    "automatiske-stabilisatorer",
+    "Automatiske stabilisatorer",
+    "Automatic stabilizers",
+    "olje",
+    "Skatt og trygd som demper en nedgang av seg selv, uten et nytt vedtak.",
+    "Faller aktiviteten, faller skatteinntektene, og flere kan få dagpenger. Underskuddet på statsbudsjettet vokser uten at Stortinget har vedtatt et nytt tiltak. I en oppgang skjer det motsatte: skatten stiger og færre får dagpenger. Et eget krisetiltak i budsjettet er noe annet, fordi det krever et vedtak.",
+    ["finanspolitikk", "dagpenger", "strukturelt-underskudd"]
+  ),
+  c(
+    "nettleie",
+    "Nettleie",
+    "Grid tariff",
+    "olje",
+    "Betalingen for å få kraften fram, i tillegg til spotprisen.",
+    "Strømregningen er mer enn kraften. Spotprisen er prisen på kraften i prisområdet ditt. Nettleie er det nettselskapet tar for å frakte den, ofte med et fast ledd og et ledd som følger forbruket. Avgifter kommer i tillegg. Strømstøtte regnes av spotprisen, ikke av nettleien.",
+    ["spotpris", "stromstotte", "prisomrader"]
+  ),
+  c(
+    "fastprisavtale",
+    "Fastprisavtale",
+    "Fixed-price electricity contract",
+    "olje",
+    "Strømavtale der prisen på kraften ligger fast i en avtalt periode.",
+    "På en spotavtale følger kraftprisen markedet time for time, pluss leverandørens påslag. På en fastprisavtale er prisen på kraften avtalt for perioden. Nettleie og avgifter kommer i tillegg på begge. Fastpris er valget mot spot når du vil ha en kjent kraftpris og slippe svingningen i markedet.",
+    ["spotpris", "nettleie"]
+  ),
+  c(
+    "utbytte",
+    "Utbytte",
+    "Dividend",
+    "marked",
+    "Utbetalingen fra selskapet til aksjonæren.",
+    "Overskuddet kan betales ut, eller bli igjen i selskapet. Utbytte er den utbetalingen. Det som blir igjen, kan brukes i driften og kan løfte verdien av aksjen. Utbytte er kontanter du får ut. Kursgevinst er en annen vei. Utenfor aksjesparekonto inngår utbytte i skatten etter skjerming og oppjustering.",
+    ["multiplikatorer", "naverdi", "skjermingsfradrag", "oppjusteringsfaktor"]
+  ),
+  c(
+    "borsverdi",
+    "Børsverdi",
+    "Market capitalization",
+    "marked",
+    "Aksjekursen ganger antall aksjer.",
+    "Børsverdi er det markedet setter på hele egenkapitalen. Den er telleren i pris/bok: børsverdi delt på bokført egenkapital. Kursen alene sier ikke hvor stort selskapet er. To selskaper kan ha samme kurs og helt ulik børsverdi, fordi de har ulikt antall aksjer.",
+    ["pb", "multiplikatorer"]
+  ),
+  c(
+    "pe",
+    "Pris/fortjeneste (P/E)",
+    "Price-to-earnings",
+    "marked",
+    "Aksjekursen delt på resultatet per aksje.",
+    "Pris/fortjeneste sier hvor mange kroner markedet betaler per krone resultat. Den er multiplikatoren en leser møter først, ved siden av pris/bok og EV/EBITDA. Høy P/E kan bety at markedet venter vekst, eller at resultatet akkurat nå er lavt. Resultatet er regnskapets tall, ikke kontantstrømmen.",
+    ["multiplikatorer", "pb", "evebitda"]
+  ),
+  c(
+    "risikopremie",
+    "Risikopremie",
+    "Risk premium",
+    "marked",
+    "Den ekstra avkastningen en risikabel plassering ventes å gi over en risikofri rente.",
+    "Risikofri rente er det du kan få uten å ta den risikoen plasseringen bærer, ofte knyttet til statsrenter. Risikopremien er påslaget over den. I CAPM er markedets risikopremie det påslaget markedet ventes å gi, og beta skalerer det for den enkelte aksjen. Premien er en forventning, ikke et løfte om at du får den.",
+    ["capm", "beta", "risiko-avkastning"]
+  ),
+  c(
+    "volatilitet",
+    "Volatilitet",
+    "Volatility",
+    "marked",
+    "Hvor mye avkastningen svinger.",
+    "Høy volatilitet betyr store utslag, opp og ned. Lav volatilitet betyr en roligere bane. Sharpe-raten deler meravkastningen på denne svingningen. Volatilitet er navnet på bevegelsen. Den sier hvor mye noe svinger, ikke om svingningen er verdt å ta. I tall er den ofte standardavviket til avkastningen.",
+    ["sharpe", "standardavvik", "risiko-avkastning"]
+  ),
+  c(
+    "korrelasjon",
+    "Korrelasjon",
+    "Correlation",
+    "marked",
+    "Hvor tett to avkastninger beveger seg sammen.",
+    "Korrelasjon nær 1 betyr at de to stort sett stiger og faller samtidig. Nær 0 betyr at de ikke følges. Negativ korrelasjon betyr at den ene ofte går opp når den andre går ned. Diversifisering virker fordi ikke alt faller samtidig. Eier du bare ting som følges tett, sprer du mindre enn antallet papirer tyder på.",
+    ["diversifisering", "standardavvik"]
+  ),
+  c(
+    "kupongrente",
+    "Kupongrente",
+    "Coupon rate",
+    "marked",
+    "Den avtalte renta på en obligasjon, regnet av pålydende.",
+    "Kupongen er beløpet utstederen betaler underveis, avtalt på forhånd. Yield er avkastningen gitt prisen du betaler i markedet. Faller prisen under pålydende, ligger yield over kupongrenta. Stiger prisen over pålydende, ligger yield under. Kupongrenta står stille når prisen flytter seg.",
+    ["yield", "obligasjon", "durasjon"]
+  ),
+  c(
+    "innskuddsgaranti",
+    "Innskuddsgaranti",
+    "Deposit guarantee",
+    "bank",
+    "Dekningen fra Bankenes sikringsfond hvis banken ikke kan betale tilbake innskuddet.",
+    "Garantien gjelder innskudd, ikke aksjer og fondsandeler. For en kunde i en norsk bank i Norge dekker den fra første krone og opptil 2 millioner kroner per kunde per bank. Flere kontoer i samme bank legges sammen. Beløpet over taket faller utenfor den vanlige garantien. I 2026 er taket 2 millioner kroner. Enkelte innskudd fra boligsalg og andre særlige livshendelser kan være dekket utover taket i en periode.",
+    ["innskuddsdekning", "rentenetto"],
+    "2 millioner kroner per kunde per bank i 2026. Sjekk Bankenes sikringsfond."
+  ),
+  c(
+    "rentemargin",
+    "Rentemargin",
+    "Interest margin",
+    "bank",
+    "Forskjellen mellom renta banken tar inn og renta den betaler.",
+    "Banken tar inn rente på utlån og betaler rente på innskudd og annen finansiering. Rentemarginen er den relative forskjellen, et påslag i rente. Rentenetto er den samme forskjellen regnet i kroner. En smal margin kan likevel gi stor rentenetto hvis volumet er stort. Marginen leses ved siden av rentenettoen.",
+    ["rentenetto", "provisjonsinntekter"]
+  ),
+  c(
+    "provisjonsinntekter",
+    "Provisjonsinntekter",
+    "Fee income",
+    "bank",
+    "Gebyrer banken tar for betalinger, fond og rådgivning.",
+    "Rentenetto kommer fra renteforskjellen. Provisjonsinntekter er den andre hovedinntekten i mange bankrapporter. En bank med mye gebyrinntekt hviler mindre på rentemarginen alene. Provisjon er ikke renter, og den ligger utenfor rentenettoen.",
+    ["rentenetto", "rentemargin", "ki"]
+  ),
+  c(
+    "motsyklisk-buffer",
+    "Motsyklisk kapitalbuffer",
+    "Countercyclical capital buffer",
+    "bank",
+    "Et tillegg i kravet til ren kjernekapital som kan settes opp og ned med konjunkturen.",
+    "Bufferen skal gjøre banken mer solid når sårbarheten i økonomien er høy, slik at den kan tåle tap og fortsatt låne ut i en nedgang. Norges Bank fastsetter satsen hvert kvartal. Kravet skal i utgangspunktet ligge mellom 0 og 2,5 prosent av risikovektede eiendeler. I november 2026 holdt Norges Bank kravet uendret på 2,5 prosent. Det er et kapitalkrav, ikke en egen konto med kontanter.",
+    ["cet1", "konjunktur"],
+    "2,5 prosent i november 2026. Sjekk Norges Bank."
+  ),
+  c(
+    "fastrente",
+    "Fastrente",
+    "Fixed mortgage rate",
+    "personlig",
+    "Boliglånsrente som ligger fast i en avtalt periode.",
+    "På flytende rente følger boliglånsrenta med når styringsrenten og pengemarkedet flytter seg. På fastrente er renta avtalt for en periode, for eksempel tre eller fem år. Du bytter sjansen for å følge renta ned mot et kjent beløp så lenge avtalen varer. Når perioden er ute, avtales renta på nytt. Annuitet og serie beskriver nedbetalingen. Fastrente beskriver om renta er låst.",
+    ["nominell-effektiv", "annuitetslan", "serielan", "styringsrenten"]
+  ),
+  c(
+    "buffer",
+    "Buffer",
+    "Cash buffer",
+    "personlig",
+    "Kontantreserven som skal tåle et uventet utlegg.",
+    "Bufferen er penger på en konto du kan bruke uten å selge fond eller ta opp gjeld. Den kommer før langsiktig sparing i ASK eller indeksfond, og før ekstra nedbetaling på lånet. Hvor stor den skal være, følger faste utgifter og hvor sikker inntekten er. Fondsandeler er ikke en buffer hvis du ikke tåler å selge dem når markedet har falt.",
+    ["ask", "indeksfond", "renters-rente"]
+  ),
+  c(
+    "innskuddspensjon",
+    "Innskuddspensjon",
+    "Defined contribution pension",
+    "personlig",
+    "Tjenestepensjon der arbeidsgiver setter inn et avtalt beløp, og utbetalingen følger avkastningen.",
+    "Innskuddet er kjent. Det du får som pensjonist, avhenger av hvor lenge pengene står og hva de kaster av seg. I privat sektor er obligatorisk tjenestepensjon som regel en slik ordning, minst det loven krever. Mange arbeidsgivere setter inn mer. Innskuddspensjon lover innbetalingen. Den lover ikke et bestemt beløp ut.",
+    ["tjenestepensjon", "ytelsespensjon", "otp", "folketrygd"]
+  ),
+  c(
+    "ytelsespensjon",
+    "Ytelsespensjon",
+    "Defined benefit pension",
+    "personlig",
+    "Tjenestepensjon der utbetalingen er avtalt på forhånd.",
+    "Du får en avtalt andel av lønna, eller et annet avtalt beløp, når vilkårene er oppfylt. Arbeidsgiver bærer risikoen for at pengene strekker til. Ordningen finnes i offentlig sektor og i eldre avtaler i privat sektor. Innskuddspensjon er det andre hovedsporet: der er innskuddet avtalt, og utbetalingen følger avkastningen.",
+    ["innskuddspensjon", "tjenestepensjon", "folketrygd"]
+  ),
+  c(
+    "oppjusteringsfaktor",
+    "Oppjusteringsfaktor",
+    "Adjustment factor for equity income",
+    "personlig",
+    "Faktoren som løfter aksjegevinst og utbytte før skatten på alminnelig inntekt regnes.",
+    "Skatten på alminnelig inntekt er flat. For at skatten på aksjeinntekt skal bli høyere, ganges gevinst og utbytte med en faktor etter at skjermingsfradraget er trukket fra. Tap oppjusteres på samme måte. Skatteetaten gjør det i skattemeldingen. For inntektsåret 2026 er faktoren 1,72. Faktoren vedtas for hvert år. Innenfor aksjesparekonto kommer skatten ved uttak, og oppjusteringen brukes da.",
+    ["skjermingsfradrag", "ask", "alminnelig-inntekt"],
+    "1,72 for inntektsåret 2026. Sjekk Skatteetaten."
+  ),
+  c(
+    "verdsettingsrabatt",
+    "Verdsettingsrabatt",
+    "Valuation discount",
+    "personlig",
+    "Nedsettelsen som gjør at aksjer teller lavere enn markedsverdien i grunnlaget for formuesskatt.",
+    "Formuesskatt regnes av nettoformue. Aksjer tas ikke med til full verdi. For 2026 er verdsettingsrabatten på aksjer 20 prosent, så de teller med 80 prosent av grunnlaget. Børsnoterte aksjer tar utgangspunkt i kursen. Rabatten trekkes i skattefastsettingen, og gjeld som hører til aksjene, reduseres også. Satsen vedtas i budsjettet.",
+    ["formuesskatt", "ask"],
+    "20 prosent på aksjer i 2026. Sjekk Skatteetaten."
+  ),
+  c(
+    "avskrivning",
+    "Avskrivning",
+    "Depreciation",
+    "metode",
+    "Fordelingen av en anskaffelse som kostnad over eiendelens levetid.",
+    "Kjøper selskapet en maskin, er ikke hele kjøpet en kostnad det året. Avskrivningen sprer anskaffelsen ut over årene maskinen brukes. EBITDA er driftsresultat før av- og nedskrivninger, så den linjen er regnet før denne kostnaden. Avskrivningen er ikke en utbetaling det året. Kontantene gikk ut da eiendelen ble kjøpt.",
+    ["resultatregnskap", "evebitda", "kontantstrom"]
+  ),
+  c(
+    "arbeidskapital",
+    "Arbeidskapital",
+    "Working capital",
+    "metode",
+    "Omløpsmidler minus kortsiktig gjeld.",
+    "Omløpsmidler er varelager, kundefordringer og kontanter i driften. Kortsiktig gjeld er blant annet det selskapet skylder leverandørene. Stiger fordringene, er det overskudd som ennå ikke er blitt kontanter. Derfor forklarer arbeidskapitalen ofte avviket mellom resultatet og kontantstrømmen. Mer kapital bundet i drift er ikke det samme som et bedre resultat.",
+    ["kontantstrom", "resultatregnskap", "balanse"]
+  ),
+  c(
+    "driftsmargin",
+    "Driftsmargin",
+    "Operating margin",
+    "metode",
+    "Driftsresultatet som andel av omsetningen.",
+    "Omsetning er det selskapet har solgt for. Driftsresultatet er det som er igjen etter driftskostnadene, før renter og skatt. Marginen er den andelen. En margin på 10 prosent er et eksempel: 10 øre av hver krone i salg er igjen i drift. Den er det korte målet på resultatregnskapet. Den sier ikke om kontantstrømmen er like sterk.",
+    ["resultatregnskap", "kontantstrom"]
+  ),
+  c(
+    "standardavvik",
+    "Standardavvik",
+    "Standard deviation",
+    "metode",
+    "Et mål på hvor spredt tallene ligger rundt snittet.",
+    "Lavt standardavvik betyr at observasjonene ligger tett på snittet. Høyt standardavvik betyr at de spriker. Volatilitet i finans er ofte standardavviket til avkastningen. Beta fra en OLS-regresjon hviler på hvordan avkastningen samvarierer med markedet, og spredningen inngår i det regnestykket. Standardavviket er spredningen. Volatilitet er navnet når spredningen gjelder avkastning.",
+    ["volatilitet", "ols", "beta", "sharpe"]
   ),
 ];

@@ -166,13 +166,13 @@ export function setConceptStatus(
     writeList(REVIEW_KEY, reviews.slice(0, 80));
     logActivity({
       label: `Vurderte ${term ?? id}`,
-      href: `/begrep/${id}`,
+      href: `/konsept/${id}`,
     });
   }
   return next;
 }
 
-/** Legg begreper i køen. Leksjoner sender onlySrs, slik at ikke alt blir kort. */
+/** Legg konsepter i køen. Leksjoner sender onlySrs, slik at ikke alt blir kort. */
 export function introduceConcepts(
   ids: string[],
   opts?: { onlySrs?: boolean }
@@ -203,7 +203,7 @@ export function introduceConcepts(
 }
 
 /**
- * Lagrer eller fjerner gjenkallingen på et begrep som allerede ligger i køen.
+ * Lagrer eller fjerner gjenkallingen på et konsept som allerede ligger i køen.
  * `null` sletter utkastet. Tom, uavslørt tekst skal ikke ligge igjen som et forsøk.
  */
 export function setRecallAttempt(
@@ -227,7 +227,7 @@ export function setRecallAttempt(
   writeMap(CONCEPT_KEY, map);
 }
 
-/** Begreper brukeren har møtt, og som forfaller i dag eller tidligere. */
+/** Konsepter brukeren har møtt, og som forfaller i dag eller tidligere. */
 export function getDueConceptIds(allIds: string[]): string[] {
   const map = getAllConceptProgress();
   const today = todayISO();
@@ -349,7 +349,7 @@ export interface ScheduledConcept {
   status: RecallStatus;
 }
 
-/** Begreper i køen, tidligste neste dato først. */
+/** Konsepter i køen, tidligste neste dato først. */
 export function listSchedule(): ScheduledConcept[] {
   const map = getAllConceptProgress();
   return Object.entries(map)

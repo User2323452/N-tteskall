@@ -33,7 +33,7 @@ export function placeLabel(path: string): string {
   const lesson = path.match(/^\/lop\/([^/]+)\//);
   if (lesson) return getPath(lesson[1])?.title ?? "Løpet";
   if (path.startsWith("/lop/")) return "Løpet";
-  if (path.startsWith("/begrep/")) return "Begrepet";
+  if (path.startsWith("/konsept/")) return "Konseptet";
   return "Tilbake";
 }
 

@@ -21,7 +21,7 @@ const areaFilters: { id: TermAreaId | "alle"; label: string }[] = [
 
 const statuses: TermStatus[] = ["Ny", "Usikker", "Kan det"];
 
-export function BegrepsbankenView() {
+export function KonseptbankenView() {
   const search = useSearchParams();
   const [ready, setReady] = useState(false);
   const [areaFilter, setAreaFilter] = useState<TermAreaId | "alle">("alle");
@@ -229,7 +229,7 @@ export function BegrepsbankenView() {
     <div className="space-y-5">
       <header>
         <h1 className="font-[family-name:var(--font-display)] text-3xl text-slate-900">
-          Begrepsbanken
+          Konseptbanken
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
           Utvidet ordliste du kan redigere selv. For kuraterte forklaringer og
@@ -306,7 +306,7 @@ export function BegrepsbankenView() {
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead className="border-b border-slate-100 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
             <tr>
-              <th className="px-3 py-2 font-medium">Begrep</th>
+              <th className="px-3 py-2 font-medium">Konsept</th>
               <th className="px-3 py-2 font-medium">Engelsk</th>
               <th className="px-3 py-2 font-medium">Forklaring</th>
               <th className="px-3 py-2 font-medium">Område</th>
@@ -361,12 +361,12 @@ export function BegrepsbankenView() {
 
       <section className="rounded-xl border border-dashed border-slate-300 bg-white/70 p-3">
         <h2 className="mb-2 text-sm font-semibold text-slate-800">
-          Nytt begrep
+          Nytt konsept
         </h2>
         <div className="grid gap-2 sm:grid-cols-2">
           <input
             className="rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none"
-            placeholder="Begrep"
+            placeholder="Konsept"
             value={draft.term}
             onChange={(e) => setDraft({ ...draft, term: e.target.value })}
           />

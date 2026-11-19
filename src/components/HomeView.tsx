@@ -62,9 +62,9 @@ export function HomeView() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Søk begrep eller løp"
+            placeholder="Søk konsept eller løp"
             className="w-full rounded-2xl border border-[var(--line)] bg-white py-3.5 pl-10 pr-4 text-sm text-[var(--ink)] outline-none ring-[var(--accent)] placeholder:text-[var(--muted)] focus:ring-2"
-            aria-label="Søk etter begrep eller læringsløp"
+            aria-label="Søk etter konsept eller læringsløp"
           />
         </form>
 
@@ -73,7 +73,7 @@ export function HomeView() {
             {liveSearch.concepts.slice(0, 4).map((concept) => (
               <Link
                 key={concept.id}
-                href={`/begrep/${concept.id}`}
+                href={`/konsept/${concept.id}`}
                 className="block rounded-xl px-3 py-2 hover:bg-[var(--accent-soft)]"
               >
                 <span className="text-sm font-medium text-[var(--ink)]">

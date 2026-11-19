@@ -278,7 +278,7 @@ export function PathView({
         </p>
         {!next && done.size > 0 && (
           <p className="mt-5 text-sm font-medium text-emerald-700">
-            Du har fullført dette læringsløpet. Repeter begrepene for å feste dem.
+            Du har fullført dette læringsløpet. Repeter konseptene for å feste dem.
           </p>
         )}
 
