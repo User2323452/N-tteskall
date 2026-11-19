@@ -133,4 +133,6 @@ export interface LearningBackup {
   activity: ActivityEntry[];
   /** Valgfritt i eldre sikkerhetskopier. */
   returnProgress?: ReturnProgress;
+  /** Navnet i hilsenen. Tomt eller utelatt betyr ingen navn. */
+  displayName?: string;
 }

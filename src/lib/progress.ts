@@ -24,6 +24,7 @@ const REVIEW_KEY = "mesterplan.reviewLog.v1";
 const ACTIVITY_KEY = "mesterplan.activity.v1";
 const RETURN_KEY = "mesterplan.return.v1";
 const INSTALL_HINT_KEY = "mesterplan.installHint.v1";
+const NAME_KEY = "mesterplan.displayName.v1";
 
 function localISO(date = new Date()): string {
   const y = date.getFullYear();
@@ -773,13 +774,29 @@ export function logActivity(entry: { label: string; href: string }): void {
   writeList(ACTIVITY_KEY, list.slice(0, 40));
 }
 
+const NAME_LIMIT = 30;
+
+export function getDisplayName(): string {
+  if (typeof window === "undefined") return "";
+  return (localStorage.getItem(NAME_KEY) ?? "").trim().slice(0, NAME_LIMIT);
+}
+
+export function setDisplayName(name: string): void {
+  if (typeof window === "undefined") return;
+  const trimmed = name.trim().slice(0, NAME_LIMIT);
+  if (!trimmed) localStorage.removeItem(NAME_KEY);
+  else localStorage.setItem(NAME_KEY, trimmed);
+}
+
 export function exportLearningState(): LearningBackup {
+  const displayName = getDisplayName();
   return {
     conceptProgress: getAllConceptProgress(),
     pathProgress: getAllPathProgress(),
     reviews: getReviews(),
     activity: getActivity(),
     returnProgress: readReturn(),
+    ...(displayName ? { displayName } : {}),
   };
 }
 
@@ -792,6 +809,7 @@ export function importLearningState(data: LearningBackup | undefined): void {
   if (data.returnProgress && typeof data.returnProgress === "object") {
     writeReturn(normalizeReturn(data.returnProgress));
   }
+  if (typeof data.displayName === "string") setDisplayName(data.displayName);
 }
 
 export interface ScheduledConcept {
