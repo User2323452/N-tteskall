@@ -9,7 +9,9 @@ import type {
   RecallAttempt,
   RecallGrade,
   RecallStatus,
+  ReturnProgress,
   ReviewEntry,
+  SitterNotice,
 } from "@/types/learning";
 
 /**
@@ -20,6 +22,7 @@ const CONCEPT_KEY = "mesterplan.conceptProgress.v1";
 const PATH_KEY = "mesterplan.pathProgress.v1";
 const REVIEW_KEY = "mesterplan.reviewLog.v1";
 const ACTIVITY_KEY = "mesterplan.activity.v1";
+const RETURN_KEY = "mesterplan.return.v1";
 
 function localISO(date = new Date()): string {
   const y = date.getFullYear();
@@ -38,6 +41,13 @@ function addDays(isoDate: string, days: number): string {
   return localISO(d);
 }
 
+/** Hele kalenderdager fra `fromIso` til `toIso`. Negativt tall betyr at målet ligger før. */
+function daysBetween(fromIso: string, toIso: string): number {
+  const from = new Date(fromIso.slice(0, 10) + "T12:00:00");
+  const to = new Date(toIso.slice(0, 10) + "T12:00:00");
+  return Math.round((to.getTime() - from.getTime()) / 86_400_000);
+}
+
 /** Kalenderdato på bokmål: «i dag, 18. nov.», «i morgen, 19. nov.» eller «24. nov.». */
 export function formatDueLabel(iso: string): string {
   const day = iso.slice(0, 10);
@@ -52,6 +62,75 @@ export function formatDueLabel(iso: string): string {
   if (diff === 0) return `i dag, ${pretty}`;
   if (diff === 1) return `i morgen, ${pretty}`;
   return pretty;
+}
+
+/**
+ * Strek som skal vises i dag. Gårsdagen holder den i live.
+ * En hel dag uten vurdering eller fullført leksjon nullstiller den.
+ */
+export function visibleStreak(
+  lastActiveOn: string | undefined,
+  streak: number,
+  today: string
+): number {
+  if (!lastActiveOn || streak <= 0) return 0;
+  const gap = daysBetween(lastActiveOn, today.slice(0, 10));
+  if (gap > 1) return 0;
+  return Math.floor(streak);
+}
+
+/** Neste lagrede strek etter en vurdering eller en fullført leksjon på `today`. */
+export function advanceStreak(
+  lastActiveOn: string | undefined,
+  streak: number,
+  today: string
+): { lastActiveOn: string; streak: number } {
+  const day = today.slice(0, 10);
+  if (lastActiveOn === day) {
+    return { lastActiveOn: day, streak: Math.max(1, Math.floor(streak) || 0) };
+  }
+  const gap = lastActiveOn ? daysBetween(lastActiveOn, day) : null;
+  if (gap === 1) {
+    return { lastActiveOn: day, streak: Math.max(0, Math.floor(streak)) + 1 };
+  }
+  return { lastActiveOn: day, streak: 1 };
+}
+
+/** «1 dag på rad» eller «3 dager på rad». Tom når det ikke er noen strek. */
+export function streakLabel(count: number): string | null {
+  if (count <= 0) return null;
+  if (count === 1) return "1 dag på rad";
+  return `${count} dager på rad`;
+}
+
+/**
+ * Neste dato når ingenting forfaller i dag.
+ * «3 konsepter i morgen», eller «2 konsepter 24. nov.» lenger frem.
+ * Null når køen for i dag ikke er tom.
+ */
+export function nextQueueLabel(
+  items: { dueOn: string }[],
+  today = todayISO()
+): string | null {
+  const day = today.slice(0, 10);
+  const days = items
+    .map((item) => item.dueOn?.slice(0, 10))
+    .filter((due): due is string => Boolean(due));
+  if (days.length === 0 || days.some((due) => due <= day)) return null;
+  const nextDay = [...days].sort()[0];
+  const count = days.filter((due) => due === nextDay).length;
+  const noun = count === 1 ? "konsept" : "konsepter";
+  if (daysBetween(day, nextDay) === 1) return `${count} ${noun} i morgen`;
+  const pretty = new Intl.DateTimeFormat("nb-NO", {
+    day: "numeric",
+    month: "short",
+  }).format(new Date(nextDay + "T12:00:00"));
+  return `${count} ${noun} ${pretty}`;
+}
+
+/** Én stille linje: «KPI · Sitter». */
+export function sitterHomeLine(term: string): string {
+  return `${term} · Sitter`;
 }
 
 function readMap<T>(key: string): Record<string, T> {
@@ -85,6 +164,117 @@ function readList<T>(key: string): T[] {
 function writeList<T>(key: string, list: T[]) {
   if (typeof window === "undefined") return;
   localStorage.setItem(key, JSON.stringify(list));
+}
+
+function emptyReturn(): ReturnProgress {
+  return { streak: 0, sitterPending: [], sitterSeen: [] };
+}
+
+function sitterEventKey(conceptId: string, at: string): string {
+  return `${conceptId}@${at}`;
+}
+
+function normalizeReturn(raw: unknown): ReturnProgress {
+  if (!raw || typeof raw !== "object") return emptyReturn();
+  const data = raw as Record<string, unknown>;
+  const streakRaw = data.streak;
+  const streak =
+    typeof streakRaw === "number" && Number.isFinite(streakRaw)
+      ? Math.max(0, Math.floor(streakRaw))
+      : 0;
+  const lastActiveOn =
+    typeof data.lastActiveOn === "string" && /^\d{4}-\d{2}-\d{2}/.test(data.lastActiveOn)
+      ? data.lastActiveOn.slice(0, 10)
+      : undefined;
+  const sitterSeen = Array.isArray(data.sitterSeen)
+    ? [
+        ...new Set(
+          data.sitterSeen.filter((id): id is string => typeof id === "string" && id.length > 0)
+        ),
+      ]
+    : [];
+  const seen = new Set(sitterSeen);
+  const sitterPending: SitterNotice[] = [];
+  if (Array.isArray(data.sitterPending)) {
+    for (const item of data.sitterPending) {
+      if (!item || typeof item !== "object") continue;
+      const record = item as Record<string, unknown>;
+      if (typeof record.conceptId !== "string" || !record.conceptId) continue;
+      if (typeof record.term !== "string" || !record.term.trim()) continue;
+      const at = typeof record.at === "string" ? record.at : "";
+      if (seen.has(sitterEventKey(record.conceptId, at))) continue;
+      if (sitterPending.some((existing) => existing.conceptId === record.conceptId)) continue;
+      sitterPending.push({ conceptId: record.conceptId, term: record.term.trim(), at });
+    }
+  }
+  return {
+    streak: lastActiveOn ? streak : 0,
+    lastActiveOn,
+    sitterPending,
+    sitterSeen,
+  };
+}
+
+function readReturn(): ReturnProgress {
+  if (typeof window === "undefined") return emptyReturn();
+  try {
+    const raw = localStorage.getItem(RETURN_KEY);
+    if (!raw) return emptyReturn();
+    return normalizeReturn(JSON.parse(raw));
+  } catch {
+    return emptyReturn();
+  }
+}
+
+function writeReturn(state: ReturnProgress): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(RETURN_KEY, JSON.stringify(state));
+}
+
+/** Én dag teller én gang, enten den kom fra en vurdering eller en fullført leksjon. */
+function noteReturnActivity(): void {
+  const state = readReturn();
+  const next = advanceStreak(state.lastActiveOn, state.streak, todayISO());
+  if (next.lastActiveOn === state.lastActiveOn && next.streak === state.streak) return;
+  writeReturn({ ...state, lastActiveOn: next.lastActiveOn, streak: next.streak });
+}
+
+function sitterAlreadyNoted(state: ReturnProgress, conceptId: string): boolean {
+  if (state.sitterPending.some((item) => item.conceptId === conceptId)) return true;
+  return state.sitterSeen.some((key) => key === conceptId || key.startsWith(`${conceptId}@`));
+}
+
+/** Første gang et konsept settes til Sitter med 30 dager. Samme konsept vises ikke igjen. */
+function noteSitterMilestone(conceptId: string, term: string): void {
+  const state = readReturn();
+  if (sitterAlreadyNoted(state, conceptId)) return;
+  const at = new Date().toISOString();
+  state.sitterPending.push({ conceptId, term, at });
+  writeReturn(state);
+}
+
+export function streakLabelForToday(): string | null {
+  const state = readReturn();
+  return streakLabel(visibleStreak(state.lastActiveOn, state.streak, todayISO()));
+}
+
+/** Sitter-linjer som ennå ikke er vist. Leser bare. */
+export function peekSitterNotices(): SitterNotice[] {
+  return readReturn().sitterPending;
+}
+
+/** Merk linjene som vist, så samme hendelse ikke kommer tilbake. */
+export function ackSitterNotices(notices: { conceptId: string; at: string }[]): void {
+  if (notices.length === 0) return;
+  const state = readReturn();
+  const seen = new Set(state.sitterSeen);
+  const ackKeys = new Set(notices.map((item) => sitterEventKey(item.conceptId, item.at)));
+  for (const key of ackKeys) seen.add(key);
+  state.sitterSeen = [...seen];
+  state.sitterPending = state.sitterPending.filter(
+    (item) => !ackKeys.has(sitterEventKey(item.conceptId, item.at))
+  );
+  writeReturn(state);
 }
 
 export function isIntroduced(progress?: ConceptProgress): boolean {
@@ -168,6 +358,10 @@ export function setConceptStatus(
       label: `Vurderte ${term ?? id}`,
       href: `/konsept/${id}`,
     });
+    noteReturnActivity();
+    if (status === "Sitter" && intervalDays === 30) {
+      noteSitterMilestone(id, term ?? id);
+    }
   }
   return next;
 }
@@ -277,8 +471,9 @@ export function markLessonComplete(
   };
   map[pathId] = next;
   writeMap(PATH_KEY, map);
-  if (wasNew && label) {
-    logActivity({ label, href: `/lop/${pathId}/${lessonId}` });
+  if (wasNew) {
+    noteReturnActivity();
+    if (label) logActivity({ label, href: `/lop/${pathId}/${lessonId}` });
   }
   return next;
 }
@@ -331,6 +526,7 @@ export function exportLearningState(): LearningBackup {
     pathProgress: getAllPathProgress(),
     reviews: getReviews(),
     activity: getActivity(),
+    returnProgress: readReturn(),
   };
 }
 
@@ -340,6 +536,9 @@ export function importLearningState(data: LearningBackup | undefined): void {
   if (data.pathProgress) writeMap(PATH_KEY, data.pathProgress);
   if (Array.isArray(data.reviews)) writeList(REVIEW_KEY, data.reviews);
   if (Array.isArray(data.activity)) writeList(ACTIVITY_KEY, data.activity);
+  if (data.returnProgress && typeof data.returnProgress === "object") {
+    writeReturn(normalizeReturn(data.returnProgress));
+  }
 }
 
 export interface ScheduledConcept {
@@ -399,6 +598,83 @@ function assertSchedule() {
   }
   if (addDays("2026-01-15", 6) !== "2026-01-21") {
     throw new Error("Seks dager frem skal være 21. januar");
+  }
+
+  if (visibleStreak(undefined, 0, "2026-11-19") !== 0) {
+    throw new Error("Tom strek skal ikke vises");
+  }
+  if (visibleStreak("2026-11-19", 4, "2026-11-19") !== 4) {
+    throw new Error("Strek fra i dag skal vises");
+  }
+  if (visibleStreak("2026-11-18", 4, "2026-11-19") !== 4) {
+    throw new Error("Strek fra i går skal fortsatt vises");
+  }
+  if (visibleStreak("2026-11-17", 4, "2026-11-19") !== 0) {
+    throw new Error("En hoppet dag skal nullstille streken");
+  }
+  if (visibleStreak("2026-11-30", 3, "2026-12-02") !== 0) {
+    throw new Error("En hoppet dag over månedsskifte skal nullstille streken");
+  }
+
+  const started = advanceStreak(undefined, 0, "2026-11-19");
+  if (started.streak !== 1 || started.lastActiveOn !== "2026-11-19") {
+    throw new Error("Første aktive dag skal være 1 dag");
+  }
+  const again = advanceStreak("2026-11-19", 1, "2026-11-19");
+  if (again.streak !== 1) {
+    throw new Error("Samme dag skal ikke telle dobbelt");
+  }
+  const nextDay = advanceStreak("2026-11-19", 1, "2026-11-20");
+  if (nextDay.streak !== 2) {
+    throw new Error("Dagen etter skal øke streken");
+  }
+  const missed = advanceStreak("2026-11-18", 5, "2026-11-20");
+  if (missed.streak !== 1) {
+    throw new Error("Et opphold skal starte streken på nytt");
+  }
+  const month = advanceStreak("2026-11-30", 3, "2026-12-01");
+  if (month.streak !== 4 || month.lastActiveOn !== "2026-12-01") {
+    throw new Error("Strek skal fortsette over månedsskifte");
+  }
+  if (streakLabel(0) !== null || streakLabel(1) !== "1 dag på rad" || streakLabel(3) !== "3 dager på rad") {
+    throw new Error("Strek-teksten skal være stille og på bokmål");
+  }
+
+  const tomorrow = nextQueueLabel(
+    [{ dueOn: "2026-11-20" }, { dueOn: "2026-11-20" }, { dueOn: "2026-11-20" }],
+    "2026-11-19"
+  );
+  if (tomorrow !== "3 konsepter i morgen") {
+    throw new Error(`Neste dato ble «${tomorrow}», ventet «3 konsepter i morgen»`);
+  }
+  if (nextQueueLabel([{ dueOn: "2026-11-20" }], "2026-11-19") !== "1 konsept i morgen") {
+    throw new Error("Ett konsept i morgen skal stå i entall");
+  }
+  const laterOnly = nextQueueLabel(
+    [{ dueOn: "2026-11-20" }, { dueOn: "2026-11-24" }, { dueOn: "2026-11-24" }],
+    "2026-11-19"
+  );
+  if (laterOnly !== "1 konsept i morgen") {
+    throw new Error("Bare neste dato skal telles");
+  }
+  const later = nextQueueLabel(
+    [{ dueOn: "2026-11-24" }, { dueOn: "2026-11-24" }],
+    "2026-11-19"
+  );
+  if (later !== "2 konsepter 24. nov.") {
+    throw new Error(`Senere dato ble «${later}», ventet «2 konsepter 24. nov.»`);
+  }
+  if (nextQueueLabel([{ dueOn: "2026-11-19" }, { dueOn: "2026-11-20" }], "2026-11-19") !== null) {
+    throw new Error("Neste dato skal skjules når noe forfaller i dag");
+  }
+  if (nextQueueLabel([{ dueOn: "2026-11-18" }], "2026-11-19") !== null) {
+    throw new Error("Neste dato skal skjules når noe har forfalt");
+  }
+  if (nextQueueLabel([], "2026-11-19") !== null) {
+    throw new Error("Tom kø skal ikke ha en neste dato");
+  }
+  if (sitterHomeLine("KPI") !== "KPI · Sitter") {
+    throw new Error("Sitter-linjen skal være konseptnavnet og ordet Sitter");
   }
 }
 

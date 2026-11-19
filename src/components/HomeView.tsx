@@ -6,15 +6,33 @@ import { useRouter } from "next/navigation";
 import { Check, Search } from "lucide-react";
 import { concepts, getConcept, searchLearning } from "@/data/learning";
 import { pickTodaysPath } from "@/lib/continue-path";
-import { formatDueLabel, getDueConceptIds, listSchedule } from "@/lib/progress";
+import {
+  ackSitterNotices,
+  formatDueLabel,
+  getDueConceptIds,
+  listSchedule,
+  nextQueueLabel,
+  peekSitterNotices,
+  sitterHomeLine,
+  streakLabelForToday,
+} from "@/lib/progress";
+import type { SitterNotice } from "@/types/learning";
 
 export function HomeView() {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [ready, setReady] = useState(false);
+  const [sitter, setSitter] = useState<SitterNotice[]>([]);
 
   useEffect(() => {
+    const pending = peekSitterNotices();
+    setSitter(pending);
     setReady(true);
+    if (pending.length === 0) return;
+    const handle = window.setTimeout(() => {
+      ackSitterNotices(pending);
+    }, 0);
+    return () => window.clearTimeout(handle);
   }, []);
 
   const liveSearch = useMemo(() => searchLearning(q), [q]);
@@ -46,6 +64,8 @@ export function HomeView() {
     todayPath && todayPath.total
       ? Math.round((todayPath.done / todayPath.total) * 100)
       : 0;
+  const streakText = ready ? streakLabelForToday() : null;
+  const nextText = ready && due.length === 0 ? nextQueueLabel(schedule) : null;
 
   return (
     <div className="mx-auto max-w-xl space-y-10">
@@ -116,9 +136,23 @@ export function HomeView() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-[var(--ink)]">
-          Dagens løp
-        </h2>
+        {sitter.length > 0 && (
+          <ul className="space-y-1">
+            {sitter.map((item) => (
+              <li key={`${item.conceptId}@${item.at}`} className="text-sm text-[var(--muted)]">
+                {sitterHomeLine(item.term)}
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-[var(--ink)]">
+            Dagens løp
+          </h2>
+          {streakText && (
+            <p className="shrink-0 text-sm text-[var(--muted)]">{streakText}</p>
+          )}
+        </div>
         {!todayPath ? (
           <div className="h-36 rounded-2xl bg-[var(--accent-soft)]" />
         ) : todayPath.finished ? (
@@ -165,6 +199,7 @@ export function HomeView() {
             </div>
           </Link>
         )}
+        {nextText && <p className="text-sm text-[var(--muted)]">{nextText}</p>}
       </section>
 
       {due.length > 0 && (
