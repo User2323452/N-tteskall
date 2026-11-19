@@ -202,10 +202,10 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "compare",
     title: "Samme kurv, to tidspunkt",
     leftLabel: "I fjor",
-    left: "Prisen på handlekurven SSB følger.",
+    left: "1 000 kr",
     rightLabel: "I år",
-    right: "Samme type varer og tjenester, ny pris. Forholdet er KPI.",
-    caption: "KPI er en indeks for hele kurven. Én vare kan hoppe uten at indeksen gjør det samme.",
+    right: "1 030 kr",
+    caption: "Samme kurv koster 3 % mer. Det er prisveksten KPI måler.",
   },
   "kpi-jae": {
     type: "compare",
