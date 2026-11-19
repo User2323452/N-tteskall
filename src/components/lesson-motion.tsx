@@ -7,6 +7,10 @@ export type LessonAdvance = {
   fromId: string;
   toId: string | null;
   commit: () => void;
+  /** Konsepter som denne leksjonen legger i Repeter. */
+  conceptsAdded: number;
+  /** Denne leksjonen er dagens første aktivitet. */
+  madeDay: boolean;
 };
 
 export type LessonMotion = {

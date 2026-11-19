@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { StreakFlame } from "@/components/StreakFlame";
 import type { Lesson } from "@/types/learning";
 
 const ROW = 124;
@@ -254,12 +255,14 @@ export function PathSnake({
   done,
   nextId,
   drawingId,
+  receipt = null,
 }: {
   pathId: string;
   lessons: Lesson[];
   done: Set<string>;
   nextId: string | null;
   drawingId: string | null;
+  receipt?: { lessonId: string; conceptsAdded: number; madeDay: boolean } | null;
 }) {
   const listRef = useRef<HTMLOListElement>(null);
   const [width, setWidth] = useState(0);
@@ -397,6 +400,23 @@ export function PathSnake({
                   {lesson.title}
                 </span>
               </Link>
+              {receipt?.lessonId === lesson.id && (receipt.conceptsAdded > 0 || receipt.madeDay) && (
+                <p className="pointer-events-none absolute left-1/2 top-[calc(50%+1.7rem)] w-44 -translate-x-1/2 text-center text-[11px] leading-snug text-[var(--muted)]">
+                  {receipt.conceptsAdded > 0 && (
+                    <span className="block">
+                      {receipt.conceptsAdded === 1
+                        ? "1 konsept lagt i Repeter"
+                        : `${receipt.conceptsAdded} konsepter lagt i Repeter`}
+                    </span>
+                  )}
+                  {receipt.madeDay && (
+                    <span className="mt-0.5 inline-flex items-center justify-center gap-1 text-[var(--ink)]">
+                      <StreakFlame className="h-3.5 w-3.5" />
+                      1 dag på rad
+                    </span>
+                  )}
+                </p>
+              )}
             </li>
           );
         })}

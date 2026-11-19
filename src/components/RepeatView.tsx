@@ -3,7 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { BackLink } from "@/components/nav-memory";
+import { StreakFlame } from "@/components/StreakFlame";
 import { concepts, getConcept } from "@/data/learning";
+import { pickContinueTarget } from "@/lib/continue-path";
 import {
   formatDueLabel,
   getConceptProgress,
@@ -12,6 +14,7 @@ import {
   listSchedule,
   setConceptStatus,
   setRecallAttempt,
+  streakLabelForToday,
 } from "@/lib/progress";
 import { recallGrades, type RecallGrade } from "@/types/learning";
 
@@ -32,6 +35,8 @@ export function RepeatView() {
   const [revealed, setRevealed] = useState(false);
   const [needsText, setNeedsText] = useState(false);
   const [ready, setReady] = useState(false);
+  const [reviewed, setReviewed] = useState(0);
+  const [sat, setSat] = useState(0);
 
   useEffect(() => {
     const due = queueWithOpenRecallFirst(getDueConceptIds(concepts.map((c) => c.id)));
@@ -93,6 +98,8 @@ export function RepeatView() {
 
   function grade(status: RecallGrade) {
     if (!current) return;
+    setReviewed((count) => count + 1);
+    if (status === "Sitter") setSat((count) => count + 1);
     setConceptStatus(current.id, status, current.term);
     if (index + 1 >= queue.length) {
       setDraft("");
@@ -114,6 +121,8 @@ export function RepeatView() {
     const upcoming = listSchedule().filter((item) => item.dueOn > today);
     const nextUp = upcoming[0];
     const nextTerm = nextUp ? getConcept(nextUp.id)?.term : undefined;
+    const nextLesson = queue.length > 0 ? pickContinueTarget() : null;
+    const openLesson = nextLesson && !nextLesson.finishedAll ? nextLesson : null;
     return (
       <div className="mx-auto max-w-lg space-y-4 py-8 text-center">
         <h1 className="font-[family-name:var(--font-display)] text-3xl text-slate-900">
@@ -124,6 +133,17 @@ export function RepeatView() {
             ? "Fullfør en leksjon, så legges nøkkelkonseptene her. Du kan også legge et konsept i køen fra konseptsiden."
             : "Du har gått gjennom det som forfalt i dag."}
         </p>
+        {queue.length > 0 && (
+          <p className="text-sm text-slate-800">
+            {reviewed === 1 ? "1 konsept" : `${reviewed} konsepter`} · {sat} sitter
+          </p>
+        )}
+        {queue.length > 0 && (
+          <p className="inline-flex items-center justify-center gap-1.5 text-sm text-slate-800">
+            <StreakFlame className="h-4 w-4" />
+            {streakLabelForToday()}
+          </p>
+        )}
         {nextTerm && nextUp && (
           <p className="text-sm text-slate-700">
             Neste: {nextTerm}, {formatDueLabel(nextUp.dueOn)}
@@ -136,12 +156,21 @@ export function RepeatView() {
           >
             Til hjem
           </Link>
-          <Link
-            href="/kart"
-            className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700"
-          >
-            Kart
-          </Link>
+          {openLesson ? (
+            <Link
+              href={`/lop/${openLesson.pathId}/${openLesson.lessonId}`}
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700"
+            >
+              Neste leksjon
+            </Link>
+          ) : (
+            <Link
+              href="/kart"
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700"
+            >
+              Kart
+            </Link>
+          )}
         </div>
       </div>
     );

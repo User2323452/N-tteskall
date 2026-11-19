@@ -11,14 +11,18 @@ import {
   getLesson,
   getLessonsForPath,
   getPath,
+  srsConceptIds,
 } from "@/data/learning";
 import { useLessonMotion } from "@/components/lesson-motion";
 import { useNav } from "@/components/nav-memory";
 import {
+  getConceptProgress,
   getPathProgress,
   introduceConcepts,
+  isIntroduced,
   markLessonComplete,
   markPathComplete,
+  todayAlreadyCounted,
   touchPath,
 } from "@/lib/progress";
 
@@ -101,11 +105,16 @@ export function LessonView({
       setSaved(true);
     };
     if (motion) {
+      const conceptsAdded = lessonConceptIds.filter(
+        (id) => srsConceptIds.has(id) && !isIntroduced(getConceptProgress(id))
+      ).length;
       motion.run({
         href,
         fromId: lessonId,
         toId: next?.id ?? null,
         commit,
+        conceptsAdded,
+        madeDay: !todayAlreadyCounted(),
       });
       return;
     }
