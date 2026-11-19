@@ -1,16 +1,29 @@
 /* Minimal PWA service worker — cache shell for offline revisit */
-const CACHE = "notteskall-shell-v5";
+const CACHE = "notteskall-shell-v6";
 const SHELL = [
   "/",
   "/manifest.webmanifest",
-  "/icons/mark.png",
-  "/icons/icon-192.png",
-  "/icons/icon-512.png",
+  "/favicon.ico",
+  "/icons/mark.png?v=6",
+  "/icons/icon-192.png?v=6",
+  "/icons/icon-512.png?v=6",
+  "/icons/apple-touch-icon.png?v=6",
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting())
+    caches
+      .open(CACHE)
+      .then((cache) =>
+        Promise.all(
+          SHELL.map(async (url) => {
+            const response = await fetch(url, { cache: "reload" });
+            if (!response.ok) throw new Error(url);
+            await cache.put(url, response);
+          })
+        )
+      )
+      .then(() => self.skipWaiting())
   );
 });
 
