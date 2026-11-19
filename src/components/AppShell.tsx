@@ -4,6 +4,7 @@ import Link from "next/link";
 import { BookOpen, Home, Map, Route, UserRound } from "lucide-react";
 import { IdeaFab } from "@/components/IdeaFab";
 import { LogoMark } from "@/components/LogoMark";
+import { NavMemory } from "@/components/nav-memory";
 import { usePathname } from "next/navigation";
 
 const headerNav = [
@@ -49,20 +50,35 @@ const pill = [
   },
 ];
 
+function screenKey(pathname: string) {
+  const parts = pathname.split("/").filter(Boolean);
+  if (parts[0] === "lop" && parts.length >= 2) return `lop/${parts[1]}`;
+  return pathname || "/";
+}
+
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "";
   const showIdeaFab =
     pathname.startsWith("/notater") || pathname.startsWith("/tema");
   const onHome = pathname === "/";
+  const detail =
+    /^\/lop\/[^/]+/.test(pathname) || pathname.startsWith("/begrep/");
 
   return (
-    <div className="min-h-dvh bg-[var(--background)] text-[var(--ink)]">
-      <header className="sticky top-0 z-30 bg-[var(--background)]/90 backdrop-blur-md">
+    <NavMemory>
+    <div
+      className={`flex h-dvh flex-col overflow-hidden bg-[var(--background)] text-[var(--ink)] ${detail ? "is-detail" : ""}`}
+    >
+      <header
+        className={`z-30 shrink-0 bg-[var(--background)]/90 backdrop-blur-md ${
+          detail ? "max-sm:hidden" : ""
+        }`}
+      >
         <div className="mx-auto flex h-12 max-w-2xl items-center justify-between gap-3 px-5">
           <div className="min-w-0">
             {onHome ? (
               <span className="flex items-center gap-2">
-                <LogoMark className="h-8 w-8 shrink-0" />
+                <LogoMark className="h-9 w-9 shrink-0" />
                 <span className="hidden font-[family-name:var(--font-display)] text-lg text-[var(--accent)] md:inline">
                   Nøtteskall
                 </span>
@@ -70,9 +86,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             ) : (
               <Link
                 href="/"
+                aria-label="Hjem"
                 className="flex items-center gap-2 font-[family-name:var(--font-display)] text-lg text-[var(--accent)]"
               >
-                <LogoMark className="h-8 w-8 shrink-0" />
+                <LogoMark className="h-9 w-9 shrink-0" />
                 <span className="hidden md:inline">Nøtteskall</span>
               </Link>
             )}
@@ -120,13 +137,26 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-xl px-5 py-4 pb-32 sm:pb-16">{children}</main>
+      <main className="min-h-0 flex-1 overflow-y-auto">
+        <div className="mx-auto max-w-xl px-5 pt-4 pb-8">
+          <div
+            key={screenKey(pathname)}
+            className={detail ? "screen-fade" : "screen-enter"}
+          >
+            {children}
+          </div>
+        </div>
+      </main>
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:hidden"
+        className="z-40 flex shrink-0 items-start px-3 pt-1.5 sm:hidden"
+        style={{
+          height: "var(--pill-offset)",
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+        }}
         aria-label="Hovedmeny"
       >
-        <ul className="mx-auto flex max-w-md items-stretch gap-0.5 rounded-full border border-[var(--line)] bg-white/95 px-1.5 py-1.5 shadow-[0_10px_30px_rgba(26,35,50,0.14)] backdrop-blur-md">
+        <ul className="mx-auto flex w-full max-w-md items-stretch gap-0.5 rounded-full border border-[var(--line)] bg-white/95 px-1.5 py-1.5 shadow-[0_10px_30px_rgba(26,35,50,0.14)] backdrop-blur-md">
           {pill.map((item) => {
             const active = item.match(pathname);
             const Icon = item.icon;
@@ -152,5 +182,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {showIdeaFab && <IdeaFab />}
     </div>
+    </NavMemory>
   );
 }

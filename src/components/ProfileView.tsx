@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { DataBackup } from "@/components/DataBackup";
 import { getConcept, learningPaths } from "@/data/learning";
+import { formatWhen } from "@/lib/format";
 import {
   formatDueLabel,
   getActivity,
@@ -14,20 +15,28 @@ import {
   isIntroduced,
   listSchedule,
 } from "@/lib/progress";
-import type { RecallStatus } from "@/types/learning";
+import type { ConceptProgress, RecallStatus, ReviewEntry } from "@/types/learning";
 
-function formatWhen(iso: string): string {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return iso;
-  const start = (value: Date) =>
-    new Date(value.getFullYear(), value.getMonth(), value.getDate()).getTime();
-  const diff = Math.round((start(new Date()) - start(date)) / 86_400_000);
-  if (diff === 0) return "i dag";
-  if (diff === 1) return "i går";
-  return new Intl.DateTimeFormat("nb-NO", {
-    day: "numeric",
-    month: "short",
-  }).format(date);
+function repeatedConcepts(reviews: ReviewEntry[], progress: Record<string, ConceptProgress>) {
+  const byId = new Map<string, ReviewEntry[]>();
+  for (const entry of reviews) {
+    const list = byId.get(entry.conceptId) ?? [];
+    list.push(entry);
+    byId.set(entry.conceptId, list);
+  }
+  return [...byId.entries()]
+    .map(([conceptId, entries]) => {
+      const sorted = [...entries].sort((a, b) => b.at.localeCompare(a.at));
+      const latest = sorted[0];
+      return {
+        conceptId,
+        term: getConcept(conceptId)?.term ?? latest?.term ?? conceptId,
+        grade: latest?.grade ?? "OK",
+        dueOn: progress[conceptId]?.dueOn,
+        at: latest?.at ?? "",
+      };
+    })
+    .sort((a, b) => b.at.localeCompare(a.at));
 }
 
 function Section({
@@ -83,6 +92,7 @@ export function ProfileView() {
   const pathProgress = getAllPathProgress();
   const conceptProgress = getAllConceptProgress();
   const reviews = getReviews();
+  const repeatedRows = repeatedConcepts(reviews, conceptProgress);
   const activity = getActivity();
   const last = activity[0];
   const introduced = Object.entries(conceptProgress).filter(([, item]) => isIntroduced(item));
@@ -196,14 +206,16 @@ export function ProfileView() {
       <Section
         title="Det du har repetert"
         summary={
-          reviews.length === 0
+          repeatedRows.length === 0
             ? "Ingen vurderinger ennå"
-            : `${reviews.length} vurderinger`
+            : repeatedRows.length === 1
+              ? "1 begrep"
+              : `${repeatedRows.length} begreper`
         }
         open={repeated}
         onToggle={() => setRepeated((open) => !open)}
       >
-        {reviews.length === 0 ? (
+        {repeatedRows.length === 0 ? (
           <p className="text-sm text-[var(--muted)]">
             Vurderinger dukker opp her etter at du har repetert et begrep.{" "}
             <Link href="/repeter" className="text-[var(--ink)] underline-offset-2 hover:underline">
@@ -212,21 +224,24 @@ export function ProfileView() {
             .
           </p>
         ) : (
-          <ul className="space-y-2">
-            {reviews.slice(0, 20).map((entry) => (
-              <li key={`${entry.conceptId}-${entry.at}`} className="text-sm">
-                <Link href={`/begrep/${entry.conceptId}`} className="text-[var(--ink)] hover:text-[var(--accent)]">
-                  {entry.term}
+          <ul>
+            {repeatedRows.map((row) => (
+              <li key={row.conceptId} className="border-t border-[var(--line)] first:border-t-0">
+                <Link
+                  href={`/begrep/${row.conceptId}`}
+                  className="flex min-h-12 items-center justify-between gap-3 py-3"
+                >
+                  <span className="min-w-0">
+                    <span className="block truncate text-[15px] font-medium text-[var(--ink)]">
+                      {row.term}
+                    </span>
+                    <span className="mt-0.5 block text-sm text-[var(--muted)]">
+                      {row.grade}
+                      {row.dueOn ? ` · ${formatDueLabel(row.dueOn)}` : ""}
+                    </span>
+                  </span>
+                  <ChevronRight className="h-4 w-4 shrink-0 text-[var(--muted)]" aria-hidden />
                 </Link>
-                <span className="text-[var(--muted)]">
-                  {" "}
-                  · {entry.grade}
-                  {entry.intervalDays
-                    ? ` · ${entry.intervalDays} ${entry.intervalDays === 1 ? "dag" : "dager"}`
-                    : ""}
-                  {" · "}
-                  {formatWhen(entry.at)}
-                </span>
               </li>
             ))}
           </ul>
@@ -280,6 +295,10 @@ export function ProfileView() {
         </p>
         <DataBackup />
       </Section>
+
+      <p className="px-1 pt-1 text-xs leading-relaxed text-slate-400">
+        Repetisjonen bygger på glemselskurven til Hermann Ebbinghaus.
+      </p>
     </div>
   );
 }

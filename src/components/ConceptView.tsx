@@ -2,21 +2,23 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import {
   categoryLabel,
   getConcept,
   learningPaths,
   lessons,
 } from "@/data/learning";
+import { BackLink } from "@/components/nav-memory";
+import { formatWhen } from "@/lib/format";
 import {
   formatDueLabel,
   getConceptProgress,
+  getReviews,
   gradeHint,
   introduceConcepts,
   setConceptStatus,
 } from "@/lib/progress";
-import { recallGrades, type ConceptProgress, type RecallGrade } from "@/types/learning";
+import { recallGrades, type ConceptProgress, type RecallGrade, type ReviewEntry } from "@/types/learning";
 import { termStatusStyle } from "@/lib/theme";
 import { ConceptFigure, ConceptTeaching } from "@/components/figures/ConceptFigure";
 
@@ -24,10 +26,19 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
   const concept = getConcept(conceptId);
   const [revealed, setRevealed] = useState(true);
   const [progress, setProgress] = useState<ConceptProgress>({ status: "Ny" });
+  const [older, setOlder] = useState<ReviewEntry[]>([]);
+  const [hints, setHints] = useState<Partial<Record<RecallGrade, string>>>({});
 
   useEffect(() => {
     if (!concept) return;
     setProgress(getConceptProgress(concept.id));
+    const history = getReviews()
+      .filter((entry) => entry.conceptId === concept.id)
+      .sort((a, b) => b.at.localeCompare(a.at));
+    setOlder(history.slice(1));
+    const nextHints: Partial<Record<RecallGrade, string>> = {};
+    for (const gradeName of recallGrades) nextHints[gradeName] = gradeHint(concept.id, gradeName);
+    setHints(nextHints);
     setRevealed(true);
   }, [concept]);
 
@@ -53,6 +64,13 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
 
   function grade(next: RecallGrade) {
     setProgress(setConceptStatus(concept!.id, next, concept!.term));
+    const history = getReviews()
+      .filter((entry) => entry.conceptId === concept!.id)
+      .sort((a, b) => b.at.localeCompare(a.at));
+    setOlder(history.slice(1));
+    const nextHints: Partial<Record<RecallGrade, string>> = {};
+    for (const gradeName of recallGrades) nextHints[gradeName] = gradeHint(concept!.id, gradeName);
+    setHints(nextHints);
   }
 
   function addToReview() {
@@ -61,14 +79,8 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
   }
 
   return (
-    <article className="mx-auto max-w-2xl animate-[fadeUp_0.35s_ease-out]">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Hjem
-      </Link>
+    <article className="mx-auto max-w-2xl">
+      <BackLink fallback="/" />
 
       <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
         {categoryLabel[concept.category]}
@@ -158,12 +170,36 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
                   progress.status === g ? "text-white/80" : "text-slate-400"
                 }`}
               >
-                {gradeHint(concept.id, g)}
+                {hints[g] ?? "\u00a0"}
               </span>
             </button>
           ))}
         </div>
       </section>
+
+      {older.length > 0 && (
+        <section className="mt-8">
+          <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+            Tidligere vurderinger
+          </h2>
+          <ul className="mt-2">
+            {older.map((entry, index) => (
+              <li
+                key={`${entry.at}-${entry.grade}-${index}`}
+                className="flex items-baseline justify-between gap-3 border-t border-[var(--line)] py-2.5 text-sm first:border-t-0"
+              >
+                <span className="text-[var(--ink)]">{entry.grade}</span>
+                <span className="text-[var(--muted)]">
+                  {entry.intervalDays
+                    ? `${entry.intervalDays === 1 ? "1 dag" : `${entry.intervalDays} dager`} · `
+                    : ""}
+                  {formatWhen(entry.at)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {related.length > 0 && (
         <section className="mt-8">

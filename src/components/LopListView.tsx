@@ -1,10 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getLessonsForPath } from "@/data/learning";
 import { overviewAreas, pathsInArea } from "@/data/overview";
-import { getAllPathProgress, nextLessonId } from "@/lib/progress";
+import { pickContinueTarget } from "@/lib/continue-path";
+import { getAllPathProgress } from "@/lib/progress";
+
+function lessonMeta(total: number, done: number) {
+  const count = total === 1 ? "1 leksjon" : `${total} leksjoner`;
+  if (done <= 0) return count;
+  if (done >= total) return `${count} · ferdig`;
+  return `${count} · ${done} ferdige`;
+}
 
 export function LopListView() {
   const [ready, setReady] = useState(false);
@@ -13,10 +21,9 @@ export function LopListView() {
     setReady(true);
   }, []);
 
-  const pathProgress = useMemo(() => {
-    if (!ready) return {};
-    return getAllPathProgress();
-  }, [ready]);
+  const pathProgress = ready ? getAllPathProgress() : {};
+  const current = ready ? pickContinueTarget() : null;
+  const currentId = current && current.started && !current.finishedAll ? current.pathId : null;
 
   return (
     <div className="mx-auto max-w-xl space-y-8">
@@ -25,7 +32,7 @@ export function LopListView() {
           Løp
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-[var(--muted)]">
-          Korte stier gjennom kartet. De er samlet etter område.
+          Alle løpene, samlet etter område.
         </p>
       </header>
 
@@ -39,27 +46,28 @@ export function LopListView() {
                 {area.name}
               </Link>
             </h2>
-            <ul className="mt-2 divide-y divide-[var(--line)]">
+            <ul className="mt-2 overflow-hidden rounded-2xl border border-[var(--line)] bg-white px-3">
               {paths.map((path) => {
-                const lessons = getLessonsForPath(path.id);
-                const progress = pathProgress[path.id];
-                const done = progress?.completedLessonIds.length ?? 0;
-                const next = nextLessonId(path.lessonIds, progress?.completedLessonIds ?? []);
-                const finished = !next;
-                const href = next ? `/lop/${path.id}/${next}` : `/lop/${path.id}`;
+                const total = getLessonsForPath(path.id).length;
+                const done = pathProgress[path.id]?.completedLessonIds.length ?? 0;
+                const ongoing = path.id === currentId;
                 return (
-                  <li key={path.id}>
-                    <Link href={href} className="block py-3">
-                      <span className="block text-[15px] text-[var(--ink)]">{path.title}</span>
-                      <span className="mt-0.5 block text-sm text-[var(--muted)]">
-                        {path.subtitle}
+                  <li key={path.id} className="border-t border-[var(--line)] first:border-t-0">
+                    <Link
+                      href={`/lop/${path.id}`}
+                      className="flex min-h-12 items-center justify-between gap-3 py-3"
+                    >
+                      <span className="min-w-0">
+                        <span className="block text-[15px] text-[var(--ink)]">
+                          {path.title}
+                          {ongoing ? " · pågår" : ""}
+                        </span>
+                        <span className="text-sm text-[var(--muted)]">
+                          {lessonMeta(total, done)}
+                        </span>
                       </span>
-                      <span className="mt-1 block text-sm text-[var(--accent)]">
-                        {finished
-                          ? "Ferdig"
-                          : done > 0
-                            ? `${done} av ${lessons.length} leksjoner`
-                            : `${lessons.length} leksjoner`}
+                      <span aria-hidden className="text-[var(--muted)]">
+                        →
                       </span>
                     </Link>
                   </li>
