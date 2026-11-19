@@ -7,6 +7,17 @@ import { ChevronDown } from "lucide-react";
 import { getConcept, getPath } from "@/data/learning";
 import { areaPictures, overviewAreas } from "@/data/overview";
 
+/** Et langt ord, som «Fleksibel inflasjonsstyring», får egen rad. */
+function ownRow(label: string) {
+  return label.length >= 22;
+}
+
+const conceptChip =
+  "inline-flex max-w-full flex-col rounded-lg bg-[var(--background)] px-2.5 py-1.5 text-left ring-1 ring-[var(--line)] ring-inset hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";
+
+const pathChip =
+  "inline-flex max-w-full rounded-lg bg-[var(--accent)] px-2.5 py-1.5 text-left text-[15px] leading-snug text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ink)]";
+
 export function KartView() {
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -93,41 +104,46 @@ export function KartView() {
                     {area.themes.map((theme) => {
                       const path = theme.pathId ? getPath(theme.pathId) : undefined;
                       return (
-                        <div key={theme.id} id={theme.id} className="scroll-mt-24">
-                          <h3 className="text-sm font-semibold text-[var(--ink)]">
-                            {theme.name}
-                          </h3>
-                          {path && (
-                            <Link
-                              href={`/lop/${path.id}`}
-                              className="mt-1 inline-block text-sm text-[var(--accent)]"
-                            >
-                              Løp: {path.title}
-                            </Link>
-                          )}
-                          <ul className="mt-1">
-                            {theme.conceptIds.map((id) => {
-                              const concept = getConcept(id);
-                              if (!concept) return null;
-                              return (
-                                <li key={id}>
-                                  <Link
-                                    href={`/konsept/${concept.id}`}
-                                    className="flex items-baseline justify-between gap-3 py-1.5"
-                                  >
-                                    <span className="text-[15px] text-[var(--ink)]">
-                                      {concept.term}
+                        <div
+                          key={theme.id}
+                          id={theme.id}
+                          className="flex scroll-mt-24 flex-wrap items-center gap-2"
+                        >
+                          <p className="shrink-0 text-xs text-[var(--muted)]">{theme.name}</p>
+                          {theme.conceptIds.map((id) => {
+                            const concept = getConcept(id);
+                            if (!concept) return null;
+                            return (
+                              <span
+                                key={id}
+                                className={
+                                  ownRow(concept.term) ? "w-full shrink-0" : "max-w-full min-w-0"
+                                }
+                              >
+                                <Link href={`/konsept/${concept.id}`} className={conceptChip}>
+                                  <span className="text-[15px] leading-snug text-[var(--ink)]">
+                                    {concept.term}
+                                  </span>
+                                  {concept.english && (
+                                    <span className="text-[11px] leading-snug text-[var(--muted)]">
+                                      {concept.english}
                                     </span>
-                                    {concept.english && (
-                                      <span className="shrink-0 text-xs text-[var(--muted)]">
-                                        {concept.english}
-                                      </span>
-                                    )}
-                                  </Link>
-                                </li>
-                              );
-                            })}
-                          </ul>
+                                  )}
+                                </Link>
+                              </span>
+                            );
+                          })}
+                          {path && (
+                            <span
+                              className={
+                                ownRow(path.title) ? "w-full shrink-0" : "max-w-full min-w-0"
+                              }
+                            >
+                              <Link href={`/lop/${path.id}`} className={pathChip}>
+                                {path.title}
+                              </Link>
+                            </span>
+                          )}
                         </div>
                       );
                     })}
