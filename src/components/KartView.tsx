@@ -7,16 +7,16 @@ import { ChevronDown } from "lucide-react";
 import { getConcept, getPath } from "@/data/learning";
 import { areaPictures, overviewAreas } from "@/data/overview";
 
-/** Et langt ord, som «Fleksibel inflasjonsstyring», får egen rad. */
-function ownRow(label: string) {
-  return label.length >= 22;
-}
+/**
+ * To like kolonner som fyller raden. Et ord som er bredere enn halv rad
+ * får hele raden, så det ikke blir et hull ved siden av.
+ */
+const chipRow =
+  "flex min-h-12 max-w-full min-w-[min(100%,min-content)] flex-[1_1_calc(50%-0.25rem)] flex-col justify-center break-words rounded-lg px-2.5 py-1.5 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
 
-const conceptChip =
-  "inline-flex max-w-full flex-col rounded-lg bg-[var(--background)] px-2.5 py-1.5 text-left ring-1 ring-[var(--line)] ring-inset hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";
+const conceptChip = `${chipRow} bg-[var(--background)] ring-1 ring-[var(--line)] ring-inset hover:bg-white focus-visible:outline-[var(--accent)]`;
 
-const pathChip =
-  "inline-flex max-w-full rounded-lg bg-[var(--accent)] px-2.5 py-1.5 text-left text-[15px] leading-snug text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ink)]";
+const pathChip = `${chipRow} bg-[var(--accent)] text-[15px] leading-snug text-white focus-visible:outline-[var(--ink)]`;
 
 export function KartView() {
   const [openId, setOpenId] = useState<string | null>(null);
@@ -104,23 +104,18 @@ export function KartView() {
                     {area.themes.map((theme) => {
                       const path = theme.pathId ? getPath(theme.pathId) : undefined;
                       return (
-                        <div
-                          key={theme.id}
-                          id={theme.id}
-                          className="flex scroll-mt-24 flex-wrap items-center gap-2"
-                        >
-                          <p className="shrink-0 text-xs text-[var(--muted)]">{theme.name}</p>
-                          {theme.conceptIds.map((id) => {
-                            const concept = getConcept(id);
-                            if (!concept) return null;
-                            return (
-                              <span
-                                key={id}
-                                className={
-                                  ownRow(concept.term) ? "w-full shrink-0" : "max-w-full min-w-0"
-                                }
-                              >
-                                <Link href={`/konsept/${concept.id}`} className={conceptChip}>
+                        <div key={theme.id} id={theme.id} className="scroll-mt-24">
+                          <h3 className="text-xs text-[var(--muted)]">{theme.name}</h3>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {theme.conceptIds.map((id) => {
+                              const concept = getConcept(id);
+                              if (!concept) return null;
+                              return (
+                                <Link
+                                  key={id}
+                                  href={`/konsept/${concept.id}`}
+                                  className={conceptChip}
+                                >
                                   <span className="text-[15px] leading-snug text-[var(--ink)]">
                                     {concept.term}
                                   </span>
@@ -130,20 +125,14 @@ export function KartView() {
                                     </span>
                                   )}
                                 </Link>
-                              </span>
-                            );
-                          })}
-                          {path && (
-                            <span
-                              className={
-                                ownRow(path.title) ? "w-full shrink-0" : "max-w-full min-w-0"
-                              }
-                            >
+                              );
+                            })}
+                            {path && (
                               <Link href={`/lop/${path.id}`} className={pathChip}>
                                 {path.title}
                               </Link>
-                            </span>
-                          )}
+                            )}
+                          </div>
                         </div>
                       );
                     })}
