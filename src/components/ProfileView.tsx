@@ -80,7 +80,7 @@ function Section({
 
 export function ProfileView() {
   const [ready, setReady] = useState(false);
-  const [bucket, setBucket] = useState<"studerer" | "fullfort" | "kan" | null>(null);
+  const [bucket, setBucket] = useState<"igang" | "fullfort" | "sitter" | null>(null);
   const [repeated, setRepeated] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [daysOpen, setDaysOpen] = useState(false);
@@ -101,14 +101,19 @@ export function ProfileView() {
   const repeatedRows = repeatedConcepts(reviews, conceptProgress);
   const activity = getActivity();
   const last = activity[0];
-  const introduced = Object.entries(conceptProgress).filter(([, item]) => isIntroduced(item));
-  const studying = introduced.filter(([, item]) => item.status !== "Kan det" && item.status !== "Sitter");
-  const knows = introduced.filter(([, item]) => item.status === "Kan det" || item.status === "Sitter");
+  const sitting = Object.entries(conceptProgress).filter(
+    ([, item]) => isIntroduced(item) && item.status === "Sitter"
+  );
   const completedPaths = learningPaths.filter((path) => {
     const progress = pathProgress[path.id];
     if (!progress) return false;
     if (progress.completedAt) return true;
     return progress.completedLessonIds.length >= path.lessonIds.length;
+  });
+  const startedPaths = learningPaths.filter((path) => {
+    if (completedPaths.some((done) => done.id === path.id)) return false;
+    const progress = pathProgress[path.id];
+    return Boolean(progress && progress.completedLessonIds.length > 0);
   });
 
   const today = new Date();
@@ -153,9 +158,9 @@ export function ProfileView() {
         <div className="mt-3 grid grid-cols-3 gap-2">
           {(
             [
-              ["studerer", studying.length, "Studerer"],
-              ["fullfort", completedPaths.length, "Fullført"],
-              ["kan", knows.length, "Kan det"],
+              ["igang", startedPaths.length, "Løp i gang"],
+              ["fullfort", completedPaths.length, "Løp fullført"],
+              ["sitter", sitting.length, "Konsepter som sitter"],
             ] as const
           ).map(([id, count, label]) => {
             const open = bucket === id;
@@ -177,14 +182,14 @@ export function ProfileView() {
             );
           })}
         </div>
-        {bucket === "studerer" && (
+        {bucket === "igang" && (
           <ConceptList
-            empty="Ingen konsepter i køen som du fortsatt studerer."
-            rows={studying.map(([id, item]) => ({
-              id,
-              href: `/konsept/${id}`,
-              label: getConcept(id)?.term ?? id,
-              meta: item.status,
+            empty="Ingen løp er i gang."
+            rows={startedPaths.map((path) => ({
+              id: path.id,
+              href: `/lop/${path.id}`,
+              label: path.title,
+              meta: "I gang",
             }))}
           />
         )}
@@ -199,14 +204,14 @@ export function ProfileView() {
             }))}
           />
         )}
-        {bucket === "kan" && (
+        {bucket === "sitter" && (
           <ConceptList
-            empty="Ingen konsepter er merket Kan det eller Sitter."
-            rows={knows.map(([id, item]) => ({
+            empty="Ingen konsepter sitter ennå."
+            rows={sitting.map(([id]) => ({
               id,
               href: `/konsept/${id}`,
               label: getConcept(id)?.term ?? id,
-              meta: item.status,
+              meta: "Sitter",
             }))}
           />
         )}
