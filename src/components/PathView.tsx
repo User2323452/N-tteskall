@@ -10,7 +10,7 @@ import {
 } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ArrowLeft, Circle } from "lucide-react";
+import { Circle } from "lucide-react";
 import {
   categoryLabel,
   getLessonsForPath,
@@ -21,6 +21,7 @@ import {
   LessonMotionContext,
   type LessonAdvance,
 } from "@/components/lesson-motion";
+import { BackLink, useNav } from "@/components/nav-memory";
 
 const SHEET_DOWN_MS = 200;
 const CHECK_MS = 160;
@@ -125,6 +126,7 @@ export function PathView({
   children?: ReactNode;
 }) {
   const router = useRouter();
+  const nav = useNav();
   const pathname = usePathname() ?? "";
   const lessonId = lessonIdFromPath(pathname, pathId);
   const path = getPath(pathId);
@@ -229,6 +231,22 @@ export function PathView({
     return wait(SCROLL_MS);
   }, []);
 
+  const goAfterLesson = useCallback(
+    (href: string) => {
+      const pathHref = `/lop/${pathId}`;
+      if (!nav) {
+        router.push(href);
+        return;
+      }
+      if (href === pathHref && nav.backTarget(pathHref) === pathHref) {
+        nav.back(pathHref);
+        return;
+      }
+      nav.replace(href);
+    },
+    [nav, pathId, router]
+  );
+
   const run = useCallback(
     async (advance: LessonAdvance) => {
       const token = ++gen.current;
@@ -236,7 +254,7 @@ export function PathView({
       if (prefersReducedMotion()) {
         advance.commit();
         setTick((n) => n + 1);
-        router.push(advance.href);
+        goAfterLesson(advance.href);
         return;
       }
       setSheet({ y: "down", ms: SHEET_DOWN_MS });
@@ -278,9 +296,9 @@ export function PathView({
         if (!alive()) return;
       }
       pendingUp.current = advance.toId !== null;
-      router.push(advance.href);
+      goAfterLesson(advance.href);
     },
-    [router, scrollRowUnderHeader]
+    [goAfterLesson, scrollRowUnderHeader]
   );
 
   const close = useCallback(() => {
@@ -291,15 +309,16 @@ export function PathView({
       flowRef.current.style.transition = "none";
       flowRef.current.style.transform = "";
     }
+    const pathHref = `/lop/${pathId}`;
     if (!lessonId || prefersReducedMotion()) {
-      router.push(`/lop/${pathId}`);
+      goAfterLesson(pathHref);
       return;
     }
     setSheet({ y: "down", ms: SHEET_DOWN_MS });
     window.setTimeout(() => {
-      router.push(`/lop/${pathId}`);
+      goAfterLesson(pathHref);
     }, SHEET_DOWN_MS);
-  }, [lessonId, pathId, router]);
+  }, [goAfterLesson, lessonId, pathId]);
 
   const motion = useMemo(() => ({ run, close }), [run, close]);
 
@@ -307,8 +326,8 @@ export function PathView({
     return (
       <div className="space-y-3">
         <p className="text-sm text-slate-600">Fant ikke læringsløpet.</p>
-        <Link href="/" className="text-sm font-medium text-slate-900 underline">
-          Tilbake til hjem
+        <Link href="/lop" className="text-sm font-medium text-slate-900 underline">
+          Tilbake til løp
         </Link>
       </div>
     );
@@ -320,18 +339,11 @@ export function PathView({
   return (
     <LessonMotionContext.Provider value={motion}>
       <div className="mx-auto max-w-2xl">
-        <header
-          ref={headerRef}
-          className="sticky top-12 z-10 -mx-5 bg-[var(--background)] px-5 pb-3 pt-1"
-        >
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Hjem
-          </Link>
-          <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl tracking-tight text-slate-900 sm:text-4xl">
+        <div className="sticky top-0 z-10 -mx-5 bg-[var(--background)] px-5">
+          <BackLink fallback="/lop" />
+        </div>
+        <header ref={headerRef} className="pb-3 pt-1">
+          <h1 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-slate-900 sm:text-4xl">
             {path.title}
           </h1>
           <div
@@ -421,14 +433,16 @@ export function PathView({
       {lessonId && (
         <div
           id="lesson-sheet"
-          className="fixed inset-x-0 bottom-0 top-12 z-20 overflow-y-auto overscroll-contain bg-[var(--background)]"
+          className="fixed inset-x-0 bottom-0 z-20 overflow-y-auto overscroll-contain bg-[var(--background)]"
           style={{
+            top: "var(--app-header)",
+            bottom: "var(--pill-offset)",
             transform: sheet.y === "open" ? "translateY(0)" : "translateY(100%)",
             transition: sheet.ms ? `transform ${sheet.ms}ms ${EASE}` : "none",
             pointerEvents: sheet.y === "open" ? "auto" : "none",
           }}
         >
-          <div className="mx-auto max-w-xl px-5 py-4 pb-28">{children}</div>
+          <div className="mx-auto max-w-xl px-5 pt-4 pb-10">{children}</div>
         </div>
       )}
     </LessonMotionContext.Provider>

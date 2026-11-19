@@ -8,6 +8,8 @@
   --line: #e2e8f0;
   --accent: #0f6e56;
   --accent-soft: #e6f4ef;
+  --app-header: 3rem;
+  --pill-offset: calc(4.75rem + env(safe-area-inset-bottom, 0px));
 }
 
 @theme inline {
@@ -31,7 +33,54 @@ body {
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
+  }
+}
+
+@keyframes screenEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes screenFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.screen-enter {
+  animation: screenEnter 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.screen-fade {
+  animation: screenFade 220ms ease-out;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --pill-offset: 0px;
+  }
+}
+
+@media (max-width: 639px) {
+  .is-detail {
+    --app-header: 0px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-enter,
+  .screen-fade {
+    animation: none;
   }
 }
 

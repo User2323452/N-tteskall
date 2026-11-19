@@ -12,6 +12,7 @@ import {
   getPath,
 } from "@/data/learning";
 import { useLessonMotion } from "@/components/lesson-motion";
+import { useNav } from "@/components/nav-memory";
 import {
   getPathProgress,
   introduceConcepts,
@@ -28,6 +29,7 @@ export function LessonView({
   lessonId: string;
 }) {
   const router = useRouter();
+  const nav = useNav();
   const motion = useLessonMotion();
   const path = getPath(pathId);
   const lesson = getLesson(lessonId);
@@ -237,12 +239,17 @@ export function LessonView({
 
       <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-6">
         {prev ? (
-          <Link
-            href={`/lop/${pathId}/${prev.id}`}
+          <button
+            type="button"
+            onClick={() => {
+              const href = `/lop/${pathId}/${prev.id}`;
+              if (nav) nav.replace(href);
+              else router.replace(href);
+            }}
             className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800"
           >
             <ArrowLeft className="h-4 w-4" /> Forrige
-          </Link>
+          </button>
         ) : (
           <span />
         )}
