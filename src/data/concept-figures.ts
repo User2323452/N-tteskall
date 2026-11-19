@@ -54,7 +54,21 @@ export type FigureSpec =
       caption: string;
     }
   | { type: "pair"; title: string; a: string; b: string; link: string; caption: string }
-  | { type: "bars"; title: string; items: { label: string; value: number }[]; caption: string };
+  | { type: "bars"; title: string; items: { label: string; value: number }[]; caption: string }
+  | { type: "sketch"; title: string; kind: SketchKind; caption: string };
+
+/** Enkle tegninger der poenget er en linje, en kurve eller punkter. */
+export type SketchKind =
+  | "kryss"
+  | "konjunktur"
+  | "noytral-rente"
+  | "prislinje"
+  | "fastpris"
+  | "fastrente"
+  | "volatilitet"
+  | "korrelasjon"
+  | "spredning"
+  | "ols";
 
 export const conceptFigures: Record<string, FigureSpec> = {
   styringsrenten: {
@@ -431,9 +445,9 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "bars",
     title: "Hvor hardt den følger markedet",
     items: [
-      { label: "0,5", value: 40 },
-      { label: "1", value: 70 },
-      { label: "1,5", value: 100 },
+      { label: "0,5", value: 0.5 },
+      { label: "1", value: 1 },
+      { label: "1,5", value: 1.5 },
     ],
     caption: "Beta 1 beveger seg om lag med markedet. 0,5 beveger seg halvparten så mye. 1,5 mer. Stolpene er forholdet, ikke en kurs.",
   },
@@ -600,12 +614,11 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Resultat kan være positivt mens kontantene faller, hvis pengene ligger i kundefordringer eller i nye anlegg.",
   },
   ols: {
-    type: "pair",
+    type: "sketch",
     title: "Linjen som bommer minst",
-    a: "Punktene",
-    b: "Én rett linje",
-    link: "minst mulig kvadrert avvik",
-    caption: "OLS velger linjen der de kvadrerte avstandene til punktene er minst. Beta fra en slik linje er et estimat, ikke en naturlov.",
+    kind: "ols",
+    caption:
+      "OLS velger linjen der summen av de kvadrerte avvikene er minst. Beta er hvor bratt en slik linje er. Den er et estimat, ikke en naturlov.",
   },
   trinnskatt: { type: "interactive", id: "trinnskatt" },
   formuesskatt: {
@@ -746,22 +759,18 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Ledige delt på arbeidsstyrken. Stolpene viser at AKU og registrert ledighet skiller lag. De er ikke årets tall fra SSB eller NAV.",
   },
   konjunktur: {
-    type: "compare",
+    type: "sketch",
     title: "Bølgen rundt trenden",
-    leftLabel: "Høykonjunktur",
-    left: "Aktiviteten ligger over trenden.",
-    rightLabel: "Lavkonjunktur",
-    right: "Aktiviteten ligger under trenden.",
-    caption: "Konjunkturen er svingningen. Trenden er den jevne linjen. Produksjonsgapet er avviket mellom dem.",
+    kind: "konjunktur",
+    caption:
+      "Konjunkturen er bølgen. Trenden er den jevne linjen. Produksjonsgapet er avviket mellom dem. Tegningen er en form, ikke Norges tall.",
   },
   "noytral-rente": {
-    type: "compare",
+    type: "sketch",
     title: "Over eller under linjen",
-    leftLabel: "Over nøytral rente",
-    left: "Styringsrenten strammer. Etterspørselen dempes.",
-    rightLabel: "Under nøytral rente",
-    right: "Styringsrenten slipper. Etterspørselen stimuleres.",
-    caption: "Den vannrette linjen er anslaget. Styringsrenten tegnes over eller under. Anslaget står i pengepolitisk rapport.",
+    kind: "noytral-rente",
+    caption:
+      "Den stiplete linjen er anslaget på nøytral rente. Styringsrenten over linjen strammer, under linjen slipper den opp. Anslaget står i pengepolitisk rapport.",
   },
   "importert-inflasjon": {
     type: "flow",
@@ -770,12 +779,11 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Svakere krone løfter importprisene i kroner. Det kan løfte KPI. Rekkefølgen er poenget, ikke en prognose.",
   },
   "tilbud-og-ettersporsel": {
-    type: "pair",
+    type: "sketch",
     title: "Krysset",
-    a: "Tilbud",
-    b: "Etterspørsel",
-    link: "møtes i prisen",
-    caption: "Der de to kurvene krysser, lander pris og mengde. Høyere rente virker ved å flytte etterspørselen.",
+    kind: "kryss",
+    caption:
+      "Der de to kurvene krysser, lander pris og mengde. Høyere rente flytter etterspørselen ned, og krysset flytter seg til lavere pris og mengde.",
   },
   bytteforhold: {
     type: "formula",
@@ -798,16 +806,11 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Handelsbalansen er differansen. Stolpene er et regnestykke, ikke Norges tall et bestemt år.",
   },
   oljepris: {
-    type: "bars",
+    type: "sketch",
     title: "En prislinje",
-    items: [
-      { label: "1", value: 40 },
-      { label: "2", value: 70 },
-      { label: "3", value: 55 },
-      { label: "4", value: 90 },
-      { label: "5", value: 60 },
-    ],
-    caption: "Linjen viser at prisen beveger seg. Den er ikke en notering. Plattformbildet på området viser hvor inntekten kommer fra.",
+    kind: "prislinje",
+    caption:
+      "Linjen viser at prisen går opp og ned over tid. Den er ikke en notering, og aksen har ingen tall. Plattformbildet på området viser hvor inntekten kommer fra.",
   },
   petroleumsinntekter: {
     type: "flow",
@@ -835,13 +838,11 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Andelene er et eksempel, ikke din regning. Strømstøtten skjærer i spotdelen, ikke i nettleien.",
   },
   fastprisavtale: {
-    type: "compare",
+    type: "sketch",
     title: "Flat mot ujevn",
-    leftLabel: "Fastpris",
-    left: "Kraftprisen ligger flatt i avtaleperioden.",
-    rightLabel: "Spot",
-    right: "Kraftprisen hopper time for time.",
-    caption: "Figuren er kraftprisen. Nettleie og avgifter ligger utenfor begge linjene.",
+    kind: "fastpris",
+    caption:
+      "Linjene er kraftprisen. På fastpris ligger den flatt i avtaleperioden, på spot hopper den time for time. Nettleie og avgifter kommer i tillegg på begge.",
   },
   utbytte: {
     type: "split",
@@ -882,22 +883,18 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Forventet avkastning er bunnen pluss påslaget. Påslaget er betalingen for å bære risiko, ikke et løfte.",
   },
   volatilitet: {
-    type: "compare",
+    type: "sketch",
     title: "Rolig og urolig",
-    leftLabel: "Lav volatilitet",
-    left: "Avkastningen holder seg nær en jevn bane.",
-    rightLabel: "Høy volatilitet",
-    right: "Avkastningen hopper. Samme snitt kan skjule store utslag.",
-    caption: "Volatilitet er størrelsen på svingningen. Den er ikke det samme som at kursen faller.",
+    kind: "volatilitet",
+    caption:
+      "Begge følger samme jevne bane. Volatilitet er størrelsen på svingningen rundt den. Den er ikke det samme som at kursen faller.",
   },
   korrelasjon: {
-    type: "compare",
+    type: "sketch",
     title: "Følges, eller ikke",
-    leftLabel: "Høy korrelasjon",
-    left: "De to kurvene går samme vei.",
-    rightLabel: "Lav korrelasjon",
-    right: "Den ene kurven følger ikke den andre.",
-    caption: "Diversifisering hjelper mest når avkastningene ikke følges. Mange aksjer som faller samtidig, er lite spredning.",
+    kind: "korrelasjon",
+    caption:
+      "Til venstre går de to kurvene samme vei. Til høyre følger den ene ikke den andre. Diversifisering hjelper mest når avkastningene ikke følges.",
   },
   kupongrente: {
     type: "compare",
@@ -946,13 +943,11 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Bufferen er det øverste laget. I november 2026 var kravet 2,5 prosent. Stabelen er formen, ikke hele kravet til én bank.",
   },
   fastrente: {
-    type: "compare",
+    type: "sketch",
     title: "Låst eller med på renta",
-    leftLabel: "Fastrente",
-    left: "Ligger flatt i avtaleperioden.",
-    rightLabel: "Flytende rente",
-    right: "Følger med når styringsrenten flytter seg.",
-    caption: "Figuren er boliglånsrenta. Etter bindingen avtales fastrenten på nytt.",
+    kind: "fastrente",
+    caption:
+      "Linjene er boliglånsrenta. Fastrenten ligger flatt mens styringsrenten flytter seg. Den flytende renta følger etter. Etter bindingen avtales fastrenten på nytt.",
   },
   buffer: {
     type: "flow",
@@ -982,10 +977,10 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "bars",
     title: "Grunnlaget før og etter",
     items: [
-      { label: "Før", value: 60 },
-      { label: "Etter", value: 100 },
+      { label: "Før", value: 1 },
+      { label: "Etter × 1,72", value: 1.72 },
     ],
-    caption: "Den høyre stolpen er grunnlaget etter faktoren. Høyden er formen. Årets faktor står hos Skatteetaten, ikke i figuren.",
+    caption: "Den høyre stolpen er grunnlaget etter faktoren 1,72 for inntektsåret 2026. Faktoren vedtas for hvert år, så sjekk Skatteetaten.",
   },
   verdsettingsrabatt: {
     type: "bars",
@@ -1021,24 +1016,22 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "split",
     title: "Omsetningen, og biten som blir igjen",
     parts: [
-      { label: "Margin", share: 18, tone: "teal" },
-      { label: "Øvrig omsetning", share: 82, tone: "slate" },
+      { label: "Margin 10 %", share: 10, tone: "teal" },
+      { label: "Driftskostnader 90 %", share: 90, tone: "slate" },
     ],
-    caption: "Hele stolpen er omsetningen. Biten er driftsresultatet. 18 prosent er et eksempel, ikke et selskap.",
+    caption: "Hele stolpen er omsetningen. Biten er driftsresultatet. 10 prosent er eksempelet fra teksten: 10 øre av hver krone i salg, ikke et bestemt selskap.",
   },
   standardavvik: {
-    type: "compare",
+    type: "sketch",
     title: "Tett eller spredt",
-    leftLabel: "Lavt standardavvik",
-    left: "Punktene ligger nær snittet.",
-    rightLabel: "Høyt standardavvik",
-    right: "Punktene ligger langt fra snittet.",
-    caption: "Snittet kan være det samme. Standardavviket sier hvor langt punktene ligger fra det. Volatilitet er denne spredningen for avkastning.",
+    kind: "spredning",
+    caption:
+      "Snittet er det samme i begge. Standardavviket sier hvor langt punktene ligger fra det. Volatilitet er denne spredningen for avkastning.",
   },
 };
 
 export function figureSitsBeside(spec: FigureSpec | undefined): boolean {
-  return Boolean(spec && spec.type !== "interactive");
+  return Boolean(spec && spec.type !== "interactive" && spec.type !== "sketch");
 }
 
 function assertFigures() {
