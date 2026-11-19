@@ -122,7 +122,7 @@ export function streakDaysEnding(
 
 export type StreakWorkLine = {
   key: "lop" | "repetisjon";
-  title: "Dagens løp" | "Repetisjon";
+  title: "Leksjon" | "Repetisjon";
   status: string;
   remaining: boolean;
 };
@@ -142,10 +142,10 @@ export function streakWorkLines(input: {
   const lopDone = input.pathFinished || input.lessonDoneToday;
   const lop: StreakWorkLine =
     !lopDone && !input.pathOpen
-      ? { key: "lop", title: "Dagens løp", status: "ingen i dag", remaining: false }
+      ? { key: "lop", title: "Leksjon", status: "ingen i dag", remaining: false }
       : lopDone
-        ? { key: "lop", title: "Dagens løp", status: "ferdig", remaining: false }
-        : { key: "lop", title: "Dagens løp", status: "gjenstår", remaining: true };
+        ? { key: "lop", title: "Leksjon", status: "ferdig", remaining: false }
+        : { key: "lop", title: "Leksjon", status: "gjenstår", remaining: true };
 
   const due = Math.max(0, Math.floor(input.dueCount));
   const repetisjon: StreakWorkLine =
@@ -422,6 +422,25 @@ export function hasLessonToday(): boolean {
 export function hasReviewToday(): boolean {
   const today = todayISO();
   return getReviews().some((entry) => onCalendarDay(entry.at, today));
+}
+
+export function todayLessonCount(): number {
+  const today = todayISO();
+  return new Set(
+    getActivity()
+      .filter((entry) => LESSON_HREF.test(entry.href) && onCalendarDay(entry.at, today))
+      .map((entry) => entry.href)
+  ).size;
+}
+
+export function todayReviewCount(): number {
+  const today = todayISO();
+  return getReviews().filter((entry) => onCalendarDay(entry.at, today)).length;
+}
+
+/** Dagen er allerede telt, så en ny leksjon ikke starter streken på nytt. */
+export function todayAlreadyCounted(): boolean {
+  return readReturn().lastActiveOn?.slice(0, 10) === todayISO();
 }
 
 /** Dager som skal merkes i måneden på Profil. */
@@ -853,6 +872,7 @@ function assertSchedule() {
   });
   if (
     openDay[0]?.status !== "gjenstår" ||
+    openDay[0]?.title !== "Leksjon" ||
     openDay[1]?.status !== "2 konsepter gjenstår" ||
     openDay[1]?.title !== "Repetisjon"
   ) {
