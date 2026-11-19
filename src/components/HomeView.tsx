@@ -10,13 +10,17 @@ import { StreakFlame } from "@/components/StreakFlame";
 import {
   ackSitterNotices,
   currentStreak,
+  dismissInstallHint,
   formatDueLabel,
   getDueConceptIds,
+  hasCompletedLesson,
   hasLessonToday,
   hasReviewToday,
   idleWaitingLabel,
   listCompletedDays,
+  installHintDismissed,
   listSchedule,
+  needsHomeScreenHint,
   peekSitterNotices,
   sitterHomeLine,
   streakWorkLines,
@@ -31,10 +35,14 @@ export function HomeView() {
   const [q, setQ] = useState("");
   const [ready, setReady] = useState(false);
   const [sitter, setSitter] = useState<SitterNotice[]>([]);
+  const [installHint, setInstallHint] = useState(false);
 
   useEffect(() => {
     const pending = peekSitterNotices();
     setSitter(pending);
+    setInstallHint(
+      hasCompletedLesson() && !installHintDismissed() && needsHomeScreenHint()
+    );
     setReady(true);
     if (pending.length === 0) return;
     const handle = window.setTimeout(() => {
@@ -132,6 +140,25 @@ export function HomeView() {
             aria-label="Søk etter konsept eller læringsløp"
           />
         </form>
+
+        {installHint && (
+          <div className="mt-4 flex items-start justify-between gap-3 text-sm leading-relaxed text-[var(--muted)]">
+            <p>
+              Legg Nøtteskall på Hjem-skjermen, så blir fremdriften værende. Trykk
+              Del, så Legg til på Hjem-skjerm.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                dismissInstallHint();
+                setInstallHint(false);
+              }}
+              className="shrink-0 text-sm text-[var(--ink)] underline-offset-2 hover:underline"
+            >
+              Skjul
+            </button>
+          </div>
+        )}
 
         {q.trim() && (
           <div className="mt-2 rounded-2xl border border-[var(--line)] bg-white p-2">
