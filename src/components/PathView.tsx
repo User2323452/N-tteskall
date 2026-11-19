@@ -194,6 +194,8 @@ export function PathView({
           madeDay: advance.madeDay,
         });
         setTick((n) => n + 1);
+        await wait(0);
+        if (!alive()) return;
         goAfterLesson(advance.href);
         return;
       }
