@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-/** Oscars merke: brun hasselnøtt med «kr». Filen brukes som den er. */
+/** Oscars merke: brun hasselnøtt med «kr» på hvit bakgrunn. */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <Image

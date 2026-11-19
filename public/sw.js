@@ -1,5 +1,5 @@
 /* Minimal PWA service worker — cache shell for offline revisit */
-const CACHE = "notteskall-shell-v5";
+const CACHE = "notteskall-shell-v6";
 const SHELL = [
   "/",
   "/manifest.webmanifest",
