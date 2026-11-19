@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { PathGlyph } from "@/components/PathGlyph";
 import { getLessonsForPath } from "@/data/learning";
 import { overviewAreas, pathsInArea } from "@/data/overview";
 import { pickContinueTarget } from "@/lib/continue-path";
@@ -55,8 +56,9 @@ export function LopListView() {
                   <li key={path.id} className="border-t border-[var(--line)] first:border-t-0">
                     <Link
                       href={`/lop/${path.id}`}
-                      className="flex min-h-12 items-center justify-between gap-3 py-3"
+                      className="flex min-h-12 items-center gap-3 py-3"
                     >
+                      <PathGlyph id={path.id} />
                       <span className="min-w-0">
                         <span className="block text-[15px] text-[var(--ink)]">
                           {path.title}
@@ -65,9 +67,6 @@ export function LopListView() {
                         <span className="text-sm text-[var(--muted)]">
                           {lessonMeta(total, done)}
                         </span>
-                      </span>
-                      <span aria-hidden className="text-[var(--muted)]">
-                        →
                       </span>
                     </Link>
                   </li>
