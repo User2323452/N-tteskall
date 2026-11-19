@@ -327,7 +327,7 @@ export const seedCareerGoals: CareerGoal[] = [
   },
 ];
 
-/** Begrepsbanken: term titles + short definitions for spaced repetition (not Notion article pages). */
+/** Konseptbanken: term titles + short definitions for spaced repetition (not Notion article pages). */
 export const seedTerms: Term[] = [
   {
     id: "term-styringsrenten",

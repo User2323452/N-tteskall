@@ -21,7 +21,7 @@ export interface OverviewArea {
 
 /**
  * Kartet Oscar kjenner fra Notion: områder og temaer,
- * med begreper under. Læringsløp er stier gjennom kartet, ikke kartet selv.
+ * med konsepter under. Læringsløp er stier gjennom kartet, ikke kartet selv.
  * Oljefondet er eget område (finanspolitikk), ikke et kapittel i pengepolitikken.
  */
 export const overviewAreas: OverviewArea[] = [
@@ -35,7 +35,7 @@ export const overviewAreas: OverviewArea[] = [
       {
         id: "inflasjon-tema",
         name: "Inflasjon og kjøpekraft",
-        conceptIds: ["inflasjon", "kpi", "kpi-jae", "kjopkraft"],
+        conceptIds: ["inflasjon", "deflasjon", "kpi", "kpi-jae", "kjopkraft", "importert-inflasjon"],
       },
       {
         id: "norges-bank",
@@ -45,10 +45,15 @@ export const overviewAreas: OverviewArea[] = [
           "inflasjonsmal",
           "fleksibel-inflasjonsstyring",
           "styringsrenten",
+          "renteniva",
+          "noytral-rente",
           "transmisjon",
+          "tilbud-og-ettersporsel",
           "rentebanen",
           "ppr",
           "produksjonsgap",
+          "konjunktur",
+          "arbeidsledighet",
         ],
       },
       {
@@ -58,6 +63,7 @@ export const overviewAreas: OverviewArea[] = [
         conceptIds: [
           "frontfagsmodellen",
           "lonnsoppgjor",
+          "reallonn",
           "sykepenger",
           "dagpenger",
         ],
@@ -75,10 +81,13 @@ export const overviewAreas: OverviewArea[] = [
         name: "Oljefondet og handlingsregelen",
         conceptIds: [
           "oljefondet",
+          "oljepris",
+          "petroleumsinntekter",
           "nbim",
           "handlingsregelen",
           "strukturelt-underskudd",
           "finanspolitikk",
+          "automatiske-stabilisatorer",
           "realavkastning",
         ],
         pathId: "oljefondet-og-handlingsregelen",
@@ -87,12 +96,12 @@ export const overviewAreas: OverviewArea[] = [
         id: "strom-og-kraft",
         name: "Strøm og kraft",
         pathId: "strom-og-kraft",
-        conceptIds: ["spotpris", "prisomrader", "stromstotte"],
+        conceptIds: ["spotpris", "nettleie", "fastprisavtale", "prisomrader", "stromstotte"],
       },
       {
         id: "verdiskaping",
         name: "Verdiskaping",
-        conceptIds: ["bnp", "bnp-fastland"],
+        conceptIds: ["bnp", "bnp-fastland", "bytteforhold", "handelsbalanse"],
       },
     ],
   },
@@ -110,12 +119,12 @@ export const overviewAreas: OverviewArea[] = [
       {
         id: "aksjer",
         name: "Aksjer og verdsettelse",
-        conceptIds: ["multiplikatorer", "pb", "evebitda", "dcf"],
+        conceptIds: ["borsverdi", "multiplikatorer", "pe", "pb", "evebitda", "dcf", "utbytte"],
       },
       {
         id: "bedrift",
         name: "Bedriftsøkonomi",
-        conceptIds: ["wacc", "capm", "beta"],
+        conceptIds: ["wacc", "capm", "risikopremie", "beta"],
       },
       {
         id: "renter",
@@ -124,6 +133,7 @@ export const overviewAreas: OverviewArea[] = [
           "nibor",
           "nowa",
           "obligasjon",
+          "kupongrente",
           "yield",
           "durasjon",
           "kredittpaslag",
@@ -139,7 +149,7 @@ export const overviewAreas: OverviewArea[] = [
       {
         id: "portefolje",
         name: "Portefølje",
-        conceptIds: ["sharpe", "diversifisering"],
+        conceptIds: ["sharpe", "volatilitet", "korrelasjon", "diversifisering"],
       },
     ],
   },
@@ -152,12 +162,12 @@ export const overviewAreas: OverviewArea[] = [
       {
         id: "forretning",
         name: "Forretningsmodellen",
-        conceptIds: ["rentenetto", "innskuddsdekning", "ki"],
+        conceptIds: ["rentenetto", "rentemargin", "provisjonsinntekter", "innskuddsdekning", "innskuddsgaranti", "ki"],
       },
       {
         id: "bankrapport",
         name: "Bankrapport",
-        conceptIds: ["roe", "cet1", "tap-pa-utlan"],
+        conceptIds: ["roe", "cet1", "motsyklisk-buffer", "tap-pa-utlan"],
       },
       {
         id: "sparebank",
@@ -181,6 +191,7 @@ export const overviewAreas: OverviewArea[] = [
         id: "sparing",
         name: "Sparing",
         conceptIds: [
+          "buffer",
           "renters-rente",
           "ask",
           "skjermingsfradrag",
@@ -192,7 +203,7 @@ export const overviewAreas: OverviewArea[] = [
         id: "pensjon",
         name: "Pensjon",
         pathId: "pensjon",
-        conceptIds: ["folketrygd", "tjenestepensjon", "grunnbelop", "otp", "ips", "afp"],
+        conceptIds: ["folketrygd", "tjenestepensjon", "innskuddspensjon", "ytelsespensjon", "grunnbelop", "otp", "ips", "afp"],
       },
       {
         id: "boliglan",
@@ -203,6 +214,7 @@ export const overviewAreas: OverviewArea[] = [
           "annuitetslan",
           "serielan",
           "nominell-effektiv",
+          "fastrente",
           "gjeldsgrad",
           "rentefradrag",
           "utlansforskriften",
@@ -222,6 +234,8 @@ export const overviewAreas: OverviewArea[] = [
           "minstefradrag",
           "trinnskatt",
           "formuesskatt",
+          "verdsettingsrabatt",
+          "oppjusteringsfaktor",
           "skjermingsfradrag",
           "rentefradrag",
         ],
@@ -237,12 +251,12 @@ export const overviewAreas: OverviewArea[] = [
       {
         id: "regnskap",
         name: "Regnskapsanalyse",
-        conceptIds: ["resultatregnskap", "balanse", "kontantstrom"],
+        conceptIds: ["resultatregnskap", "driftsmargin", "avskrivning", "balanse", "arbeidskapital", "kontantstrom"],
       },
       {
         id: "regresjon",
         name: "Regresjon i praksis",
-        conceptIds: ["ols", "beta"],
+        conceptIds: ["ols", "standardavvik", "beta"],
       },
     ],
   },
@@ -292,7 +306,7 @@ function assertOverview() {
     for (const theme of area.themes) {
       for (const id of theme.conceptIds) {
         if (!getConcept(id)) {
-          throw new Error(`Oversikt: mangler begrep ${id} i ${theme.name}`);
+          throw new Error(`Oversikt: mangler konsept ${id} i ${theme.name}`);
         }
       }
     }

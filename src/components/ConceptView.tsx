@@ -45,7 +45,7 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
   if (!concept) {
     return (
       <div className="space-y-3">
-        <p className="text-sm text-slate-600">Fant ikke begrepet.</p>
+        <p className="text-sm text-slate-600">Fant ikke konseptet.</p>
         <Link href="/sok" className="text-sm font-medium underline">
           Til søk
         </Link>
@@ -142,7 +142,7 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
         </h2>
         <p className="mt-1 text-sm text-slate-500">
           Si forklaringen høyt, og velg hvor godt den satt. Datoen under
-          knappen er neste gang begrepet kommer i Repeter. Intervallet er kort
+          knappen er neste gang konseptet kommer i Repeter. Intervallet er kort
           første gang, og blir lengre når det sitter.
         </p>
         <button
@@ -204,14 +204,14 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
       {related.length > 0 && (
         <section className="mt-8">
           <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
-            Relaterte begreper
+            Relaterte konsepter
           </h2>
           <ul className="mt-3 flex flex-wrap gap-2">
             {related.map((c) =>
               c ? (
                 <li key={c.id}>
                   <Link
-                    href={`/begrep/${c.id}`}
+                    href={`/konsept/${c.id}`}
                     className="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 hover:border-slate-300"
                   >
                     {c.term}

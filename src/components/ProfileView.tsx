@@ -170,10 +170,10 @@ export function ProfileView() {
         </div>
         {bucket === "studerer" && (
           <ConceptList
-            empty="Ingen begreper i køen som du fortsatt studerer."
+            empty="Ingen konsepter i køen som du fortsatt studerer."
             rows={studying.map(([id, item]) => ({
               id,
-              href: `/begrep/${id}`,
+              href: `/konsept/${id}`,
               label: getConcept(id)?.term ?? id,
               meta: item.status,
             }))}
@@ -192,10 +192,10 @@ export function ProfileView() {
         )}
         {bucket === "kan" && (
           <ConceptList
-            empty="Ingen begreper er merket Kan det eller Sitter."
+            empty="Ingen konsepter er merket Kan det eller Sitter."
             rows={knows.map(([id, item]) => ({
               id,
-              href: `/begrep/${id}`,
+              href: `/konsept/${id}`,
               label: getConcept(id)?.term ?? id,
               meta: item.status,
             }))}
@@ -209,15 +209,15 @@ export function ProfileView() {
           repeatedRows.length === 0
             ? "Ingen vurderinger ennå"
             : repeatedRows.length === 1
-              ? "1 begrep"
-              : `${repeatedRows.length} begreper`
+              ? "1 konsept"
+              : `${repeatedRows.length} konsepter`
         }
         open={repeated}
         onToggle={() => setRepeated((open) => !open)}
       >
         {repeatedRows.length === 0 ? (
           <p className="text-sm text-[var(--muted)]">
-            Vurderinger dukker opp her etter at du har repetert et begrep.{" "}
+            Vurderinger dukker opp her etter at du har repetert et konsept.{" "}
             <Link href="/repeter" className="text-[var(--ink)] underline-offset-2 hover:underline">
               Gå til Repeter
             </Link>
@@ -228,7 +228,7 @@ export function ProfileView() {
             {repeatedRows.map((row) => (
               <li key={row.conceptId} className="border-t border-[var(--line)] first:border-t-0">
                 <Link
-                  href={`/begrep/${row.conceptId}`}
+                  href={`/konsept/${row.conceptId}`}
                   className="flex min-h-12 items-center justify-between gap-3 py-3"
                 >
                   <span className="min-w-0">
@@ -268,13 +268,13 @@ export function ProfileView() {
         </p>
         {schedule.length === 0 ? (
           <p className="mt-2 text-sm text-[var(--muted)]">
-            Datoene kommer når et begrep ligger i køen.
+            Datoene kommer når et konsept ligger i køen.
           </p>
         ) : (
           <ul className="mt-3 space-y-1.5">
             {schedule.slice(0, 12).map((item) => (
               <li key={item.id} className="flex items-baseline justify-between gap-3 text-sm">
-                <Link href={`/begrep/${item.id}`} className="text-[var(--ink)] hover:text-[var(--accent)]">
+                <Link href={`/konsept/${item.id}`} className="text-[var(--ink)] hover:text-[var(--accent)]">
                   {getConcept(item.id)?.term ?? item.id}
                 </Link>
                 <span className="shrink-0 text-[var(--muted)]">{formatDueLabel(item.dueOn)}</span>

@@ -121,7 +121,7 @@ export function RepeatView() {
         </h1>
         <p className="text-sm leading-relaxed text-slate-600">
           {queue.length === 0
-            ? "Fullfør en leksjon, så legges nøkkelbegrepene her. Du kan også legge et begrep i køen fra begrepssiden."
+            ? "Fullfør en leksjon, så legges nøkkelkonseptene her. Du kan også legge et konsept i køen fra konseptsiden."
             : "Du har gått gjennom det som forfalt i dag."}
         </p>
         {nextTerm && nextUp && (

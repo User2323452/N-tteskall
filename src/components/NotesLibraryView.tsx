@@ -65,7 +65,7 @@ export function NotesLibraryView() {
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600">
           Valgfritt bibliotek for egne sider. Læring skjer via{" "}
           <Link href="/" className="font-medium text-slate-800 underline-offset-2 hover:underline">
-            læringsløp og begreper
+            læringsløp og konsepter
           </Link>
           — du trenger ikke fylle tomme sider først.
         </p>

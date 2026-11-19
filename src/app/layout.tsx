@@ -32,7 +32,7 @@ const body = localFont({
 export const metadata: Metadata = {
   title: "Nøtteskall",
   description:
-    "Lær økonomi på bokmål. Læringsløp, begreper og repetisjon — lagret lokalt på enheten.",
+    "Lær økonomi på bokmål. Læringsløp, konsepter og repetisjon — lagret lokalt på enheten.",
   applicationName: "Nøtteskall",
   appleWebApp: {
     capable: true,

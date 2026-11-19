@@ -158,7 +158,7 @@ export function LessonView({
       {concepts.length > 0 && (
         <section className="mt-8">
           <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
-            Nøkkelbegreper
+            Nøkkelkonsepter
           </h2>
           <ul className="mt-3 space-y-2">
             {concepts.map((c) =>
@@ -167,7 +167,7 @@ export function LessonView({
                   key={c.id}
                   className="rounded-2xl border border-slate-200/80 bg-white px-4 py-3"
                 >
-                  <Link href={`/begrep/${c.id}`} className="block">
+                  <Link href={`/konsept/${c.id}`} className="block">
                     <span className="font-medium text-slate-900">{c.term}</span>
                     <span className="mt-0.5 block text-sm text-slate-500">
                       {c.definition}
@@ -275,7 +275,7 @@ export function LessonView({
       </div>
       {lesson.quiz && !canAdvance && (
         <p className="mt-2 text-xs text-slate-500">
-          Svar riktig på spørsmålet for å gå videre — eller åpne begrepene over og prøv igjen.
+          Svar riktig på spørsmålet for å gå videre — eller åpne konseptene over og prøv igjen.
         </p>
       )}
       <p className="mt-6 text-xs leading-relaxed text-slate-400">

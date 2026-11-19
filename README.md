@@ -1,6 +1,6 @@
 # Nøtteskall
 
-Norsk læringsapp for økonomi: **læringsløp**, **begreper**, **oversikt** og **profil**. Lokal-først (IndexedDB og localStorage), PWA-klar for iPhone Safari.
+Norsk læringsapp for økonomi: **læringsløp**, **konsepter**, **oversikt** og **profil**. Lokal-først (IndexedDB og localStorage), PWA-klar for iPhone Safari.
 
 ## Stack
 
@@ -21,9 +21,9 @@ npm run dev
 ## Hva du kan gjøre
 
 1. Fortsette et **læringsløp** (Norsk pengepolitikk, Personlig sparing)
-2. Bla i **Oversikt** — områder, temaer og begreper
-3. **Søke** et begrep (også vanlige synonymer som «oljefondet» og «renta»)
-4. **Repetere** begreper du har møtt
+2. Bla i **Oversikt** — områder, temaer og konsepter
+3. **Søke** et konsept (også vanlige synonymer som «oljefondet» og «renta»)
+4. **Repetere** konsepter du har møtt
 5. Se fremdrift under **Profil**
 6. Valgfritt: egne notater under `/notater`
 

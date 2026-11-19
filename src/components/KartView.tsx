@@ -38,7 +38,7 @@ export function KartView() {
           Kart
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-[var(--muted)]">
-          Et kart over økonomien. Åpne et område, og temaene og begrepene ligger
+          Et kart over økonomien. Åpne et område, og temaene og konseptene ligger
           inni.
         </p>
       </header>
@@ -112,7 +112,7 @@ export function KartView() {
                               return (
                                 <li key={id}>
                                   <Link
-                                    href={`/begrep/${concept.id}`}
+                                    href={`/konsept/${concept.id}`}
                                     className="flex items-baseline justify-between gap-3 py-1.5"
                                   >
                                     <span className="text-[15px] text-[var(--ink)]">
