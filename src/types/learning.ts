@@ -99,9 +99,33 @@ export interface ActivityEntry {
   at: string;
 }
 
+/** Én gang et konsept ble vurdert Sitter med 30 dagers intervall. */
+export interface SitterNotice {
+  conceptId: string;
+  term: string;
+  at: string;
+}
+
+/**
+ * Dager på rad og Sitter-linjer som bare vises én gang.
+ * Ligger i den lokale fremdriften og følger med i sikkerhetskopien.
+ */
+export interface ReturnProgress {
+  /** Siste dag med minst én vurdering eller én fullført leksjon. YYYY-MM-DD. */
+  lastActiveOn?: string;
+  /** Antall dager på rad som slutter på lastActiveOn. */
+  streak: number;
+  /** Sitter (30 dager) som ikke er vist på Hjem ennå. */
+  sitterPending: SitterNotice[];
+  /** `conceptId@at` for linjer som allerede er vist. */
+  sitterSeen: string[];
+}
+
 export interface LearningBackup {
   conceptProgress: Record<string, ConceptProgress>;
   pathProgress: Record<string, PathProgress>;
   reviews: ReviewEntry[];
   activity: ActivityEntry[];
+  /** Valgfritt i eldre sikkerhetskopier. */
+  returnProgress?: ReturnProgress;
 }
