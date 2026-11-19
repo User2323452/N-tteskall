@@ -19,7 +19,9 @@ export type InteractiveId =
   | "minstefradrag"
   | "yield"
   | "nominell"
-  | "lanform";
+  | "lanform"
+  | "reallonn"
+  | "bolig";
 
 export type FigureSpec =
   | { type: "photo"; src: string; alt: string; caption: string }
@@ -451,15 +453,7 @@ export const conceptFigures: Record<string, FigureSpec> = {
     ],
     caption: "Beta 1 beveger seg om lag med markedet. 0,5 beveger seg halvparten så mye. 1,5 mer. Stolpene er forholdet, ikke en kurs.",
   },
-  durasjon: {
-    type: "compare",
-    title: "Kort eller lang binding",
-    leftLabel: "Kort durasjon",
-    left: "Prisen flytter seg lite når renta endres. Du får pengene tilbake før.",
-    rightLabel: "Lang durasjon",
-    right: "Prisen flytter seg mye. Du er låst til kupongen lenger.",
-    caption: "Durasjon måler hvor følsom obligasjonsprisen er for en renteendring. Lengre løpetid gir vanligvis høyere durasjon.",
-  },
+  durasjon: { type: "interactive", id: "yield" },
   yield: { type: "interactive", id: "yield" },
   kredittpaslag: {
     type: "stack",
@@ -633,16 +627,7 @@ export const conceptFigures: Record<string, FigureSpec> = {
     steps: ["Lønn", "Arbeidsgiver setter inn", "Kontoen står", "Utbetaling som pensjonist"],
     caption: "I innskuddspensjon er innskuddet avtalt. Det du får ut, avhenger av avkastning og tid. OTP er minstesatsen i privat sektor.",
   },
-  egenkapital: {
-    type: "split",
-    title: "Eksempel: bolig til 100",
-    parts: [
-      { label: "Egenkapital 10", share: 10, tone: "green" },
-      { label: "Lån 90", share: 90, tone: "blue" },
-    ],
-    caption:
-      "Egenkapital er delen du stiller selv. For nedbetalingslån er 10/90 grensen fra 31. desember 2024, fortsatt i 2026. Rammekreditt med pant i bolig har et tak på 60 prosent.",
-  },
+  egenkapital: { type: "interactive", id: "bolig" },
   fellesgjeld: {
     type: "photo",
     src: "/bilder/begrep-fellesgjeld.jpg",
@@ -740,15 +725,7 @@ export const conceptFigures: Record<string, FigureSpec> = {
     right: "Deflasjon. Det generelle prisnivået synker over tid.",
     caption: "Én vare som blir billigere, er ikke deflasjon. Prisnivået skal falle, og fallet skal vare.",
   },
-  reallonn: {
-    type: "compare",
-    title: "To linjer",
-    leftLabel: "Nominell lønn",
-    left: "Kronene på lønnsslippen.",
-    rightLabel: "KPI",
-    right: "Prisveksten som avgjør om lønna rekker lenger.",
-    caption: "Reallønna stiger når lønnslinjen stiger mer enn KPI. Figuren er de to linjene, ikke et bestemt år.",
-  },
+  reallonn: { type: "interactive", id: "reallonn" },
   arbeidsledighet: {
     type: "bars",
     title: "To mål på ledighet",
@@ -1029,6 +1006,12 @@ export const conceptFigures: Record<string, FigureSpec> = {
       "Snittet er det samme i begge. Standardavviket sier hvor langt punktene ligger fra det. Volatilitet er denne spredningen for avkastning.",
   },
 };
+
+/** Konsepter med samme interaktive figur deler nøkkel, så en leksjon viser den én gang. */
+export function figureKey(conceptId: string): string {
+  const spec = conceptFigures[conceptId];
+  return spec?.type === "interactive" ? `interaktiv:${spec.id}` : conceptId;
+}
 
 export function figureSitsBeside(spec: FigureSpec | undefined): boolean {
   return Boolean(spec && spec.type !== "interactive" && spec.type !== "sketch");

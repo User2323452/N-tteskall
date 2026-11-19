@@ -346,8 +346,9 @@ export const lessons: Lesson[] = [
       "Renters rente betyr at du får avkastning også på tidligere avkastning. 100 kroner som vokser med 5 prosent, blir 105. Neste periode regnes prosenten av 105, ikke bare av de opprinnelige 100.",
       "Effekten er liten det første året og større jo lenger pengene får stå. Derfor betyr tid og jevn sparing mer enn det føles som i starten.",
       "En høy årlig kostnad, for eksempel et dyrt fond, spiser av den samme effekten. Lav kostnad og lang horisont hører sammen.",
+      "Snur du regnestykket, får du nåverdi: hva et beløp senere er verdt i dag. Med 5 prosent i året er 1 000 kroner om ti år verdt om lag 614 kroner i dag, fordi 614 kroner vokser til 1 000 på ti år.",
     ],
-    conceptIds: ["renters-rente"],
+    conceptIds: ["renters-rente", "naverdi"],
     quiz: {
       question: "Hva beskriver renters rente?",
       options: [
@@ -371,8 +372,9 @@ export const lessons: Lesson[] = [
       "Høyere forventet avkastning henger vanligvis sammen med større svingninger. Penger på konto svinger lite og har lav forventet avkastning. Aksjer svinger mer, og har historisk gitt høyere avkastning over lange perioder.",
       "Et indeksfond følger en indeks, for eksempel et bredt aksjemarked, i stedet for at en forvalter plukker enkeltaksjer. Den årlige kostnaden er ofte lav. Fondet fjerner ikke markedsrisiko: det faller når markedet faller.",
       "Risikospredning betyr å ikke legge alt i én aksje eller én sektor. Ett selskap kan gå i null. Et bredt fond gjør at enkeltutfall veier mindre. Hele markedet kan likevel falle.",
+      "Et rentefond eier obligasjoner. En obligasjon betaler en fast kupong. Stiger renta i markedet, faller prisen på obligasjonene fondet allerede eier, mest for dem med lang løpetid. Avkastningen du får hvis du kjøper til dagens pris og holder til forfall, kalles yield.",
     ],
-    conceptIds: ["risiko-avkastning", "indeksfond", "diversifisering"],
+    conceptIds: ["risiko-avkastning", "indeksfond", "diversifisering", "yield"],
   },
   {
     id: "ps-3",
@@ -626,7 +628,7 @@ export const lessons: Lesson[] = [
       "Tre krav går igjen. Du må stille med egenkapital, så belåningsgraden ikke blir for høy. Samlet gjeld må stå i forhold til inntekten. Banken skal sjekke at du tåler en høyere rente enn den du får i dag.",
       "For nedbetalingslån er grensen 90 prosent av boligverdien fra 31. desember 2024, og den gjelder fortsatt i 2026. Egenkapitalkravet er dermed 10 prosent. Gjelden er fortsatt begrenset til fem ganger brutto inntekt. Rammekreditt med pant i bolig har et tak på 60 prosent. Banken kan være strengere.",
     ],
-    conceptIds: ["utlansforskriften"],
+    conceptIds: ["utlansforskriften", "belaningsgrad", "gjeldsgrad"],
     quiz: {
       question: "Hvem fastsetter utlånsforskriften?",
       options: [
@@ -650,14 +652,36 @@ export const lessons: Lesson[] = [
       "Egenkapital i et boligkjøp er den delen av prisen du stiller med selv. Belåningsgrad er lånet delt på boligens verdi. 10 prosent egenkapital er det samme som 90 prosent belåningsgrad. Det er grensen for nedbetalingslån fra 31. desember 2024, fortsatt i 2026.",
       "Pengene kan komme fra sparing, for eksempel BSU, fra salg av en annen bolig, eller fra gave. Et nytt lån regnes ikke som egenkapital. Banken vurderer også at du kan betjene gjelden.",
       "Høyere egenkapital gir lavere belåningsgrad. Det er ofte et vilkår for lånet, og det demper hvor hardt et prisfall treffer deg.",
+      "Begge reglene gjelder samtidig. Lånet kan være høyst 90 prosent av verdien, og samlet gjeld høyst fem ganger brutto inntekt. Med 400 000 kroner i egenkapital er taket etter 90-prosentregelen en totalpris på 4 000 000 kroner. Med 700 000 kroner i inntekt, og ingen annen gjeld, kan boliggjelden være 3 500 000 kroner, og totalprisen dermed 3 900 000 kroner. Regelen med lavest tak stopper deg først, her inntekten.",
     ],
     conceptIds: ["egenkapital"],
+  },
+  {
+    id: "bo-5",
+    pathId: "bolig",
+    title: "Annuitet eller serielån",
+    order: 2,
+    summary: "To måter å betale ned det samme lånet.",
+    body: [
+      "Et boliglån betales ned med terminer. Hver termin er renter pluss avdrag. Renta er prisen for å låne. Avdraget er den delen som betaler ned lånet.",
+      "Annuitetslån har fast terminbeløp. I starten er det meste renter, fordi restgjelden er høy. Etter hvert blir renteandelen mindre og avdraget større.",
+      "Serielån har fast avdrag. Renta regnes av en restgjeld som synker, så terminbeløpet faller. De første årene er dyrere enn på et annuitetslån med samme rente og løpetid. Du betaler ned raskere, og betaler derfor mindre renter totalt.",
+      "Eksempel: 1 000 000 kroner, 5 prosent rente, 20 år og én termin i året. Første termin er om lag 80 243 kroner på annuitet og 100 000 kroner på serielån. Rentene blir om lag 604 852 kroner på annuitet og 525 000 kroner på serielån til sammen.",
+    ],
+    conceptIds: ["annuitetslan", "serielan"],
+    quiz: {
+      question: "Hvilket lån har fast avdrag og synkende terminbeløp?",
+      options: ["Annuitetslån", "Serielån", "Rammekreditt", "Begge"],
+      answerIndex: 1,
+      explain:
+        "Serielån har fast avdrag. Renta regnes av lavere restgjeld for hver termin, så terminbeløpet faller. Annuitetslån har fast terminbeløp.",
+    },
   },
   {
     id: "bo-3",
     pathId: "bolig",
     title: "Fellesgjeld",
-    order: 2,
+    order: 3,
     summary: "Gjeld som følger andelen.",
     body: [
       "I et borettslag eier du en andel, og laget kan ha lån. Din del av det lånet er fellesgjeld. Prisantydningen er ofte bare innskuddet. Totalpris er innskudd pluss fellesgjeld.",
@@ -682,7 +706,7 @@ export const lessons: Lesson[] = [
     id: "bo-4",
     pathId: "bolig",
     title: "Leie mot eie",
-    order: 3,
+    order: 4,
     summary: "Leie først, kjøp senere — på avtale.",
     body: [
       "Leie mot eie, også kalt leie til eie, er en avtale der du leier boligen en periode og siden kan eller skal kjøpe den. En del av leien kan være avtalt å telle som egenkapital. Vilkårene varierer mellom utbyggere og kommuner.",
@@ -765,8 +789,9 @@ export const lessons: Lesson[] = [
       "Lønnsoppgjøret er forhandlingene om lønn og tariffavtaler. Hovedoppgjør annet hvert år tar hele avtalen. Mellomoppgjør i året mellom gjelder i hovedsak lønn.",
       "Frontfaget går først. Andre områder forhandler etterpå, med rammen fra frontfaget som norm. Den lokale lønnsøkningen din kan avvike, men rammen er ankeret i nyhetene.",
       "Oppgjøret oppgis ofte som en årslønnsvekst, inkludert overheng fra året før. Det er ikke det samme som prosenten på én lønnsslipp.",
+      "Reallønn er lønna etter prisvekst. Stiger lønna 4 prosent og prisene 3 prosent, stiger reallønna med om lag 1 prosent. Stiger prisene mer enn lønna, faller reallønna selv om det står flere kroner på slippen.",
     ],
-    conceptIds: ["lonnsoppgjor"],
+    conceptIds: ["lonnsoppgjor", "reallonn"],
     quiz: {
       question: "Hva er frontfaget i et lønnsoppgjør?",
       options: [
@@ -947,10 +972,10 @@ export const learningPaths: LearningPath[] = [
   {
     id: "bolig",
     title: "Bolig",
-    subtitle: "Boliglånsforskriften, egenkapital, fellesgjeld og leie mot eie.",
+    subtitle: "Boliglånsforskriften, egenkapital, annuitet og serielån, fellesgjeld og leie mot eie.",
     category: "personlig",
-    estimatedMinutes: 16,
-    lessonIds: ["bo-1", "bo-2", "bo-3", "bo-4"],
+    estimatedMinutes: 20,
+    lessonIds: ["bo-1", "bo-2", "bo-5", "bo-3", "bo-4"],
   },
   {
     id: "oljefondet-og-handlingsregelen",

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { ConceptFigure } from "@/components/figures/ConceptFigure";
+import { figureKey } from "@/data/concept-figures";
 import {
   getConcept,
   getLesson,
@@ -75,6 +76,10 @@ export function LessonView({
     .map((id) => getConcept(id))
     .filter(Boolean);
   const lessonConceptIds = lesson.conceptIds;
+  const figureOwners = new Map<string, string>();
+  for (const id of lessonConceptIds) {
+    if (!figureOwners.has(figureKey(id))) figureOwners.set(figureKey(id), id);
+  }
   const lessonTitle = lesson.title;
   const pathTitle = path.title;
 
@@ -173,9 +178,11 @@ export function LessonView({
                       {c.definition}
                     </span>
                   </Link>
-                  <div className="mt-3">
-                    <ConceptFigure id={c.id} />
-                  </div>
+                  {figureOwners.get(figureKey(c.id)) === c.id && (
+                    <div className="mt-3">
+                      <ConceptFigure id={c.id} />
+                    </div>
+                  )}
                 </li>
               ) : null
             )}
