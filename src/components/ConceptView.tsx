@@ -16,11 +16,81 @@ import {
   getReviews,
   gradeHint,
   introduceConcepts,
+  isIntroduced,
   setConceptStatus,
 } from "@/lib/progress";
 import { recallGrades, type ConceptProgress, type RecallGrade, type ReviewEntry } from "@/types/learning";
 import { termStatusStyle } from "@/lib/theme";
 import { ConceptFigure, ConceptTeaching } from "@/components/figures/ConceptFigure";
+
+function ReviewActions({
+  progress,
+  hints,
+  onAdd,
+  onGrade,
+}: {
+  progress: ConceptProgress;
+  hints: Partial<Record<RecallGrade, string>>;
+  onAdd: () => void;
+  onGrade: (grade: RecallGrade) => void;
+}) {
+  const inQueue = isIntroduced(progress) && Boolean(progress.dueOn);
+  const today = new Date();
+  const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const dueNow = inQueue && (progress.dueOn ?? "") <= todayIso;
+
+  if (!inQueue) {
+    return (
+      <button
+        type="button"
+        onClick={onAdd}
+        className="mt-3 text-sm font-medium text-[var(--accent)]"
+      >
+        Legg i Repeter
+      </button>
+    );
+  }
+
+  if (!dueNow) {
+    return (
+      <p className="mt-2 text-sm text-slate-600">
+        I Repeter · neste {formatDueLabel(progress.dueOn ?? todayIso)}
+      </p>
+    );
+  }
+
+  return (
+    <>
+      <p className="mt-1 text-sm text-slate-500">
+        Si forklaringen høyt, og velg hvor godt den satt. Datoen under knappen
+        er neste gang konseptet kommer i Repeter.
+      </p>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        {recallGrades.map((g) => (
+          <button
+            key={g}
+            type="button"
+            onClick={() => onGrade(g)}
+            className={`min-h-12 rounded-xl border px-3 py-2.5 text-center text-sm font-medium leading-tight ${
+              progress.status === g
+                ? "border-slate-900 bg-slate-900 text-white"
+                : "border-slate-200 bg-white text-slate-700"
+            }`}
+          >
+            <span className="block">{g}</span>
+            <span
+              className={`mt-0.5 block text-[11px] font-normal ${
+                progress.status === g ? "text-white/80" : "text-slate-400"
+              }`}
+            >
+              {hints[g] ?? "\u00a0"}
+            </span>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+}
 
 export function ConceptView({ conceptId }: { conceptId: string }) {
   const concept = getConcept(conceptId);
@@ -140,41 +210,12 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
         <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
           Repeter
         </h2>
-        <p className="mt-1 text-sm text-slate-500">
-          Si forklaringen høyt, og velg hvor godt den satt. Datoen under
-          knappen er neste gang konseptet kommer i Repeter. Intervallet er kort
-          første gang, og blir lengre når det sitter.
-        </p>
-        <button
-          type="button"
-          onClick={addToReview}
-          className="mt-3 text-sm font-medium text-[var(--accent)]"
-        >
-          Legg i Repeter
-        </button>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {recallGrades.map((g) => (
-            <button
-              key={g}
-              type="button"
-              onClick={() => grade(g)}
-              className={`min-h-11 flex-1 rounded-xl border px-3 py-2.5 text-center text-sm font-medium leading-tight sm:flex-none ${
-                progress.status === g
-                  ? "border-slate-900 bg-slate-900 text-white"
-                  : "border-slate-200 bg-white text-slate-700"
-              }`}
-            >
-              <span className="block">{g}</span>
-              <span
-                className={`mt-0.5 block text-[11px] font-normal ${
-                  progress.status === g ? "text-white/80" : "text-slate-400"
-                }`}
-              >
-                {hints[g] ?? "\u00a0"}
-              </span>
-            </button>
-          ))}
-        </div>
+        <ReviewActions
+          progress={progress}
+          hints={hints}
+          onAdd={addToReview}
+          onGrade={grade}
+        />
       </section>
 
       {older.length > 0 && (

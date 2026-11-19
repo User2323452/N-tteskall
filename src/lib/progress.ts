@@ -575,7 +575,7 @@ export function introduceConcepts(
     }
     map[id] = {
       status: "Ny",
-      dueOn: today,
+      dueOn: addDays(today, 1),
       introduced: true,
       reviewCount: 0,
     };
