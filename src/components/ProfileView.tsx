@@ -13,10 +13,12 @@ import {
   getActivity,
   getAllConceptProgress,
   getAllPathProgress,
+  getDisplayName,
   getReviews,
   isIntroduced,
   listCompletedDays,
   listSchedule,
+  setDisplayName,
   syncCompletedDays,
 } from "@/lib/progress";
 import type { ConceptProgress, RecallStatus, ReviewEntry } from "@/types/learning";
@@ -85,11 +87,26 @@ export function ProfileView() {
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [daysOpen, setDaysOpen] = useState(false);
   const [backup, setBackup] = useState(false);
+  const [nameOpen, setNameOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [draft, setDraft] = useState("");
 
   useEffect(() => {
+    const stored = getDisplayName();
+    setName(stored);
+    setDraft(stored);
     syncCompletedDays();
     setReady(true);
   }, []);
+
+  function saveName(event: React.FormEvent) {
+    event.preventDefault();
+    const next = draft.trim().slice(0, 30);
+    setDisplayName(next);
+    setName(next);
+    setDraft(next);
+    setNameOpen(false);
+  }
 
   if (!ready) {
     return <p className="text-sm text-[var(--muted)]">Laster profil…</p>;
@@ -152,6 +169,35 @@ export function ProfileView() {
           </p>
         )}
       </header>
+
+      <Section
+        title="Navn"
+        summary={name || "Ikke satt"}
+        open={nameOpen}
+        onToggle={() => {
+          setDraft(name);
+          setNameOpen((open) => !open);
+        }}
+      >
+        <form onSubmit={saveName} className="space-y-3">
+          <label htmlFor="display-name" className="block text-sm text-[var(--muted)]">
+            Hva vil du at vi skal kalle deg?
+          </label>
+          <input
+            id="display-name"
+            value={draft}
+            maxLength={30}
+            onChange={(event) => setDraft(event.target.value)}
+            className="w-full rounded-xl border border-[var(--line)] bg-white px-3 py-3 text-sm text-[var(--ink)] outline-none ring-[var(--accent)] focus:ring-2"
+          />
+          <button
+            type="submit"
+            className="min-h-12 w-full rounded-xl bg-[var(--accent)] text-sm font-medium text-white"
+          >
+            Lagre
+          </button>
+        </form>
+      </Section>
 
       <section className="rounded-2xl border border-[var(--line)] bg-white px-4 py-4">
         <h2 className="text-sm font-semibold text-[var(--ink)]">Fremdrift</h2>

@@ -71,19 +71,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     >
       <header
         className={`z-30 shrink-0 bg-[var(--background)]/90 backdrop-blur-md ${
-          detail ? "max-sm:hidden" : ""
+          detail || onHome ? "max-sm:hidden" : ""
         }`}
       >
         <div className="mx-auto flex h-12 max-w-2xl items-center justify-between gap-3 px-5">
           <div className="min-w-0">
-            {onHome ? (
-              <span className="flex items-center gap-2">
-                <LogoMark className="h-9 w-9 shrink-0" />
-                <span className="hidden font-[family-name:var(--font-display)] text-lg text-[var(--accent)] md:inline">
-                  Nøtteskall
-                </span>
-              </span>
-            ) : (
+            {!onHome && (
               <Link
                 href="/"
                 aria-label="Hjem"
