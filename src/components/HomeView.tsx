@@ -20,7 +20,6 @@ import {
   hasLessonToday,
   hasReviewToday,
   installHintDismissed,
-  listCompletedDays,
   listSchedule,
   needsHomeScreenHint,
   peekSitterNotices,
@@ -103,8 +102,6 @@ export function HomeView() {
     ? Object.values(getAllConceptProgress()).filter((item) => item.status === "Sitter").length
     : 0;
   const streak = ready ? currentStreak() : null;
-  const freshStart =
-    ready && (streak?.count ?? 0) === 0 && listCompletedDays().length === 0;
   const dayComplete = Boolean(target && lessonDoneToday && dueIds.length === 0);
   const minutes =
     target && target.total > 0
@@ -289,18 +286,16 @@ export function HomeView() {
               {sitting} av {concepts.length}
             </span>
           </Link>
-          {streak && !freshStart && (
-            <Link
-              href="/profil"
-              className="flex min-h-14 items-center justify-between gap-3 border-t border-[var(--line)] px-4 py-4"
-            >
-              <span className="font-semibold text-[var(--ink)]">Dager på rad</span>
-              <span className="flex shrink-0 items-center gap-1.5 font-semibold text-[var(--ink)]">
-                {streak.count > 0 && <StreakFlame className="h-4 w-4" />}
-                {streak.count}
-              </span>
-            </Link>
-          )}
+          <Link
+            href="/profil"
+            className="flex min-h-14 items-center justify-between gap-3 border-t border-[var(--line)] px-4 py-4"
+          >
+            <span className="font-semibold text-[var(--ink)]">Dager på rad</span>
+            <span className="flex shrink-0 items-center gap-1.5 font-semibold text-[var(--ink)]">
+              {(streak?.count ?? 0) > 0 && <StreakFlame className="h-4 w-4" />}
+              {streak?.count ?? 0}
+            </span>
+          </Link>
         </div>
         {sitter.length > 0 && (
           <ul className="mt-2 space-y-1 px-1">
