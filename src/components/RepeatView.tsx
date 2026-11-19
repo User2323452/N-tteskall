@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { BackLink } from "@/components/nav-memory";
 import { concepts, getConcept } from "@/data/learning";
 import {
   formatDueLabel,
@@ -152,14 +152,8 @@ export function RepeatView() {
   const attempt = draft.trim();
 
   return (
-    <div className="mx-auto flex min-h-[70dvh] max-w-lg flex-col">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Avslutt
-      </Link>
+    <div className="mx-auto flex min-h-full max-w-lg flex-col">
+      <BackLink fallback="/" label="Avslutt" />
 
       <p className="mt-4 text-sm text-slate-500">
         Venter i dag: {queue.length - index}
@@ -243,7 +237,7 @@ export function RepeatView() {
       </div>
 
       {revealed && (
-        <div className="sticky bottom-20 mt-8 grid grid-cols-2 gap-2 pb-4 sm:grid-cols-4">
+        <div className="sticky bottom-3 z-10 mt-8 grid grid-cols-2 gap-2 pb-1 sm:grid-cols-4">
           {recallGrades.map((status) => (
             <button
               key={status}

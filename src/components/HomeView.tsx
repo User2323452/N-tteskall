@@ -1,59 +1,21 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
-import { getLessonsForPath, learningPaths, searchLearning } from "@/data/learning";
-import { areaPictures, overviewAreas, pathsInArea } from "@/data/overview";
-import { getAllPathProgress, nextLessonId } from "@/lib/progress";
+import { Check, Search } from "lucide-react";
+import { concepts, getConcept, searchLearning } from "@/data/learning";
+import { pickTodaysPath } from "@/lib/continue-path";
+import { formatDueLabel, getDueConceptIds, listSchedule } from "@/lib/progress";
 
 export function HomeView() {
   const router = useRouter();
   const [q, setQ] = useState("");
-  const [progressTick, setProgressTick] = useState(0);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setProgressTick((n) => n + 1);
+    setReady(true);
   }, []);
-
-  const pathProgress = useMemo(() => {
-    void progressTick;
-    return getAllPathProgress();
-  }, [progressTick]);
-
-  const continueTarget = useMemo(() => {
-    for (const path of learningPaths) {
-      const prog = pathProgress[path.id];
-      const lessons = getLessonsForPath(path.id);
-      const next = nextLessonId(path.lessonIds, prog?.completedLessonIds ?? []);
-      if (!next) continue;
-      const done = prog?.completedLessonIds.length ?? 0;
-      const started = Boolean(prog?.startedAt) || done > 0;
-      const index = lessons.findIndex((lesson) => lesson.id === next);
-      return {
-        path,
-        lessonId: next,
-        started,
-        index: index >= 0 ? index + 1 : 1,
-        total: lessons.length,
-        done,
-        finishedAll: false,
-      };
-    }
-    const first = learningPaths[0];
-    const lessons = getLessonsForPath(first.id);
-    return {
-      path: first,
-      lessonId: first.lessonIds[0],
-      started: true,
-      index: lessons.length,
-      total: lessons.length,
-      done: lessons.length,
-      finishedAll: true,
-    };
-  }, [pathProgress]);
 
   const liveSearch = useMemo(() => searchLearning(q), [q]);
 
@@ -67,9 +29,23 @@ export function HomeView() {
     router.push(`/sok?q=${encodeURIComponent(trimmed)}`);
   }
 
-  const pct = continueTarget.total
-    ? Math.round((continueTarget.done / continueTarget.total) * 100)
-    : 0;
+  const todayPath = ready ? pickTodaysPath() : null;
+  const schedule = ready ? listSchedule() : [];
+  const dueIds = new Set(
+    ready ? getDueConceptIds(concepts.map((concept) => concept.id)) : []
+  );
+  const due = schedule
+    .filter((item) => dueIds.has(item.id))
+    .map((item) => ({
+      id: item.id,
+      term: getConcept(item.id)?.term ?? item.id,
+      dueOn: item.dueOn,
+    }));
+
+  const pct =
+    todayPath && todayPath.total
+      ? Math.round((todayPath.done / todayPath.total) * 100)
+      : 0;
 
   return (
     <div className="mx-auto max-w-xl space-y-10">
@@ -139,41 +115,47 @@ export function HomeView() {
         )}
       </section>
 
-      <section>
-        {continueTarget.finishedAll ? (
+      <section className="space-y-3">
+        <h2 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-[var(--ink)]">
+          Dagens løp
+        </h2>
+        {!todayPath ? (
+          <div className="h-36 rounded-2xl bg-[var(--accent-soft)]" />
+        ) : todayPath.finished ? (
           <Link
-            href="/repeter"
-            className="block rounded-2xl bg-[var(--accent-soft)] px-4 py-4"
+            href={`/lop/${todayPath.pathId}`}
+            className="block rounded-2xl border border-[var(--line)] bg-white px-4 py-4"
           >
-            <p className="text-[11px] font-semibold tracking-[0.16em] text-[var(--accent)]">
-              Løp
-            </p>
-            <h2 className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
-              Løpene er ferdige
-            </h2>
-            <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">
-              Repeter begrepene du har lagt i køen.
-            </p>
-            <p className="mt-3 text-sm font-medium text-[var(--accent)]">
-              Til repetisjon →
-            </p>
+            <p className="text-xs font-semibold text-[var(--accent)]">Løp</p>
+            <span className="mt-1 flex items-start gap-3">
+              <span
+                className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[var(--accent)] text-white"
+                aria-hidden
+              >
+                <Check className="h-3.5 w-3.5" strokeWidth={3} />
+              </span>
+              <span className="min-w-0">
+                <span className="block font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
+                  {todayPath.pathTitle}
+                </span>
+                <span className="mt-1 block text-sm text-[var(--muted)]">Ferdig</span>
+              </span>
+            </span>
           </Link>
         ) : (
           <Link
-            href={`/lop/${continueTarget.path.id}/${continueTarget.lessonId}`}
+            href={`/lop/${todayPath.pathId}`}
             className="block rounded-2xl bg-[var(--accent-soft)] px-4 py-4"
           >
-            <p className="text-[11px] font-semibold tracking-[0.16em] text-[var(--accent)]">
-              {continueTarget.started ? "Fortsett" : "Start"}
-            </p>
-            <h2 className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
-              {continueTarget.path.title}
-            </h2>
+            <p className="text-xs font-semibold text-[var(--accent)]">Løp</p>
+            <h3 className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
+              {todayPath.pathTitle}
+            </h3>
             <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">
-              {continueTarget.path.subtitle}
+              {todayPath.pathSubtitle}
             </p>
             <p className="mt-4 text-sm text-[var(--ink)]">
-              Leksjon {continueTarget.index} av {continueTarget.total}
+              Leksjon {todayPath.index} av {todayPath.total}
             </p>
             <div className="mt-2 h-1 overflow-hidden rounded-full bg-white">
               <div
@@ -181,92 +163,41 @@ export function HomeView() {
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <p className="mt-3 text-sm font-medium text-[var(--accent)]">
-              {continueTarget.started ? "Fortsett" : "Start"} →
-            </p>
           </Link>
         )}
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-[var(--ink)]">Områdene</h2>
-        <p className="text-sm text-[var(--muted)]">
-          Løpene ligger i kartet, samlet etter område.
-        </p>
-        <ul className="space-y-3">
-          {overviewAreas.map((area) => {
-            const picture = areaPictures[area.id];
-            const paths = pathsInArea(area);
-            return (
-              <li key={area.id} className="overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
-                <Link href={`/kart#${area.id}`} className="flex gap-3 p-3">
-                  {picture && (
-                    <Image
-                      src={picture.src}
-                      alt=""
-                      width={160}
-                      height={120}
-                      className="h-16 w-20 shrink-0 rounded-xl object-cover"
-                    />
-                  )}
-                  <span className="min-w-0">
-                    <span className="block font-[family-name:var(--font-display)] text-xl text-[var(--ink)]">
-                      {area.name}
-                    </span>
-                    <span className="mt-0.5 block text-sm leading-relaxed text-[var(--muted)]">
-                      {area.summary}
-                    </span>
+      {due.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold text-[var(--ink)]">Til repetisjon</h2>
+          <Link
+            href="/repeter"
+            className="block overflow-hidden rounded-2xl border border-[var(--line)] bg-white"
+          >
+            <ul className="px-4">
+              {due.slice(0, 5).map((item) => (
+                <li
+                  key={item.id}
+                  className="flex min-h-12 items-baseline justify-between gap-3 border-t border-[var(--line)] py-3 first:border-t-0"
+                >
+                  <span className="text-[15px] text-[var(--ink)]">{item.term}</span>
+                  <span className="shrink-0 text-sm text-[var(--muted)]">
+                    {item.dueOn ? formatDueLabel(item.dueOn) : "i dag"}
                   </span>
-                </Link>
-                <ul className="border-t border-[var(--line)] px-3">
-                  {paths.length > 0 ? (
-                    paths.map((path) => {
-                      const total = getLessonsForPath(path.id).length;
-                      const done = pathProgress[path.id]?.completedLessonIds.length ?? 0;
-                      const current =
-                        path.id === continueTarget.path.id &&
-                        continueTarget.started &&
-                        !continueTarget.finishedAll;
-                      return (
-                        <li key={path.id}>
-                          <Link
-                            href={`/lop/${path.id}`}
-                            className="flex items-baseline justify-between gap-3 py-2.5"
-                          >
-                            <span>
-                              <span className="block text-[15px] text-[var(--ink)]">
-                                {path.title}
-                                {current ? " · pågår" : ""}
-                              </span>
-                              <span className="text-sm text-[var(--muted)]">
-                                {total} leksjoner
-                                {done > 0 ? ` · ${done} ferdige` : ""}
-                              </span>
-                            </span>
-                            <span aria-hidden className="text-[var(--muted)]">
-                              →
-                            </span>
-                          </Link>
-                        </li>
-                      );
-                    })
-                  ) : (
-                    <li>
-                      <Link
-                        href={`/kart#${area.id}`}
-                        className="flex items-baseline justify-between gap-3 py-2.5 text-sm text-[var(--muted)]"
-                      >
-                        Temaer og begreper
-                        <span aria-hidden>→</span>
-                      </Link>
-                    </li>
-                  )}
-                </ul>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
+                </li>
+              ))}
+            </ul>
+            {due.length > 5 && (
+              <p className="px-4 pb-2 text-sm text-[var(--muted)]">
+                og {due.length - 5} til
+              </p>
+            )}
+            <p className="border-t border-[var(--line)] px-4 py-3 text-sm text-[var(--muted)]">
+              Repeter
+            </p>
+          </Link>
+        </section>
+      )}
     </div>
   );
 }

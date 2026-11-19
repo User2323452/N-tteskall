@@ -1,17 +1,16 @@
 import Image from "next/image";
 
-/** Hasselnøtt med «kr» på hvit bakgrunn. Nøtten og bokstavene er uendret. */
+/** Oscars merke: brun hasselnøtt med «kr» på hvit bakgrunn. */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <Image
-      src="/logo.png"
+      src="/icons/mark.png"
       alt=""
-      width={217}
-      height={217}
-      className={className}
-      aria-hidden
+      width={440}
+      height={412}
       priority
       unoptimized
+      className={className ?? "h-9 w-9 object-contain"}
     />
   );
 }
