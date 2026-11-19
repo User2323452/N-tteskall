@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DataBackup } from "@/components/DataBackup";
+import { StreakFlame } from "@/components/StreakFlame";
 import { getConcept, learningPaths } from "@/data/learning";
 import { formatWhen } from "@/lib/format";
 import {
+  currentStreak,
   formatDueLabel,
   getActivity,
   getAllConceptProgress,
@@ -112,6 +114,8 @@ export function ProfileView() {
   const today = new Date();
   const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const completedDays = listCompletedDays();
+  const streakNow = currentStreak();
+  const monthBit = monthDaySummary(completedDays, today);
   const schedule = listSchedule();
   const dueNow = schedule.filter((item) => item.dueOn <= todayIso);
   const later = schedule.filter((item) => item.dueOn > todayIso);
@@ -210,13 +214,13 @@ export function ProfileView() {
 
       <Section
         title="Fullførte dager"
-        summary={monthDaySummary(completedDays, today)}
+        summary={`${streakNow.label} · ${monthBit.charAt(0).toLowerCase()}${monthBit.slice(1)}`}
         open={daysOpen}
         onToggle={() => setDaysOpen((open) => !open)}
       >
         <CompletedMonth completed={completedDays} today={todayIso} />
         <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
-          En dag merkes når du vurderer et konsept eller fullfører en leksjon.
+          En flamme er en dag du vurderte et konsept eller fullførte en leksjon. Tomme dager er stille.
         </p>
       </Section>
 
@@ -348,6 +352,10 @@ function CompletedMonth({ completed, today }: { completed: string[]; today: stri
     ...Array.from({ length: count }, (_, index) => index + 1),
   ];
   while (cells.length % 7 !== 0) cells.push(null);
+  const weeks: (number | null)[][] = [];
+  for (let index = 0; index < cells.length; index += 7) {
+    weeks.push(cells.slice(index, index + 7));
+  }
 
   function shift(delta: number) {
     const next = new Date(cursor.year, cursor.month + delta, 1);
@@ -386,36 +394,40 @@ function CompletedMonth({ completed, today }: { completed: string[]; today: stri
           </span>
         ))}
       </div>
-      <div className="grid grid-cols-7 justify-items-center" role="grid" aria-label={monthLabel}>
-        {cells.map((day, index) => {
-          if (!day) return <span key={`empty-${index}`} className="h-9 w-9" />;
-          const iso = `${cursor.year}-${String(cursor.month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-          const marked = done.has(iso);
-          const isToday = iso === today;
-          const future = iso > today;
-          const spoken = new Intl.DateTimeFormat("nb-NO", {
-            day: "numeric",
-            month: "long",
-          }).format(new Date(cursor.year, cursor.month, day));
-          return (
-            <span
-              key={iso}
-              role="gridcell"
-              aria-label={`${spoken}${isToday ? ", i dag" : ""}${marked ? ", fullført" : ""}`}
-              className={`flex h-9 w-9 items-center justify-center rounded-full text-sm tabular-nums ${
-                marked
-                  ? "bg-[var(--accent)] font-medium text-white"
-                  : isToday
-                    ? "text-[var(--ink)] ring-1 ring-[var(--accent)]"
-                    : future
-                      ? "text-[var(--muted)]"
-                      : "text-[var(--ink)]"
-              }`}
-            >
-              {day}
-            </span>
-          );
-        })}
+      <div className="space-y-1" role="grid" aria-label={monthLabel}>
+        {weeks.map((week, weekIndex) => (
+          <div key={weekIndex} role="row" className="grid grid-cols-7 justify-items-center">
+            {week.map((day, index) => {
+              if (!day) return <span key={`empty-${weekIndex}-${index}`} className="h-12 w-10" />;
+              const iso = `${cursor.year}-${String(cursor.month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+              const marked = done.has(iso);
+              const isToday = iso === today;
+              const spoken = new Intl.DateTimeFormat("nb-NO", {
+                day: "numeric",
+                month: "long",
+              }).format(new Date(cursor.year, cursor.month, day));
+              return (
+                <span
+                  key={iso}
+                  role="gridcell"
+                  aria-label={`${spoken}${isToday ? ", i dag" : ""}${marked ? ", fullført" : ""}`}
+                  className={`flex h-12 w-10 flex-col items-center justify-center rounded-xl tabular-nums ${
+                    marked
+                      ? "bg-[#FFF6ED] text-[var(--ink)]"
+                      : isToday
+                        ? "text-[var(--ink)] ring-1 ring-[var(--accent)]"
+                        : "text-[var(--muted)]"
+                  } ${marked && isToday ? "ring-1 ring-[var(--accent)]" : ""}`}
+                >
+                  {marked ? <StreakFlame className="h-5 w-5" /> : null}
+                  <span className={marked ? "mt-0.5 text-[11px] leading-none" : "text-sm leading-none"}>
+                    {day}
+                  </span>
+                </span>
+              );
+            })}
+          </div>
+        ))}
       </div>
     </div>
   );

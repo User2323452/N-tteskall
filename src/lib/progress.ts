@@ -103,6 +103,66 @@ export function streakLabel(count: number): string {
   return `${n} dager på rad`;
 }
 
+/**
+ * Dagene i streken som fortsatt lever, eldste først.
+ * Tom liste når synlig strek er 0. Hopper ikke over dager.
+ */
+export function streakDaysEnding(
+  lastActiveOn: string | undefined,
+  streak: number,
+  today: string
+): string[] {
+  const count = visibleStreak(lastActiveOn, streak, today);
+  if (!lastActiveOn || count <= 0) return [];
+  const end = lastActiveOn.slice(0, 10);
+  const days: string[] = [];
+  for (let i = count - 1; i >= 0; i--) days.push(addDays(end, -i));
+  return days;
+}
+
+export type StreakWorkLine = {
+  key: "lop" | "repetisjon";
+  title: "Dagens løp" | "Repetisjon";
+  status: string;
+  remaining: boolean;
+};
+
+/**
+ * Hva som er igjen i dag, så streken forklarer seg.
+ * En fullført leksjon eller et ferdig løp gjør dagens løp ferdig.
+ * Repetisjon gjenstår så lenge noe forfaller i dag.
+ */
+export function streakWorkLines(input: {
+  pathFinished: boolean;
+  pathOpen: boolean;
+  lessonDoneToday: boolean;
+  dueCount: number;
+  reviewedToday: boolean;
+}): StreakWorkLine[] {
+  const lopDone = input.pathFinished || input.lessonDoneToday;
+  const lop: StreakWorkLine =
+    !lopDone && !input.pathOpen
+      ? { key: "lop", title: "Dagens løp", status: "ingen i dag", remaining: false }
+      : lopDone
+        ? { key: "lop", title: "Dagens løp", status: "ferdig", remaining: false }
+        : { key: "lop", title: "Dagens løp", status: "gjenstår", remaining: true };
+
+  const due = Math.max(0, Math.floor(input.dueCount));
+  const repetisjon: StreakWorkLine =
+    due > 0
+      ? {
+          key: "repetisjon",
+          title: "Repetisjon",
+          status: due === 1 ? "1 konsept gjenstår" : `${due} konsepter gjenstår`,
+          remaining: true,
+        }
+      : input.reviewedToday
+        ? { key: "repetisjon", title: "Repetisjon", status: "ferdig", remaining: false }
+        : { key: "repetisjon", title: "Repetisjon", status: "ingen i dag", remaining: false };
+
+  return [lop, repetisjon];
+}
+
 const LESSON_HREF = /^\/lop\/[^/]+\/[^/]+$/;
 
 function asCalendarDay(value: string | undefined): string | null {
@@ -334,6 +394,34 @@ function noteSitterMilestone(conceptId: string, term: string): void {
 export function streakLabelForToday(): string {
   const state = readReturn();
   return streakLabel(visibleStreak(state.lastActiveOn, state.streak, todayISO()));
+}
+
+/** Synlig strek i dag, som en rekke dager. Tom når den er 0. */
+export function currentStreak(): { count: number; days: string[]; label: string } {
+  const state = readReturn();
+  const today = todayISO();
+  const count = visibleStreak(state.lastActiveOn, state.streak, today);
+  return {
+    count,
+    days: streakDaysEnding(state.lastActiveOn, state.streak, today),
+    label: streakLabel(count),
+  };
+}
+
+function onCalendarDay(value: string, day: string): boolean {
+  return asCalendarDay(value) === day.slice(0, 10);
+}
+
+export function hasLessonToday(): boolean {
+  const today = todayISO();
+  return getActivity().some(
+    (entry) => LESSON_HREF.test(entry.href) && onCalendarDay(entry.at, today)
+  );
+}
+
+export function hasReviewToday(): boolean {
+  const today = todayISO();
+  return getReviews().some((entry) => onCalendarDay(entry.at, today));
 }
 
 /** Dager som skal merkes i måneden på Profil. */
@@ -742,6 +830,63 @@ function assertSchedule() {
     streakLabel(3) !== "3 dager på rad"
   ) {
     throw new Error("Strek-teksten skal være stille og på bokmål, også ved null");
+  }
+  if (streakDaysEnding(undefined, 0, "2026-11-19").length !== 0) {
+    throw new Error("Strek 0 skal ikke ha dager");
+  }
+  if (streakDaysEnding("2026-11-17", 4, "2026-11-19").join(",") !== "") {
+    throw new Error("En brutt strek skal ikke tegnes som flammer");
+  }
+  const alive = streakDaysEnding("2026-11-19", 3, "2026-11-20");
+  if (alive.join(",") !== "2026-11-17,2026-11-18,2026-11-19") {
+    throw new Error(`Levende strek ble ${alive.join(", ")}`);
+  }
+  if (streakDaysEnding("2026-11-19", 1, "2026-11-19").join(",") !== "2026-11-19") {
+    throw new Error("Én dag skal være én flamme");
+  }
+  const openDay = streakWorkLines({
+    pathFinished: false,
+    pathOpen: true,
+    lessonDoneToday: false,
+    dueCount: 2,
+    reviewedToday: false,
+  });
+  if (
+    openDay[0]?.status !== "gjenstår" ||
+    openDay[1]?.status !== "2 konsepter gjenstår" ||
+    openDay[1]?.title !== "Repetisjon"
+  ) {
+    throw new Error("Åpen dag skal si hva som gjenstår");
+  }
+  const lessonDone = streakWorkLines({
+    pathFinished: false,
+    pathOpen: true,
+    lessonDoneToday: true,
+    dueCount: 1,
+    reviewedToday: true,
+  });
+  if (lessonDone[0]?.status !== "ferdig" || lessonDone[1]?.status !== "1 konsept gjenstår") {
+    throw new Error("En leksjon i dag gjør løpet ferdig, repetisjon kan fortsatt gjenstå");
+  }
+  const quiet = streakWorkLines({
+    pathFinished: false,
+    pathOpen: false,
+    lessonDoneToday: false,
+    dueCount: 0,
+    reviewedToday: false,
+  });
+  if (quiet[0]?.status !== "ingen i dag" || quiet[1]?.status !== "ingen i dag") {
+    throw new Error("Tom dag skal være stille");
+  }
+  const reviewed = streakWorkLines({
+    pathFinished: true,
+    pathOpen: false,
+    lessonDoneToday: false,
+    dueCount: 0,
+    reviewedToday: true,
+  });
+  if (reviewed[0]?.remaining || reviewed[1]?.status !== "ferdig") {
+    throw new Error("Ferdig løp og vurdert kø skal ikke stå som gjenstår");
   }
 
   const tomorrow = nextQueueLabel(
