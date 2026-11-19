@@ -37,6 +37,7 @@ export function RepeatView() {
   const [ready, setReady] = useState(false);
   const [reviewed, setReviewed] = useState(0);
   const [sat, setSat] = useState(0);
+  const [again, setAgain] = useState(false);
 
   useEffect(() => {
     const due = queueWithOpenRecallFirst(getDueConceptIds(concepts.map((c) => c.id)));
@@ -46,6 +47,7 @@ export function RepeatView() {
     setDraft(saved?.text ?? "");
     setRevealed(Boolean(saved?.revealed));
     setNeedsText(false);
+    setAgain(false);
     setReady(true);
   }, []);
 
@@ -60,6 +62,7 @@ export function RepeatView() {
     setDraft(saved?.text ?? "");
     setRevealed(Boolean(saved?.revealed));
     setNeedsText(false);
+    setAgain(false);
     setIndex(nextIndex);
   }
 
@@ -94,6 +97,15 @@ export function RepeatView() {
     setRecallAttempt(current.id, { text, revealed: true });
     setRevealed(true);
     setNeedsText(false);
+  }
+
+  function writeAgain() {
+    if (!current) return;
+    setDraft("");
+    setRevealed(false);
+    setNeedsText(false);
+    setAgain(true);
+    setRecallAttempt(current.id, null);
   }
 
   function grade(status: RecallGrade) {
@@ -206,8 +218,13 @@ export function RepeatView() {
             }}
           >
             <label htmlFor="recall" className="text-sm font-medium text-slate-700">
-              Hva betyr dette?
+              {again ? "Skriv det en gang til" : "Hva betyr dette?"}
             </label>
+            {again && (
+              <p className="mt-1 text-sm leading-relaxed text-slate-500">
+                Fasiten er skjult. Skriv forklaringen med egne ord.
+              </p>
+            )}
             <textarea
               id="recall"
               value={draft}
@@ -261,6 +278,13 @@ export function RepeatView() {
               </section>
             </div>
             <p className="text-sm leading-relaxed text-slate-600">{current.explanation}</p>
+            <button
+              type="button"
+              onClick={writeAgain}
+              className="min-h-12 w-full rounded-xl border border-[var(--accent)] bg-white text-sm font-medium text-[var(--accent)] active:scale-[0.98]"
+            >
+              Skriv det igjen
+            </button>
           </div>
         )}
       </div>
