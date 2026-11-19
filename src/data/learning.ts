@@ -242,7 +242,7 @@ export const lessons: Lesson[] = [
     order: 1,
     summary: "Nær 2 prosent over tid — og fleksibelt.",
     body: [
-      "Norges Bank har et operativt mål om at konsumprisveksten skal ligge nær 2 prosent over tid. Tallet er et anker for forventningene. Det er ikke et krav om at KPI treffer 2 prosent hver eneste måned. Sjekk mandatet hvis du skal sitere tallet i et arbeid.",
+      "Norges Bank har et operativt mål om at konsumprisveksten skal ligge nær 2 prosent over tid. Tallet er et anker for forventningene. Det er ikke et krav om at KPI treffer 2 prosent hver eneste måned.",
       "Styringen er fleksibel. Banken legger også vekt på produksjon og sysselsetting, og styringen skal kunne motvirke oppbygging av finansielle ubalanser. Den prøver ikke å presse inflasjonen tilbake på én måned hvis det ville gitt et unødvendig hopp i ledigheten.",
       "KPI-JAE er KPI uten energivarer og justert for avgiftsendringer. Den brukes ofte når man vil se den underliggende prisveksten, fordi strøm og avgifter svinger uten at det alltid sier noe om presset i økonomien.",
     ],

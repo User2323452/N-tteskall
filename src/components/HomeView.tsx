@@ -4,21 +4,28 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Check, Search } from "lucide-react";
-import { concepts, getConcept, searchLearning } from "@/data/learning";
-import { pickTodaysPath } from "@/lib/continue-path";
+import { concepts, getConcept, learningPaths, searchLearning } from "@/data/learning";
+import { pickContinueTarget, pickTodaysPath } from "@/lib/continue-path";
 import { StreakFlame } from "@/components/StreakFlame";
 import {
   ackSitterNotices,
   currentStreak,
+  dismissInstallHint,
   formatDueLabel,
   getDueConceptIds,
+  hasCompletedLesson,
   hasLessonToday,
   hasReviewToday,
   idleWaitingLabel,
+  listCompletedDays,
+  installHintDismissed,
   listSchedule,
+  needsHomeScreenHint,
   peekSitterNotices,
   sitterHomeLine,
   streakWorkLines,
+  todayLessonCount,
+  todayReviewCount,
   type StreakWorkLine,
 } from "@/lib/progress";
 import type { SitterNotice } from "@/types/learning";
@@ -28,10 +35,14 @@ export function HomeView() {
   const [q, setQ] = useState("");
   const [ready, setReady] = useState(false);
   const [sitter, setSitter] = useState<SitterNotice[]>([]);
+  const [installHint, setInstallHint] = useState(false);
 
   useEffect(() => {
     const pending = peekSitterNotices();
     setSitter(pending);
+    setInstallHint(
+      hasCompletedLesson() && !installHintDismissed() && needsHomeScreenHint()
+    );
     setReady(true);
     if (pending.length === 0) return;
     const handle = window.setTimeout(() => {
@@ -80,6 +91,34 @@ export function HomeView() {
       })
     : null;
   const waitingText = ready && due.length === 0 ? idleWaitingLabel(schedule) : null;
+  const freshStart =
+    ready && (streak?.count ?? 0) === 0 && listCompletedDays().length === 0;
+  const lessonHref = todayPath ? `/lop/${todayPath.pathId}` : "/lop";
+  const lopLine = work?.find((line) => line.key === "lop");
+  const reviewLine = work?.find((line) => line.key === "repetisjon");
+  const reviewClear =
+    reviewLine?.status === "ferdig" || reviewLine?.status === "ingen i dag";
+  const dayComplete = Boolean(
+    todayPath &&
+      lopLine?.status === "ferdig" &&
+      reviewClear &&
+      (reviewLine?.status === "ferdig" || todayPath.finished)
+  );
+  const doneToday = ready
+    ? { lessons: todayLessonCount(), concepts: todayReviewCount() }
+    : { lessons: 0, concepts: 0 };
+  const nextLesson =
+    ready && dayComplete ? pickContinueTarget() : null;
+  const minutes =
+    todayPath && todayPath.total > 0
+      ? Math.max(
+          1,
+          Math.round(
+            (learningPaths.find((path) => path.id === todayPath.pathId)?.estimatedMinutes ??
+              0) / todayPath.total
+          )
+        )
+      : null;
 
   return (
     <div className="mx-auto max-w-xl space-y-10">
@@ -101,6 +140,25 @@ export function HomeView() {
             aria-label="Søk etter konsept eller læringsløp"
           />
         </form>
+
+        {installHint && (
+          <div className="mt-4 flex items-start justify-between gap-3 text-sm leading-relaxed text-[var(--muted)]">
+            <p>
+              Legg Nøtteskall på Hjem-skjermen, så blir fremdriften værende. Trykk
+              Del, så Legg til på Hjem-skjerm.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                dismissInstallHint();
+                setInstallHint(false);
+              }}
+              className="shrink-0 text-sm text-[var(--ink)] underline-offset-2 hover:underline"
+            >
+              Skjul
+            </button>
+          </div>
+        )}
 
         {q.trim() && (
           <div className="mt-2 rounded-2xl border border-[var(--line)] bg-white p-2">
@@ -149,23 +207,42 @@ export function HomeView() {
         )}
       </section>
 
-      {streak && work && <StreakPanel streak={streak} lines={work} />}
+      {streak && work && !freshStart && (
+        <StreakPanel streak={streak} lines={work} lessonHref={lessonHref} />
+      )}
 
       <section className="space-y-3">
-        {sitter.length > 0 && (
-          <ul className="space-y-1">
-            {sitter.map((item) => (
-              <li key={`${item.conceptId}@${item.at}`} className="text-sm text-[var(--muted)]">
-                {sitterHomeLine(item.term)}
-              </li>
-            ))}
-          </ul>
+        {!dayComplete && (
+          <h2 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-[var(--ink)]">
+            Dagens løp
+          </h2>
         )}
-        <h2 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-[var(--ink)]">
-          Dagens løp
-        </h2>
         {!todayPath ? (
           <div className="h-36 rounded-2xl bg-[var(--accent-soft)]" />
+        ) : dayComplete ? (
+          <div className="rounded-2xl bg-[var(--accent-soft)] px-4 py-4">
+            <p className="flex items-center gap-2 font-[family-name:var(--font-display)] text-2xl text-[var(--ink)]">
+              <StreakFlame className="h-6 w-6" />
+              Ferdig for i dag
+            </p>
+            <p className="mt-2 text-sm text-[var(--ink)]">
+              {doneSummary(doneToday.lessons, doneToday.concepts)}
+            </p>
+            {nextLesson && !nextLesson.finishedAll && (
+              <p className="mt-1 text-sm text-[var(--muted)]">
+                Neste: {nextLesson.lessonTitle}
+              </p>
+            )}
+            {sitter.length > 0 && (
+              <ul className="mt-3 space-y-1">
+                {sitter.map((item) => (
+                  <li key={`${item.conceptId}@${item.at}`} className="text-sm text-[var(--muted)]">
+                    {sitterHomeLine(item.term)}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         ) : todayPath.finished ? (
           <Link
             href={`/lop/${todayPath.pathId}`}
@@ -201,6 +278,7 @@ export function HomeView() {
             </p>
             <p className="mt-4 text-sm text-[var(--ink)]">
               Leksjon {todayPath.index} av {todayPath.total}
+              {minutes ? ` · ca. ${minutes} min` : ""}
             </p>
             <div className="mt-2 h-1 overflow-hidden rounded-full bg-white">
               <div
@@ -248,54 +326,77 @@ export function HomeView() {
   );
 }
 
+function doneSummary(lessons: number, concepts: number) {
+  const parts: string[] = [];
+  if (lessons === 1) parts.push("1 leksjon");
+  else if (lessons > 1) parts.push(`${lessons} leksjoner`);
+  if (concepts === 1) parts.push("1 konsept");
+  else if (concepts > 1) parts.push(`${concepts} konsepter`);
+  return parts.join(" · ") || "Dagen er tatt";
+}
+
 function StreakPanel({
   streak,
   lines,
+  lessonHref,
 }: {
   streak: { count: number; days: string[]; label: string };
   lines: StreakWorkLine[];
+  lessonHref: string;
 }) {
   return (
-    <Link
-      href="/profil"
-      className="block rounded-2xl border border-[var(--line)] bg-white px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-    >
-      {streak.days.length > 0 && (
-        <ul className="flex flex-wrap gap-1.5" aria-hidden>
-          {streak.days.map((day) => (
-            <li
-              key={day}
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFF6ED]"
-            >
-              <StreakFlame className="h-6 w-6" />
-            </li>
-          ))}
-        </ul>
-      )}
-      <p
-        className={
-          streak.count > 0
-            ? "mt-2 text-sm font-medium text-[var(--ink)]"
-            : "text-sm text-[var(--muted)]"
-        }
+    <section className="rounded-2xl border border-[var(--line)] bg-white px-4 py-4">
+      <Link
+        href="/profil"
+        className="block rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
       >
-        {streak.label}
-      </p>
+        {streak.days.length > 0 && (
+          <ul className="flex flex-wrap gap-1.5" aria-hidden>
+            {streak.days.map((day) => (
+              <li
+                key={day}
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFF6ED]"
+              >
+                <StreakFlame className="h-6 w-6" />
+              </li>
+            ))}
+          </ul>
+        )}
+        <p
+          className={
+            streak.count > 0
+              ? "mt-2 text-sm font-medium text-[var(--ink)]"
+              : "text-sm text-[var(--muted)]"
+          }
+        >
+          {streak.label}
+        </p>
+        <span className="sr-only">Se dagene på profilen.</span>
+      </Link>
       <ul className="mt-3 space-y-1.5 border-t border-[var(--line)] pt-3">
-        {lines.map((line) => (
-          <li key={line.key} className="flex items-baseline justify-between gap-3 text-sm">
-            <span className="text-[var(--ink)]">{line.title}</span>
-            <span
-              className={
-                line.remaining ? "shrink-0 font-medium text-[var(--ink)]" : "shrink-0 text-[var(--muted)]"
-              }
-            >
-              {line.status}
-            </span>
-          </li>
-        ))}
+        {lines.map((line) => {
+          const href = line.key === "lop" ? lessonHref : "/repeter";
+          return (
+            <li key={line.key}>
+              <Link
+                href={href}
+                className="flex min-h-11 items-center justify-between gap-3 text-sm"
+              >
+                <span className="text-[var(--ink)]">{line.title}</span>
+                <span
+                  className={
+                    line.remaining
+                      ? "shrink-0 font-medium text-[var(--ink)]"
+                      : "shrink-0 text-[var(--muted)]"
+                  }
+                >
+                  {line.status}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
-      <span className="sr-only">Se dagene på profilen.</span>
-    </Link>
+    </section>
   );
 }

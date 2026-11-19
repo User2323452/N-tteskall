@@ -11,14 +11,18 @@ import {
   getLesson,
   getLessonsForPath,
   getPath,
+  srsConceptIds,
 } from "@/data/learning";
 import { useLessonMotion } from "@/components/lesson-motion";
 import { useNav } from "@/components/nav-memory";
 import {
+  getConceptProgress,
   getPathProgress,
   introduceConcepts,
+  isIntroduced,
   markLessonComplete,
   markPathComplete,
+  todayAlreadyCounted,
   touchPath,
 } from "@/lib/progress";
 
@@ -37,12 +41,14 @@ export function LessonView({
   const lessons = getLessonsForPath(pathId);
   const [quizChoice, setQuizChoice] = useState<number | null>(null);
   const [quizChecked, setQuizChecked] = useState(false);
+  const [wrongChoices, setWrongChoices] = useState<number[]>([]);
   const [saved, setSaved] = useState(false);
   const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
     setQuizChoice(null);
     setQuizChecked(false);
+    setWrongChoices([]);
     setSaved(false);
     setLeaving(false);
   }, [lessonId]);
@@ -99,11 +105,16 @@ export function LessonView({
       setSaved(true);
     };
     if (motion) {
+      const conceptsAdded = lessonConceptIds.filter(
+        (id) => srsConceptIds.has(id) && !isIntroduced(getConceptProgress(id))
+      ).length;
       motion.run({
         href,
         fromId: lessonId,
         toId: next?.id ?? null,
         commit,
+        conceptsAdded,
+        madeDay: !todayAlreadyCounted(),
       });
       return;
     }
@@ -197,11 +208,12 @@ export function LessonView({
           <ul className="mt-3 space-y-2">
             {lesson.quiz.options.map((opt, i) => {
               const selected = quizChoice === i;
+              const wrong = wrongChoices.includes(i);
               let style =
                 "border-slate-200 bg-white hover:border-slate-300";
-              if (quizChecked && i === lesson.quiz!.answerIndex) {
+              if (quizOk && i === lesson.quiz!.answerIndex) {
                 style = "border-emerald-400 bg-emerald-50";
-              } else if (quizChecked && selected) {
+              } else if (wrong) {
                 style = "border-rose-300 bg-rose-50";
               } else if (selected) {
                 style = "border-slate-900 bg-white";
@@ -224,22 +236,42 @@ export function LessonView({
             <button
               type="button"
               disabled={quizChoice === null}
-              onClick={() => setQuizChecked(true)}
+              onClick={() => {
+                if (quizChoice !== null && quizChoice !== lesson.quiz!.answerIndex) {
+                  setWrongChoices((current) =>
+                    current.includes(quizChoice) ? current : [...current, quizChoice]
+                  );
+                }
+                setQuizChecked(true);
+              }}
               className="mt-3 rounded-xl bg-[var(--accent)] px-3.5 py-2 text-sm font-medium text-white disabled:opacity-40"
             >
               Sjekk svar
             </button>
-          ) : (
+          ) : quizOk ? (
             <p className="mt-3 text-sm text-slate-600">
-              {quizOk ? (
-                <span className="inline-flex items-center gap-1 font-medium text-emerald-700">
-                  <Check className="h-4 w-4" /> Riktig.
-                </span>
-              ) : (
-                <span className="font-medium text-rose-700">Ikke helt.</span>
-              )}{" "}
+              <span className="inline-flex items-center gap-1 font-medium text-emerald-700">
+                <Check className="h-4 w-4" /> Riktig.
+              </span>{" "}
               {lesson.quiz.explain}
             </p>
+          ) : (
+            <div className="mt-3 space-y-3">
+              <p className="text-sm text-slate-600">
+                <span className="font-medium text-rose-700">Ikke helt.</span>{" "}
+                {lesson.quiz.explain}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setQuizChecked(false);
+                  setQuizChoice(null);
+                }}
+                className="min-h-11 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-800"
+              >
+                Prøv igjen
+              </button>
+            </div>
           )}
         </section>
       )}
@@ -282,7 +314,7 @@ export function LessonView({
       </div>
       {lesson.quiz && !canAdvance && (
         <p className="mt-2 text-xs text-slate-500">
-          Svar riktig på spørsmålet for å gå videre — eller åpne konseptene over og prøv igjen.
+          Svar riktig på spørsmålet for å gå videre.
         </p>
       )}
       <p className="mt-6 text-xs leading-relaxed text-slate-400">

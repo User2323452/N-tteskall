@@ -24,7 +24,7 @@ import { BackLink, useNav } from "@/components/nav-memory";
 import { clearLessonLinks, drawLessonLink, PathSnake } from "@/components/PathSnake";
 
 const SHEET_DOWN_MS = 200;
-const CHECK_MS = 160;
+const CHECK_HOLD_MS = 900;
 const STROKE_MS = 340;
 const SCROLL_MS = 400;
 const REST_MS = 300;
@@ -66,6 +66,11 @@ export function PathView({
   const [tick, setTick] = useState(0);
   const [sheet, setSheet] = useState<Sheet>({ y: "down", ms: 0 });
   const [drawingId, setDrawingId] = useState<string | null>(null);
+  const [receipt, setReceipt] = useState<{
+    lessonId: string;
+    conceptsAdded: number;
+    madeDay: boolean;
+  } | null>(null);
   const headerRef = useRef<HTMLElement>(null);
   const flowRef = useRef<HTMLDivElement>(null);
   const gen = useRef(0);
@@ -183,7 +188,14 @@ export function PathView({
       const alive = () => gen.current === token;
       if (prefersReducedMotion()) {
         advance.commit();
+        setReceipt({
+          lessonId: advance.fromId,
+          conceptsAdded: advance.conceptsAdded,
+          madeDay: advance.madeDay,
+        });
         setTick((n) => n + 1);
+        await wait(0);
+        if (!alive()) return;
         goAfterLesson(advance.href);
         return;
       }
@@ -193,8 +205,14 @@ export function PathView({
       advance.commit();
       setTick((n) => n + 1);
       setDrawingId(advance.fromId);
-      await wait(CHECK_MS);
+      setReceipt({
+        lessonId: advance.fromId,
+        conceptsAdded: advance.conceptsAdded,
+        madeDay: advance.madeDay,
+      });
+      await wait(CHECK_HOLD_MS);
       if (!alive()) return;
+      setReceipt(null);
       setDrawingId(null);
       if (advance.toId) {
         if (drawLessonLink(advance.fromId, advance.toId, STROKE_MS)) {
@@ -288,6 +306,7 @@ export function PathView({
           done={done}
           nextId={next}
           drawingId={drawingId}
+          receipt={receipt}
         />
         </div>
         </div>

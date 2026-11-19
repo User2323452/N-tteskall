@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { getConcept, getPath } from "@/data/learning";
 import { areaPictures, overviewAreas } from "@/data/overview";
+import { getAllConceptProgress, isIntroduced } from "@/lib/progress";
 
 /**
  * To like kolonner som fyller raden. Et ord som er bredere enn halv rad
@@ -20,6 +21,20 @@ const pathChip = `${chipRow} bg-[var(--accent)] text-[15px] leading-snug text-wh
 
 export function KartView() {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [seen, setSeen] = useState<Set<string>>(new Set());
+  const [progressReady, setProgressReady] = useState(false);
+
+  useEffect(() => {
+    const map = getAllConceptProgress();
+    setSeen(
+      new Set(
+        Object.entries(map)
+          .filter(([, progress]) => isIntroduced(progress))
+          .map(([id]) => id)
+      )
+    );
+    setProgressReady(true);
+  }, []);
 
   useEffect(() => {
     const openFromHash = () => {
@@ -58,13 +73,22 @@ export function KartView() {
         {overviewAreas.map((area) => {
           const open = openId === area.id;
           const picture = areaPictures[area.id];
+          const conceptIds = [...new Set(area.themes.flatMap((theme) => theme.conceptIds))];
+          const met = conceptIds.filter((id) => seen.has(id)).length;
           return (
             <li key={area.id} id={area.id} className="scroll-mt-20">
               <section className="overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
                 <button
                   type="button"
                   aria-expanded={open}
-                  onClick={() => setOpenId(open ? null : area.id)}
+                  onClick={() => {
+                    const next = open ? null : area.id;
+                    setOpenId(next);
+                    const url = next
+                      ? `#${next}`
+                      : `${window.location.pathname}${window.location.search}`;
+                    window.history.replaceState(null, "", url);
+                  }}
                   className="block w-full text-left"
                 >
                   {picture && (
@@ -84,6 +108,11 @@ export function KartView() {
                       <span className="mt-1 block text-sm leading-relaxed text-[var(--muted)]">
                         {area.summary}
                       </span>
+                      {progressReady && (
+                        <span className="mt-1 block text-xs text-[var(--muted)]">
+                          {met} av {conceptIds.length}
+                        </span>
+                      )}
                     </span>
                     <ChevronDown
                       className={`mt-1 h-5 w-5 shrink-0 text-[var(--muted)] transition-transform motion-reduce:transition-none ${
@@ -115,9 +144,19 @@ export function KartView() {
                                   key={id}
                                   href={`/konsept/${concept.id}`}
                                   className={conceptChip}
+                                  onClick={() => {
+                                    window.history.replaceState(null, "", `#${theme.id}`);
+                                  }}
                                 >
+                                  {seen.has(id) && (
+                                    <span
+                                      className="mb-0.5 h-1.5 w-1.5 rounded-full bg-[var(--accent)]"
+                                      aria-hidden
+                                    />
+                                  )}
                                   <span className="text-[15px] leading-snug text-[var(--ink)]">
                                     {concept.term}
+                                    {seen.has(id) && <span className="sr-only">, sett</span>}
                                   </span>
                                   {concept.english && (
                                     <span className="text-[11px] leading-snug text-[var(--muted)]">
@@ -128,7 +167,13 @@ export function KartView() {
                               );
                             })}
                             {path && (
-                              <Link href={`/lop/${path.id}`} className={pathChip}>
+                              <Link
+                                href={`/lop/${path.id}`}
+                                className={pathChip}
+                                onClick={() => {
+                                  window.history.replaceState(null, "", `#${theme.id}`);
+                                }}
+                              >
                                 {path.title}
                               </Link>
                             )}

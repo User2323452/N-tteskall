@@ -149,7 +149,7 @@ export const overviewAreas: OverviewArea[] = [
       {
         id: "portefolje",
         name: "Portefølje",
-        conceptIds: ["sharpe", "volatilitet", "korrelasjon", "diversifisering"],
+        conceptIds: ["sharpe", "volatilitet", "korrelasjon"],
       },
     ],
   },

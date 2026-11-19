@@ -23,6 +23,7 @@ const PATH_KEY = "mesterplan.pathProgress.v1";
 const REVIEW_KEY = "mesterplan.reviewLog.v1";
 const ACTIVITY_KEY = "mesterplan.activity.v1";
 const RETURN_KEY = "mesterplan.return.v1";
+const INSTALL_HINT_KEY = "mesterplan.installHint.v1";
 
 function localISO(date = new Date()): string {
   const y = date.getFullYear();
@@ -122,7 +123,7 @@ export function streakDaysEnding(
 
 export type StreakWorkLine = {
   key: "lop" | "repetisjon";
-  title: "Dagens løp" | "Repetisjon";
+  title: "Leksjon" | "Repetisjon";
   status: string;
   remaining: boolean;
 };
@@ -142,10 +143,10 @@ export function streakWorkLines(input: {
   const lopDone = input.pathFinished || input.lessonDoneToday;
   const lop: StreakWorkLine =
     !lopDone && !input.pathOpen
-      ? { key: "lop", title: "Dagens løp", status: "ingen i dag", remaining: false }
+      ? { key: "lop", title: "Leksjon", status: "ingen i dag", remaining: false }
       : lopDone
-        ? { key: "lop", title: "Dagens løp", status: "ferdig", remaining: false }
-        : { key: "lop", title: "Dagens løp", status: "gjenstår", remaining: true };
+        ? { key: "lop", title: "Leksjon", status: "ferdig", remaining: false }
+        : { key: "lop", title: "Leksjon", status: "gjenstår", remaining: true };
 
   const due = Math.max(0, Math.floor(input.dueCount));
   const repetisjon: StreakWorkLine =
@@ -256,8 +257,21 @@ function readMap<T>(key: string): Record<string, T> {
   }
 }
 
+let askedToPersist = false;
+
+function rememberStorage() {
+  if (askedToPersist || typeof navigator === "undefined") return;
+  askedToPersist = true;
+  try {
+    void navigator.storage?.persist?.();
+  } catch {
+    // Noen nettlesere kaster hvis lagring er sperret.
+  }
+}
+
 function writeMap<T>(key: string, map: Record<string, T>) {
   if (typeof window === "undefined") return;
+  rememberStorage();
   localStorage.setItem(key, JSON.stringify(map));
 }
 
@@ -275,6 +289,7 @@ function readList<T>(key: string): T[] {
 
 function writeList<T>(key: string, list: T[]) {
   if (typeof window === "undefined") return;
+  rememberStorage();
   localStorage.setItem(key, JSON.stringify(list));
 }
 
@@ -348,6 +363,7 @@ function readReturn(): ReturnProgress {
 
 function writeReturn(state: ReturnProgress): void {
   if (typeof window === "undefined") return;
+  rememberStorage();
   localStorage.setItem(RETURN_KEY, JSON.stringify(state));
 }
 
@@ -422,6 +438,55 @@ export function hasLessonToday(): boolean {
 export function hasReviewToday(): boolean {
   const today = todayISO();
   return getReviews().some((entry) => onCalendarDay(entry.at, today));
+}
+
+export function todayLessonCount(): number {
+  const today = todayISO();
+  return new Set(
+    getActivity()
+      .filter((entry) => LESSON_HREF.test(entry.href) && onCalendarDay(entry.at, today))
+      .map((entry) => entry.href)
+  ).size;
+}
+
+export function todayReviewCount(): number {
+  const today = todayISO();
+  return getReviews().filter((entry) => onCalendarDay(entry.at, today)).length;
+}
+
+/** Dagen er allerede telt, så en ny leksjon ikke starter streken på nytt. */
+export function todayAlreadyCounted(): boolean {
+  return readReturn().lastActiveOn?.slice(0, 10) === todayISO();
+}
+
+export function hasCompletedLesson(): boolean {
+  return Object.values(readMap<PathProgress>(PATH_KEY)).some(
+    (progress) => progress.completedLessonIds.length > 0
+  );
+}
+
+export function installHintDismissed(): boolean {
+  if (typeof window === "undefined") return true;
+  return localStorage.getItem(INSTALL_HINT_KEY) === "1";
+}
+
+export function dismissInstallHint(): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(INSTALL_HINT_KEY, "1");
+}
+
+/** iOS Safari som ikke er lagt på Hjem-skjermen. */
+export function needsHomeScreenHint(): boolean {
+  if (typeof window === "undefined" || typeof navigator === "undefined") return false;
+  const nav = navigator as Navigator & { standalone?: boolean };
+  const ua = nav.userAgent;
+  const iOS =
+    /iPad|iPhone|iPod/.test(ua) ||
+    (nav.platform === "MacIntel" && nav.maxTouchPoints > 1);
+  const safari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+  const installed =
+    nav.standalone === true || window.matchMedia("(display-mode: standalone)").matches;
+  return iOS && safari && !installed;
 }
 
 /** Dager som skal merkes i måneden på Profil. */
@@ -575,7 +640,7 @@ export function introduceConcepts(
     }
     map[id] = {
       status: "Ny",
-      dueOn: today,
+      dueOn: addDays(today, 1),
       introduced: true,
       reviewCount: 0,
     };
@@ -853,6 +918,7 @@ function assertSchedule() {
   });
   if (
     openDay[0]?.status !== "gjenstår" ||
+    openDay[0]?.title !== "Leksjon" ||
     openDay[1]?.status !== "2 konsepter gjenstår" ||
     openDay[1]?.title !== "Repetisjon"
   ) {

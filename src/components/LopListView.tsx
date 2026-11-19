@@ -12,6 +12,7 @@ function lessonMeta(total: number, done: number) {
   const count = total === 1 ? "1 leksjon" : `${total} leksjoner`;
   if (done <= 0) return count;
   if (done >= total) return `${count} · ferdig`;
+  if (done === 1) return `${count} · 1 ferdig`;
   return `${count} · ${done} ferdige`;
 }
 

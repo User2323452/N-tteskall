@@ -34,8 +34,16 @@ export function SearchView() {
         </p>
       )}
 
+      {q.trim() &&
+        results.concepts.length +
+          results.paths.length +
+          results.coming.length +
+          results.lessons.length ===
+          0 && <p className="text-sm text-slate-500">Ingen treff.</p>}
+
       {q.trim() && (
         <div className="space-y-6">
+          {results.concepts.length > 0 && (
           <section>
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
               Konsepter ({results.concepts.length})
@@ -60,12 +68,11 @@ export function SearchView() {
                   </Link>
                 </li>
               ))}
-              {results.concepts.length === 0 && (
-                <p className="text-sm text-slate-500">Ingen konsepter.</p>
-              )}
             </ul>
           </section>
+          )}
 
+          {results.paths.length > 0 && (
           <section>
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
               Læringsløp ({results.paths.length})
@@ -84,11 +91,9 @@ export function SearchView() {
                   </Link>
                 </li>
               ))}
-              {results.paths.length === 0 && (
-                <p className="text-sm text-slate-500">Ingen læringsløp.</p>
-              )}
             </ul>
           </section>
+          )}
 
           {results.coming.length > 0 && (
             <section>
