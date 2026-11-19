@@ -353,7 +353,7 @@ export const seedTerms: Term[] = [
     english: "Fiscal rule",
     areaId: "makro",
     explanation:
-      "Regel om hvor mye av oljefondet staten bruker over budsjettet hvert år, målt som andel av fondets verdi.",
+      "Retningslinje for bruk av oljefondet over statsbudsjettet. Forventet realavkastning er om lag 3 prosent over tid. I normale år bør bruken ligge rundt 2,7 prosent.",
     status: "Ny",
   },
   {
@@ -362,7 +362,7 @@ export const seedTerms: Term[] = [
     english: "Norwegian Interbank Offered Rate",
     areaId: "marked",
     explanation:
-      "Pengemarkedsrente: renta bankene låner til hverandre for. Mange lån og obligasjoner prises ut fra den.",
+      "Daglig panelkvotering av renta bankene krever for usikrede kronelån, fra én uke til seks måneder. Fortsatt den referanserenten markedet bruker. Mange lån og obligasjoner prises ut fra den.",
     status: "Ny",
   },
   {
@@ -371,7 +371,7 @@ export const seedTerms: Term[] = [
     english: "Norwegian Overnight Weighted Average",
     areaId: "marked",
     explanation:
-      "Dag-til-dag-rente og ny norsk referanserente som gradvis tar over for NIBOR.",
+      "Vektet snitt av faktiske usikrede overnattenlån. Anbefalt alternativ og fallback hvis NIBOR skulle opphøre. NIBOR er fortsatt referanserenten markedet bruker. De måler ikke samme rente.",
     status: "Ny",
   },
   {
@@ -584,10 +584,10 @@ export const seedTerms: Term[] = [
   {
     id: "term-afp",
     term: "AFP",
-    english: "Contractual early retirement pension",
+    english: "Contractual pension",
     areaId: "personlig",
     explanation:
-      "Avtalefestet pensjon: et livsvarig tillegg for ansatte i bedrifter med tariffavtale.",
+      "Avtalefestet pensjon. I privat sektor er AFP i Fellesordningen et livsvarig påslag fra 62 år. I offentlig sektor gjelder livsvarig AFP fra 2025 for årskull fra 1963. Eldre årskull har tidligpensjon fra 62 til 67 år.",
     status: "Ny",
   },
   {

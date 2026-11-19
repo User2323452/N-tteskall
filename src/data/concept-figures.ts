@@ -77,13 +77,14 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Rentebanen er Norges Banks anslag. Den tegnes på nytt når ny informasjon kommer.",
   },
   handlingsregelen: {
-    type: "split",
-    title: "Fondet og det som kan brukes",
-    parts: [
-      { label: "Blir i fondet", share: 97, tone: "teal" },
-      { label: "Bruk", share: 3, tone: "amber" },
-    ],
-    caption: "Regelen peker på forventet realavkastning, lenge omtalt rundt 3 prosent. Det er en tommelfinger over tid, ikke fasit for ett år.",
+    type: "compare",
+    title: "Avkastning og normal bruk",
+    leftLabel: "Forventet realavkastning",
+    left: "Om lag 3 prosent over tid. Et anslag, ikke et tall som skal treffes hvert år.",
+    rightLabel: "Bruk i normale år",
+    right: "Bør ligge under det, rundt 2,7 prosent, slik at uttaket over tid kan tilsvare 3 prosent når kriseår regnes med.",
+    caption:
+      "Nasjonalbudsjettet 2027 anslår det strukturelle oljekorrigerte underskuddet for 2026 til 583,4 milliarder kroner, 2,7 prosent av fondet.",
   },
   oljefondet: {
     type: "photo",
@@ -93,19 +94,21 @@ export const conceptFigures: Record<string, FigureSpec> = {
   },
   nibor: {
     type: "pair",
-    title: "Renta bankene seg imellom",
-    a: "Styringsrenten",
-    b: "Et påslag",
-    link: "gir NIBOR",
-    caption: "NIBOR er det bankene krever for å låne kroner til hverandre en kort periode. Den ligger nær styringsrenten, med et påslag.",
+    title: "Panelkvotering av usikrede lån",
+    a: "NIBOR",
+    b: "Én uke til seks måneder",
+    link: "kvoterer usikrede kronelån på",
+    caption:
+      "NIBOR er en daglig panelkvotering av renta bankene krever. Norges Bank skrev i 2025 at den fortsatt er den klart mest brukte referanserenten. Den ligger vanligvis nær styringsrenten, med et påslag.",
   },
   nowa: {
     type: "pair",
-    title: "Det som faktisk ble handlet",
-    a: "Lån over natten",
-    b: "NOWA",
-    link: "er snittet",
-    caption: "NOWA er gjennomsnittet av faktiske lån mellom banker fra en dag til den neste. NIBOR er et anslag. NOWA er det som skjedde.",
+    title: "Faktiske lån over natten",
+    a: "NOWA",
+    b: "Usikrede overnattenlån",
+    link: "er snittet av",
+    caption:
+      "NOWA er et vektet snitt av faktiske usikrede overnattenlån. Den har eksistert siden 2011 og ble lagt om i 2020. Den er anbefalt alternativ og en fallback hvis NIBOR skulle opphøre. Norges Bank skrev i 2025 at den i liten grad brukes som referanse. NIBOR og NOWA måler ikke samme rente.",
   },
   "renters-rente": { type: "interactive", id: "renters-rente" },
   ask: {
@@ -121,7 +124,8 @@ export const conceptFigures: Record<string, FigureSpec> = {
       { label: "Skjerming", share: 35, tone: "green" },
       { label: "Skattlegges", share: 65, tone: "slate" },
     ],
-    caption: "En del av avkastningen er skjermet, regnet ut fra skjermingsrenten. Resten kan skattlegges. Andelene i stolpen er et eksempel, ikke årets tall.",
+    caption:
+      "Skjermingen reduserer både skattepliktig utbytte og skattepliktig gevinst, etter aksjonærmodellen. Andelene i stolpen er et eksempel, ikke årets tall.",
   },
   "risiko-avkastning": {
     type: "compare",
@@ -159,12 +163,12 @@ export const conceptFigures: Record<string, FigureSpec> = {
   },
   afp: {
     type: "compare",
-    title: "Følger ikke med av seg selv",
-    leftLabel: "Jobb med AFP",
-    left: "Tariffavtalen gir et tillegg ved siden av folketrygd og tjenestepensjon.",
-    rightLabel: "Jobb uten AFP",
-    right: "Du har fortsatt folketrygd og vanlig tjenestepensjon, men ikke dette tillegget.",
-    caption: "AFP er et tariffestet tillegg. Sjekk avtalen før du bytter jobb sent i karrieren.",
+    title: "To ordninger",
+    leftLabel: "Privat sektor",
+    left: "I Fellesordningen er AFP et livsvarig påslag som kan tas ut fra 62 år.",
+    rightLabel: "Offentlig sektor",
+    right: "Livsvarig AFP fra 2025 for årskull fra 1963. Eldre årskull har tidligpensjon fra 62 til 67 år, som deretter faller bort.",
+    caption: "Tidligpensjon beskriver den gamle offentlige ordningen. Det livsvarige påslaget er en annen ytelse. Sjekk avtalen før du bytter jobb sent i karrieren.",
   },
   belaningsgrad: { type: "interactive", id: "belaningsgrad" },
   utlansforskriften: {
@@ -172,10 +176,11 @@ export const conceptFigures: Record<string, FigureSpec> = {
     title: "Tre rammer banken ser på",
     layers: [
       { label: "Betjeningsevne", note: "tåler du høyere rente?", tone: "rose" },
-      { label: "Gjeldsgrad", note: "gjeld mot inntekt", tone: "amber" },
-      { label: "Belåningsgrad", note: "lån mot boligverdi", tone: "blue" },
+      { label: "Gjeldsgrad", note: "fortsatt fem ganger inntekt", tone: "amber" },
+      { label: "Belåningsgrad", note: "90 % på nedbetalingslån, 60 % på rammekreditt", tone: "blue" },
     ],
-    caption: "Forskriften setter rammer for hvor mye banken kan låne ut. Banken kan være strengere. Sjekk gjeldende tekst.",
+    caption:
+      "For nedbetalingslån er grensen 90 prosent fra 31. desember 2024, fortsatt i 2026. Egenkapitalkravet er 10 prosent. Banken kan være strengere.",
   },
   kpi: {
     type: "compare",
@@ -204,12 +209,15 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Målet er at inflasjonen over tid skal være nær 2 prosent. Ett enkelt månedstall treffer sjelden prikken.",
   },
   "fleksibel-inflasjonsstyring": {
-    type: "pair",
-    title: "To hensyn",
-    a: "Inflasjon nær målet",
-    b: "Aktivitet og sysselsetting",
-    link: "veies mot hverandre",
-    caption: "Fleksibel inflasjonsstyring betyr at komiteen ikke bare ser på prisene. Horisonten brukes til å veie.",
+    type: "stack",
+    title: "Hensynene i styringen",
+    layers: [
+      { label: "Finansielle ubalanser", note: "skal kunne motvirkes", tone: "rose" },
+      { label: "Aktivitet og sysselsetting", note: "veies med", tone: "amber" },
+      { label: "Inflasjon nær målet", note: "nær 2 prosent over tid", tone: "teal" },
+    ],
+    caption:
+      "Forskrift for pengepolitikken § 3. Styringen vekter inflasjon mot produksjon og sysselsetting, og skal kunne motvirke oppbygging av finansielle ubalanser.",
   },
   ppr: {
     type: "flow",
@@ -249,13 +257,14 @@ export const conceptFigures: Record<string, FigureSpec> = {
   },
   "strukturelt-underskudd": {
     type: "formula",
-    title: "Oljepengebruken i budsjettet",
-    expression: "Bruk av fondet ≈ underskuddet uten oljeinntekter",
+    title: "To tall i budsjettet",
+    expression: "Overføring = oljekorrigert underskudd",
     bits: [
-      { name: "Underskudd", means: "Utgifter som ikke dekkes av andre inntekter" },
-      { name: "Uten olje", means: "Oljeinntektene holdes utenfor, så bruken av fondet synes" },
+      { name: "Oljekorrigert", means: "Det faktiske underskuddet uten oljeinntekter. Det er dette fondet overfører." },
+      { name: "Strukturelt", means: "Samme tall justert for konjunktur. Det sammenlignes med handlingsregelen." },
     ],
-    caption: "Det strukturelle, oljekorrigerte underskuddet er måten budsjettet viser hvor mye oljepenger som brukes.",
+    caption:
+      "I anslaget for 2026 er det strukturelle underskuddet 583,4 milliarder kroner, og overføringen 454,8 milliarder kroner.",
   },
   finanspolitikk: {
     type: "pair",
@@ -279,16 +288,18 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "stack",
     title: "Hele verdiskapingen",
     layers: [
-      { label: "Petroleumsvirksomhet", note: "olje og gass", tone: "slate" },
-      { label: "Fastlandet", note: "resten av økonomien", tone: "teal" },
+      { label: "Utenfor fastlandet", note: "olje, gass, rør og utenriks sjøfart", tone: "slate" },
+      { label: "Fastlands-Norge", note: "med fiske og annen kystaktivitet", tone: "teal" },
     ],
-    caption: "BNP er verdien av det som produseres. Fastlands-BNP holder petroleumsvirksomheten utenfor, så svingningene der ikke skjuler resten.",
+    caption:
+      "BNP Fastlands-Norge holder olje og gass, rørtransport og utenriks sjøfart utenfor. Utenriks sjøfart er egen virksomhet, ved siden av petroleumsvirksomheten. Fiske og annen kystaktivitet er med.",
   },
   "bnp-fastland": {
     type: "photo",
     src: "/bilder/begrep-fastland.jpg",
     alt: "En fiskebåt ved bryggen i et kystvær, med naust og kasser.",
-    caption: "Fastlands-BNP er verdiskapingen utenom olje og gass: fiske, industri, tjenester og det andre som skjer på land.",
+    caption:
+      "BNP Fastlands-Norge er verdiskapingen uten olje og gass, rørtransport og utenriks sjøfart. Fiske og annen kystaktivitet er med.",
   },
   indeksfond: {
     type: "compare",
@@ -316,17 +327,19 @@ export const conceptFigures: Record<string, FigureSpec> = {
       { label: "Tjenestepensjon", note: "fra jobben", tone: "teal" },
       { label: "Folketrygd", note: "NAV, opptjent over livet", tone: "green" },
     ],
-    caption: "Alderspensjon fra folketrygden er grunnen de fleste bygger på. Den dekker sjelden hele pensjonen alene.",
+    caption:
+      "I det nye systemet er alderspensjonen inntektspensjon pluss garantipensjon. Grunnpensjon hører til det gamle systemet, sammen med tilleggspensjon. Laget dekker sjelden hele pensjonen alene.",
   },
   grunnbelop: {
     type: "formula",
     title: "Enheten ytelsene regnes i",
     expression: "Ytelse = antall G × grunnbeløpet i kroner",
     bits: [
-      { name: "G", means: "Grunnbeløpet, som reguleres" },
-      { name: "Kronebeløpet", means: "Endres. Selve G-en er enheten du husker" },
+      { name: "G", means: "Kongen fastsetter beløpet. Det reguleres 1. mai i takt med lønnsveksten" },
+      { name: "Kronebeløpet", means: "Per 1. mai 2026 er G 136 549 kroner" },
     ],
-    caption: "Pensjon og flere trygder oppgis i G. Sjekk NAV for årets kronebeløp.",
+    caption:
+      "Pensjon og flere trygder oppgis i G. Folketrygdloven § 1-4. Siden 2011 fastsetter regjeringen i statsråd beløpet etter trygdeoppgjøret.",
   },
   annuitetslan: { type: "interactive", id: "lanform", focus: "annuitet" },
   serielan: { type: "interactive", id: "lanform", focus: "serie" },
@@ -611,10 +624,11 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "split",
     title: "Eksempel: bolig til 100",
     parts: [
-      { label: "Egenkapital 15", share: 15, tone: "green" },
-      { label: "Lån 85", share: 85, tone: "blue" },
+      { label: "Egenkapital 10", share: 10, tone: "green" },
+      { label: "Lån 90", share: 90, tone: "blue" },
     ],
-    caption: "Egenkapital er delen du stiller selv. 15/85 er et vanlig bilde av belåningsgrad, ikke et løfte om at banken sier ja.",
+    caption:
+      "Egenkapital er delen du stiller selv. For nedbetalingslån er 10/90 grensen fra 31. desember 2024, fortsatt i 2026. Rammekreditt med pant i bolig har et tak på 60 prosent.",
   },
   fellesgjeld: {
     type: "photo",
@@ -623,13 +637,11 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Fellesgjeld er lånet som hører til hele bygget, ikke bare din leilighet. Din del følger andelen din.",
   },
   "leie-mot-eie": {
-    type: "compare",
-    title: "To måter å bo på",
-    leftLabel: "Leie",
-    left: "Du betaler for bruksretten. Ingen egenkapital, ingen formue i boligen, og du kan flytte lettere.",
-    rightLabel: "Eie",
-    right: "Du binder egenkapital og tar gjelden. Boligen kan bli formue, og renten er din risiko.",
-    caption: "Valget er fleksibilitet mot eierskap. Regnestykket avhenger av rente, prisvekst og hvor lenge du blir.",
+    type: "flow",
+    title: "Leie først, kjøp senere",
+    steps: ["Leie en periode", "Leie kan avtales som egenkapital", "Kjøpsrett eller kjøpsplikt", "Banken må fortsatt si ja"],
+    caption:
+      "Leie mot eie er en avtale om å leie en periode og senere kunne eller skulle kjøpe. En del av leien kan avtales å telle som egenkapital. Vilkårene varierer.",
   },
   frontfagsmodellen: {
     type: "photo",

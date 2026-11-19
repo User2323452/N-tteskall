@@ -185,9 +185,9 @@ function CompoundFigure() {
 function RatioFigure({ kind }: { kind: "belaning" | "gjeld" }) {
   const belaning = kind === "belaning";
   const [base, setBase] = useState(belaning ? 4_000_000 : 700_000);
-  const [loan, setLoan] = useState(belaning ? 3_400_000 : 3_500_000);
+  const [loan, setLoan] = useState(belaning ? 3_600_000 : 3_500_000);
   const ratio = base > 0 ? loan / base : 0;
-  const limit = belaning ? 0.85 : 5;
+  const limit = belaning ? 0.9 : 5;
   const pct = belaning ? ratio * 100 : ratio;
   const marker = belaning ? limit * 100 : (limit / 8) * 100;
   const bar = belaning ? Math.min(100, pct) : Math.min(100, (ratio / 8) * 100);
@@ -196,7 +196,7 @@ function RatioFigure({ kind }: { kind: "belaning" | "gjeld" }) {
       title={belaning ? "Belåningsgrad" : "Gjeldsgrad"}
       note={
         belaning
-          ? "Læringsfigur. Streken er 85 %, en vanlig ramme for boliglån i utlånsforskriften. Banken kan være strengere. Sjekk gjeldende forskrift."
+          ? "Læringsfigur. Streken er 90 %, grensen for nedbetalingslån i utlånsforskriften fra 31. desember 2024, fortsatt i 2026. Rammekreditt med pant i bolig har et tak på 60 %. Gjeldsgraden på fem ganger inntekten står. Banken kan være strengere."
           : "Læringsfigur. Streken er 5 ganger brutto inntekt, en vanlig ramme. Sjekk gjeldende forskrift. Ikke et lånetilsagn."
       }
     >
@@ -220,7 +220,7 @@ function RatioFigure({ kind }: { kind: "belaning" | "gjeld" }) {
       </div>
       <p className="text-sm text-[var(--ink)]">
         {belaning
-          ? `Lånet er ${tall(pct, 0)} % av boligverdien. Streken er 85 %.`
+          ? `Lånet er ${tall(pct, 0)} % av boligverdien. Streken er 90 %.`
           : `Gjelden er ${tall(pct, 1)} ganger inntekten. Streken er 5.`}
       </p>
     </Card>

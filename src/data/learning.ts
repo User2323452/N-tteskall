@@ -57,8 +57,8 @@ const coreConcepts: Concept[] = [
     definition:
       "Retningslinje for hvor mye av Oljefondet staten kan bruke over statsbudsjettet hvert år.",
     explanation:
-      "Handlingsregelen sier at den forventede realavkastningen av Statens pensjonsfond utland (ofte omtalt rundt 3 prosent) skal styre bruken over tid. Målet er å jevne ut oljeinntekter, unngå å bruke opp fondet, og skjerme fastlandsøkonomien mot store svingninger. Dette er finanspolitikk, vedtatt over statsbudsjettet — ikke et virkemiddel Norges Bank bruker når den setter styringsrenten.",
-    tip: "Sjekk gjeldende anslag. 3 prosent er en tommelfinger for forventet realavkastning, ikke en fasit for hvert enkelt år.",
+      "Handlingsregelen sier at den forventede realavkastningen av Statens pensjonsfond utland, om lag 3 prosent over tid, skal styre bruken. Det er et anslag over tid. I normale år bør bruken ligge under 3 prosent, rundt 2,7 prosent, slik at uttaket over tid kan tilsvare 3 prosent når kriseår regnes med. Nasjonalbudsjettet 2027 anslår det strukturelle oljekorrigerte underskuddet for 2026 til 583,4 milliarder kroner, 2,7 prosent av fondet. Målet er å jevne ut oljeinntekter, unngå å bruke opp fondet, og skjerme fastlandsøkonomien mot store svingninger. Dette er finanspolitikk, vedtatt over statsbudsjettet — ikke et virkemiddel Norges Bank bruker når den setter styringsrenten.",
+    tip: "3 prosent er forventet realavkastning over tid. Normal bruk ligger lavere, rundt 2,7 prosent. Sjekk gjeldende anslag.",
     relatedIds: ["oljefondet", "finanspolitikk", "strukturelt-underskudd", "realavkastning"],
   },
   {
@@ -78,9 +78,9 @@ const coreConcepts: Concept[] = [
     english: "Norwegian Interbank Offered Rate",
     category: "marked",
     definition:
-      "Pengemarkedsrente: hva bankene oppgir at de kan låne til hverandre for.",
+      "Daglig panelkvotering av renta bankene krever for usikrede kronelån med løpetid fra én uke til seks måneder.",
     explanation:
-      "Mange lån, obligasjoner og rentederivater er knyttet til NIBOR (eller påslag over NIBOR). Den ligger vanligvis nær styringsrenten, men kan avvike ved uro i pengemarkedet. Norge er i ferd med å fase inn andre referanserenter, blant annet NOWA.",
+      "Mange lån, obligasjoner og rentederivater er knyttet til NIBOR (eller påslag over NIBOR). Den ligger vanligvis nær styringsrenten, men kan avvike ved uro i pengemarkedet. Norges Bank skrev i 2025 at NIBOR fortsatt er den klart mest brukte referanserenten. NOWA er anbefalt alternativ og en fallback hvis NIBOR skulle opphøre. De to måler ikke samme rente.",
     relatedIds: ["styringsrenten", "nowa"],
   },
   {
@@ -89,9 +89,9 @@ const coreConcepts: Concept[] = [
     english: "Norwegian Overnight Weighted Average",
     category: "marked",
     definition:
-      "Norsk overnattenrente basert på faktiske transaksjoner — ny referanserente.",
+      "Vektet snitt av faktiske usikrede overnattenlån. Anbefalt alternativ til NIBOR, og en fallback.",
     explanation:
-      "NOWA er et vektet snitt av faktiske dag-til-dag-lån mellom banker. Den brukes mer som referanse etter hvert som markedet går bort fra panelbaserte renter som NIBOR. For deg som lærer: husk at «referanserente» er bakgrunnen mange kontrakter prises fra.",
+      "NOWA har eksistert siden 2011 og ble lagt om i 2020. Norges Bank skrev i 2025 at den i liten grad brukes som referanse. Den er anbefalt alternativ og en fallback hvis NIBOR skulle opphøre. Markedet bruker fortsatt NIBOR. NIBOR er en panelkvotering fra én uke til seks måneder. NOWA er overnatt. De måler ikke samme rente. For deg som lærer: husk at «referanserente» er bakgrunnen mange kontrakter prises fra.",
     relatedIds: ["nibor", "styringsrenten"],
   },
   {
@@ -124,9 +124,9 @@ const coreConcepts: Concept[] = [
     english: "Risk-free allowance / shielding deduction",
     category: "personlig",
     definition:
-      "Et fradrag som skjermer en risikofri del av aksjeavkastningen fra utbytteskatt.",
+      "Et fradrag som skjermer en risikofri del av aksjeavkastningen fra skatt på både utbytte og gevinst.",
     explanation:
-      "Skjermingsfradraget beregnes ut fra skjermingsgrunnlaget (typisk kostpris/innskudd) ganget med en skjermingsrente satt av Skatteetaten. Fradraget reduserer skattepliktig gevinst/utbytte og kan fremføres hvis det ikke brukes. På ASK håndteres mye av dette inne i kontoen.",
+      "Skjermingsfradraget beregnes ut fra skjermingsgrunnlaget (typisk kostpris/innskudd) ganget med en skjermingsrente satt av Skatteetaten. Etter aksjonærmodellen reduserer fradraget både skattepliktig utbytte og skattepliktig gevinst, og det kan fremføres hvis det ikke brukes. På ASK håndteres mye av dette inne i kontoen. Der beregnes skjermingen av laveste innskuddssaldo i året.",
     relatedIds: ["ask"],
   },
   {
@@ -176,12 +176,12 @@ const coreConcepts: Concept[] = [
   {
     id: "afp",
     term: "AFP",
-    english: "Contractual early retirement pension",
+    english: "Contractual pension",
     category: "personlig",
     definition:
-      "Avtalefestet pensjon — livsvarig tillegg for mange med tariffavtale.",
+      "Avtalefestet pensjon. I privat sektor et livsvarig påslag. I offentlig sektor avhenger ordningen av årskull.",
     explanation:
-      "AFP er et tillegg til folketrygden for ansatte i virksomheter tilknyttet ordningen (offentlig og deler av privat sektor). Vilkår om ansiennitet og medlemskap gjelder. AFP er verdifull — sjekk om arbeidsgiveren din er med før du bytter jobb sent i karrieren.",
+      "I privat sektor er AFP i Fellesordningen et livsvarig påslag som kan tas ut fra 62 år. I offentlig sektor gjelder livsvarig AFP fra 2025 for årskull fra 1963. Eldre årskull har den gamle ordningen: tidligpensjon fra 62 til 67 år, som deretter faller bort. Vilkår om ansiennitet og medlemskap gjelder. AFP er verdifull — sjekk om arbeidsgiveren din er med før du bytter jobb sent i karrieren.",
     relatedIds: ["otp"],
   },
   {
@@ -191,7 +191,7 @@ const coreConcepts: Concept[] = [
     category: "personlig",
     definition: "Boliglånet delt på boligens markedsverdi.",
     explanation:
-      "Belåningsgrad 85 % betyr at lånet er 85 % av boligverdien og egenkapitalen 15 %. Høy belåningsgrad gir ofte høyere rente og krav om tilleggssikkerhet. Utlånsforskriften setter rammer for hvor høy belåningsgrad bankene normalt kan tilby.",
+      "Belåningsgrad er lånet delt på boligverdien. 90 prosent belåningsgrad betyr 10 prosent egenkapital. Høy belåningsgrad gir ofte høyere rente og krav om tilleggssikkerhet. For nedbetalingslån til bolig er grensen i utlånsforskriften 90 prosent fra 31. desember 2024, og den gjelder fortsatt i 2026. Rammekreditt med pant i bolig har et eget tak på 60 prosent.",
     relatedIds: ["utlansforskriften"],
   },
   {
@@ -202,7 +202,7 @@ const coreConcepts: Concept[] = [
     definition:
       "Krav til bankenes utlån — ofte kalt boliglånsforskriften — om egenkapital, gjeldsgrad og stresstest.",
     explanation:
-      "Forskriften, fastsatt av Finansdepartementet, skal dempe risikoen for at husholdninger tar opp mer gjeld enn de tåler. Den viderefører reglene fra boliglånsforskriften og gjelder boliglån og en del andre lån. Kravene går til egenkapital, samlet gjeld mot inntekt, og at lånet skal tåle en høyere rente. Bankene kan ha egne, strengere regler. Tallene kan endres.",
+      "Forskriften, fastsatt av Finansdepartementet, skal dempe risikoen for at husholdninger tar opp mer gjeld enn de tåler. Den viderefører reglene fra boliglånsforskriften og gjelder boliglån og en del andre lån. Kravene går til egenkapital, samlet gjeld mot inntekt, og at lånet skal tåle en høyere rente. For nedbetalingslån er belåningsgraden maksimalt 90 prosent fra 31. desember 2024, fortsatt i 2026, så egenkapitalkravet er 10 prosent. Gjelden kan fortsatt være inntil fem ganger brutto inntekt. Rammekreditt med pant i bolig har et tak på 60 prosent. Bankene kan ha egne, strengere regler.",
     relatedIds: ["belaningsgrad", "egenkapital", "gjeldsgrad"],
   },
 ];
@@ -243,7 +243,7 @@ export const lessons: Lesson[] = [
     summary: "Nær 2 prosent over tid — og fleksibelt.",
     body: [
       "Norges Bank har et operativt mål om at konsumprisveksten skal ligge nær 2 prosent over tid. Tallet er et anker for forventningene. Det er ikke et krav om at KPI treffer 2 prosent hver eneste måned. Sjekk mandatet hvis du skal sitere tallet i et arbeid.",
-      "Styringen er fleksibel. Banken legger også vekt på produksjon og sysselsetting. Den prøver ikke å presse inflasjonen tilbake på én måned hvis det ville gitt et unødvendig hopp i ledigheten.",
+      "Styringen er fleksibel. Banken legger også vekt på produksjon og sysselsetting, og styringen skal kunne motvirke oppbygging av finansielle ubalanser. Den prøver ikke å presse inflasjonen tilbake på én måned hvis det ville gitt et unødvendig hopp i ledigheten.",
       "KPI-JAE er KPI uten energivarer og justert for avgiftsendringer. Den brukes ofte når man vil se den underliggende prisveksten, fordi strøm og avgifter svinger uten at det alltid sier noe om presset i økonomien.",
     ],
     conceptIds: ["inflasjonsmal", "fleksibel-inflasjonsstyring", "kpi-jae"],
@@ -251,13 +251,13 @@ export const lessons: Lesson[] = [
       question: "Hva ligger i fleksibel inflasjonsstyring?",
       options: [
         "Inflasjonen skal være null hver måned",
-        "Hensyn til både inflasjon og aktivitet og sysselsetting",
+        "Hensyn til inflasjon, aktivitet og sysselsetting, og finansielle ubalanser",
         "Styringsrenten er alltid lik boliglånsrenta",
         "KPI-JAE er det eneste tallet som teller",
       ],
       answerIndex: 1,
       explain:
-        "Fleksibel inflasjonsstyring veier inflasjon mot produksjon og sysselsetting, over en horisont på noen år.",
+        "Fleksibel inflasjonsstyring veier inflasjon mot produksjon og sysselsetting, og skal kunne motvirke oppbygging av finansielle ubalanser. Horisonten er noen år.",
     },
   },
   {
@@ -319,7 +319,7 @@ export const lessons: Lesson[] = [
     order: 5,
     summary: "Inflasjon og aktivitet peker ikke alltid samme vei.",
     body: [
-      "Fleksibel inflasjonsstyring er en avveining. Høy prisvekst og høy aktivitet taler for høyere rente. Stigende ledighet og inflasjon under målet taler for lavere rente. Ofte peker hensynene hver sin vei, og komiteen må veie dem over horisonten.",
+      "Fleksibel inflasjonsstyring er en avveining. Høy prisvekst og høy aktivitet taler for høyere rente. Stigende ledighet og inflasjon under målet taler for lavere rente. Forskrift for pengepolitikken § 3 sier i tillegg at styringen skal kunne motvirke oppbygging av finansielle ubalanser. Ofte peker hensynene hver sin vei, og komiteen må veie dem over horisonten.",
       "Produksjonsgapet er et anslag på avviket mellom faktisk produksjon og det økonomien kan produsere uten at inflasjonspresset bygger seg opp. Positivt gap betyr press. Negativt gap betyr slakk.",
       "Renta treffer husholdningene særlig via boliglån, forbruk og kronekurs. Hvor mye som brukes over statsbudsjettet, er et annet spor. Det ligger på kartet under norsk økonomi.",
     ],
@@ -406,9 +406,9 @@ export const lessons: Lesson[] = [
     order: 3,
     summary: "Folketrygd, tjenestepensjon og egen sparing.",
     body: [
-      "Pensjonen i Norge er lag på lag. Folketrygden er den offentlige grunnpensjonen, knyttet til inntekt, botid og når du tar den ut. Grunnbeløpet (G) er beløpet Stortinget regulerer, og som ytelsene regnes ut fra.",
+      "Pensjonen i Norge er lag på lag. Folketrygdens alderspensjon er det offentlige laget de fleste bygger på. I det nye systemet er den inntektspensjon pluss garantipensjon. Inntekt og uttakstidspunkt betyr mest for inntektspensjonen. Botid, som trygdetid, betyr mest for garantipensjonen. Grunnbeløpet (G) fastsettes av Kongen og reguleres hvert år fra 1. mai. Per 1. mai 2026 er G 136 549 kroner.",
       "Obligatorisk tjenestepensjon (OTP) er penger arbeidsgiver må spare for deg, ofte i fond, oppå folketrygden. Minstesatsen er lav. Mange arbeidsgivere sparer mer.",
-      "Individuell pensjonssparing (IPS) er privat sparing med fradrag i inntekten. Pengene er bundet til pensjonsalder. De er ikke en buffer du kan ta ut når du vil. AFP er et tillegg for mange med tariffavtale — sjekk om du er omfattet før du bytter jobb sent.",
+      "Individuell pensjonssparing (IPS) er privat sparing med fradrag i inntekten. Pengene er bundet til pensjonsalder. De er ikke en buffer du kan ta ut når du vil. I privat sektor er AFP i Fellesordningen et livsvarig påslag fra 62 år. I offentlig sektor gjelder livsvarig AFP fra 2025 for årskull fra 1963, mens eldre årskull har tidligpensjon fra 62 til 67 år. Sjekk om du er omfattet før du bytter jobb sent.",
     ],
     conceptIds: ["folketrygd", "otp", "ips"],
   },
@@ -480,11 +480,11 @@ export const lessons: Lesson[] = [
     pathId: "skatt-for-privatpersoner",
     title: "Minstefradrag",
     order: 1,
-    summary: "Standardfradrag i lønn, med tak.",
+    summary: "Standardfradrag i lønn, prosent opp til et tak.",
     body: [
-      "Minstefradraget er et standardfradrag i lønn og enkelte andre inntekter. Det beregnes som en prosent av inntekten, med et nedre og et øvre beløp. Du får det automatisk i skattemeldingen.",
+      "Minstefradraget er et standardfradrag i lønn, pensjon og enkelte andre inntekter. Det beregnes som en prosent av inntekten. Den nedre grensen for vanlige lønns- og pensjonsinntekter ble opphevet fra inntektsåret 2023, så prosentsatsen gjelder helt ned til null. Du får det automatisk i skattemeldingen.",
       "Fradraget skal grovt dekke vanlige kostnader ved å være i jobb, slik at du slipper å dokumentere dem. Har du høyere kostnader av den typen fradraget dekker, kan faktiske kostnader brukes i stedet.",
-      "Prosentsats og tak settes i skattereglene og endres. Sjekk Skatteetaten for året du er i.",
+      "I 2026 er minstefradraget i lønn 46 prosent, med øvre grense 95 700 kr. Prosentsats og tak settes i skattereglene og endres. Sjekk Skatteetaten for året du er i.",
     ],
     conceptIds: ["minstefradrag", "personfradrag"],
   },
@@ -558,8 +558,8 @@ export const lessons: Lesson[] = [
     order: 0,
     summary: "Den offentlige pensjonen.",
     body: [
-      "Folketrygden er den offentlige trygdeordningen. Alderspensjonen derfra er grunnpensjonen de fleste bygger på. Den opptjenes av pensjonsgivende inntekt gjennom livet, og påvirkes av botid og når du tar den ut.",
-      "NAV forvalter ytelsene. Grunnbeløpet (G) er beløpet som reguleres, og som pensjon og andre ytelser regnes ut fra. Kronebeløpet endres. G er enheten.",
+      "Folketrygden er den offentlige trygdeordningen. Alderspensjonen derfra er laget de fleste bygger på. For årskull i det nye systemet er den inntektspensjon pluss garantipensjon. Inntekt og uttakstidspunkt betyr mest for inntektspensjonen. Botid, som trygdetid, betyr mest for garantipensjonen. Grunnpensjon hører til det gamle systemet, sammen med tilleggspensjon.",
+      "NAV forvalter ytelsene. Grunnbeløpet (G) fastsettes av Kongen etter folketrygdloven § 1-4 og reguleres hvert år fra 1. mai i takt med lønnsveksten. Siden 2011 er det regjeringen i statsråd som fastsetter beløpet etter trygdeoppgjøret. Per 1. mai 2026 er G 136 549 kroner.",
       "Folketrygden betaler ikke hele pensjonen for de fleste. Tjenestepensjon og eventuell egen sparing ligger oppå.",
     ],
     conceptIds: ["folketrygd"],
@@ -573,7 +573,7 @@ export const lessons: Lesson[] = [
     body: [
       "Tjenestepensjon er pensjonssparing knyttet til arbeidsforholdet, i tillegg til folketrygden. I privat sektor er en minstesparing lovpålagt: obligatorisk tjenestepensjon (OTP). Mange arbeidsgivere sparer mer enn minstesatsen.",
       "Den vanlige ordningen er innskuddspensjon. Innskuddet er avtalt. Det du får ut, avhenger av avkastning og hvor lenge pengene står. Offentlig sektor har egne ordninger.",
-      "AFP kan komme i tillegg der tariffavtalen gir det. Den følger ikke automatisk med alle jobber. Sjekk arbeidsgiver før du bytter sent i karrieren.",
+      "AFP kan komme i tillegg der tariffavtalen gir det. I privat sektor er påslaget i Fellesordningen livsvarig og kan tas ut fra 62 år. I offentlig sektor gjelder livsvarig AFP fra 2025 for årskull fra 1963. Eldre årskull har tidligpensjon fra 62 til 67 år. Den følger ikke automatisk med alle jobber. Sjekk arbeidsgiver før du bytter sent i karrieren.",
     ],
     conceptIds: ["tjenestepensjon"],
     quiz: {
@@ -624,7 +624,7 @@ export const lessons: Lesson[] = [
     body: [
       "Boliglånsforskriften er det gamle navnet. Reglene står nå i utlånsforskriften, fastsatt av Finansdepartementet. Den setter rammer for boliglån og en del andre lån til husholdninger.",
       "Tre krav går igjen. Du må stille med egenkapital, så belåningsgraden ikke blir for høy. Samlet gjeld må stå i forhold til inntekten. Banken skal sjekke at du tåler en høyere rente enn den du får i dag.",
-      "Egenkapitalkravet har i en årrekke ligget på 15 prosent, og gjelden har vært begrenset til fem ganger brutto inntekt. Tallene står i forskriften og kan endres. Banken kan være strengere.",
+      "For nedbetalingslån er grensen 90 prosent av boligverdien fra 31. desember 2024, og den gjelder fortsatt i 2026. Egenkapitalkravet er dermed 10 prosent. Gjelden er fortsatt begrenset til fem ganger brutto inntekt. Rammekreditt med pant i bolig har et tak på 60 prosent. Banken kan være strengere.",
     ],
     conceptIds: ["utlansforskriften"],
     quiz: {
@@ -647,7 +647,7 @@ export const lessons: Lesson[] = [
     order: 1,
     summary: "Den delen du ikke låner.",
     body: [
-      "Egenkapital i et boligkjøp er den delen av prisen du stiller med selv. Belåningsgrad er lånet delt på boligens verdi. 15 prosent egenkapital er det samme som 85 prosent belåningsgrad, når forskriften krever det.",
+      "Egenkapital i et boligkjøp er den delen av prisen du stiller med selv. Belåningsgrad er lånet delt på boligens verdi. 10 prosent egenkapital er det samme som 90 prosent belåningsgrad. Det er grensen for nedbetalingslån fra 31. desember 2024, fortsatt i 2026.",
       "Pengene kan komme fra sparing, for eksempel BSU, fra salg av en annen bolig, eller fra gave. Et nytt lån regnes ikke som egenkapital. Banken vurderer også at du kan betjene gjelden.",
       "Høyere egenkapital gir lavere belåningsgrad. Det er ofte et vilkår for lånet, og det demper hvor hardt et prisfall treffer deg.",
     ],
@@ -711,8 +711,8 @@ export const lessons: Lesson[] = [
     order: 1,
     summary: "Hvor mye av fondet som brukes over tid.",
     body: [
-      "Handlingsregelen er retningslinjen for bruken av fondet over statsbudsjettet. Over tid skal bruken følge forventet realavkastning, lenge omtalt rundt 3 prosent av fondet. Det er et anslag, ikke et tak som skal treffes hvert år.",
-      "Regelen skal jevne ut svingninger i oljeinntektene, la fondet vare, og hindre at fastlandsøkonomien overopphetes av oljepenger. I en nedgang kan bruken ligge over anslaget, i en oppgang under.",
+      "Handlingsregelen er retningslinjen for bruken av fondet over statsbudsjettet. Forventet realavkastning er om lag 3 prosent over tid. Det er et anslag, ikke et tak som skal treffes hvert år.",
+      "I normale år bør bruken ligge under 3 prosent, rundt 2,7 prosent, slik at uttaket over tid kan tilsvare 3 prosent når kriseår regnes med. Nasjonalbudsjettet 2027 anslår det strukturelle oljekorrigerte underskuddet for 2026 til 583,4 milliarder kroner, 2,7 prosent av fondet. Regelen skal jevne ut svingninger i oljeinntektene, la fondet vare, og hindre at fastlandsøkonomien overopphetes av oljepenger.",
       "Dette er finanspolitikk. Stortinget vedtar budsjettet etter forslag fra Finansdepartementet. Norges Bank styrer ikke handlingsregelen når den setter renta.",
     ],
     conceptIds: ["handlingsregelen"],
@@ -736,8 +736,8 @@ export const lessons: Lesson[] = [
     order: 2,
     summary: "Underskuddet uten oljeinntekter.",
     body: [
-      "Oljepengebruken i budsjettet måles ved det strukturelle, oljekorrigerte underskuddet. Det er hvor stort underskuddet på statsbudsjettet er uten oljeinntekter, justert for konjunktur.",
-      "Overføringen fra fondet dekker dette underskuddet. Finansdepartementet foreslår tallet. Stortinget vedtar budsjettet. Handlingsregelen er målestokken bruken sammenlignes med over tid.",
+      "Det som sammenlignes med handlingsregelen, er det strukturelle oljekorrigerte underskuddet: underskuddet uten oljeinntekter, justert for konjunktur.",
+      "Overføringen fra Statens pensjonsfond utland er lik det oljekorrigerte underskuddet, altså det faktiske underskuddet uten oljeinntekter. Det strukturelle underskuddet er det samme tallet justert for konjunktur, og det er dette som sammenlignes med handlingsregelen. I anslaget for 2026 er det strukturelle underskuddet 583,4 milliarder kroner, og overføringen 454,8 milliarder kroner. Finansdepartementet foreslår tallene. Stortinget vedtar budsjettet.",
       "Pengebruken er ikke det samme som fondets avkastning et enkelt år. Fondet kan falle i verdi i markedet samtidig som budsjettet bruker penger etter regelen. Begrepene fra løpet ligger i repetisjonen.",
     ],
     conceptIds: ["strukturelt-underskudd", "finanspolitikk"],

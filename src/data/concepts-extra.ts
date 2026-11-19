@@ -48,8 +48,8 @@ export const extraConcepts: Concept[] = [
     "Fleksibel inflasjonsstyring",
     "Flexible inflation targeting",
     "makro",
-    "Pengepolitikken vekter både inflasjon og produksjon og sysselsetting.",
-    "Banken prøver ikke å presse inflasjonen tilbake på én måned hvis det ville gitt et unødvendig hopp i ledigheten. Avveiningen gjøres over en horisont på noen år.",
+    "Pengepolitikken vekter inflasjon mot produksjon og sysselsetting, og skal kunne motvirke oppbygging av finansielle ubalanser.",
+    "Banken prøver ikke å presse inflasjonen tilbake på én måned hvis det ville gitt et unødvendig hopp i ledigheten. Avveiningen gjøres over en horisont på noen år. Forskrift for pengepolitikken § 3 sier at styringen også skal kunne motvirke oppbygging av finansielle ubalanser. Inflasjonsmålet er nær 2 prosent over tid.",
     ["inflasjonsmal", "produksjonsgap", "styringsrenten"]
   ),
   c(
@@ -102,8 +102,8 @@ export const extraConcepts: Concept[] = [
     "Strukturelt oljekorrigert underskudd",
     "Structural non-oil deficit",
     "olje",
-    "Mål på oljepengebruken over statsbudsjettet, justert for konjunkturen.",
-    "Tallet brukes når man sammenligner faktisk bruk med handlingsregelen. Det er et budsjettmål, ikke en rente.",
+    "Det oljekorrigerte underskuddet justert for konjunktur. Dette tallet sammenlignes med handlingsregelen.",
+    "Overføringen fra Statens pensjonsfond utland er lik det oljekorrigerte underskuddet, det faktiske underskuddet uten oljeinntekter. Det strukturelle tallet er det samme justert for konjunktur. I anslaget for 2026 er strukturelt underskudd 583,4 milliarder kroner og den faktiske overføringen 454,8 milliarder kroner. Det er et budsjettmål, ikke en rente.",
     ["handlingsregelen", "finanspolitikk", "oljefondet"]
   ),
   c(
@@ -167,8 +167,8 @@ export const extraConcepts: Concept[] = [
     "Folketrygd",
     "National insurance pension",
     "personlig",
-    "Den offentlige grunnpensjonen. Størrelsen henger på inntekt, botid og når du tar den ut.",
-    "Folketrygden er det nederste laget. Oppå kommer tjenestepensjon fra arbeidsgiver, og eventuelt egen sparing. Grunnbeløpet (G) brukes når ytelsene beregnes.",
+    "Den offentlige alderspensjonen. I det nye systemet er den inntektspensjon pluss garantipensjon.",
+    "Folketrygden er det nederste laget. Oppå kommer tjenestepensjon fra arbeidsgiver, og eventuelt egen sparing. Inntekt og uttakstidspunkt betyr mest for inntektspensjonen. Botid, som trygdetid, betyr mest for garantipensjonen. Grunnpensjon er en ytelse i det gamle systemet, sammen med tilleggspensjon. Grunnbeløpet (G) brukes når ytelsene beregnes.",
     ["grunnbelop", "otp", "ips"]
   ),
   c(
@@ -176,8 +176,8 @@ export const extraConcepts: Concept[] = [
     "Grunnbeløpet (G)",
     "National insurance basic amount",
     "personlig",
-    "Et beløp Stortinget regulerer, brukt til å beregne pensjon og trygdeytelser.",
-    "G oppdateres, normalt én gang i året. Når noen sier «2 G» eller «6 G», mener de et multiplum av dette beløpet — sjekk NAV for gjeldende kronebeløp.",
+    "Beløpet folketrygdens ytelser regnes ut fra. Kongen fastsetter det, og det reguleres hvert år fra 1. mai i takt med lønnsveksten.",
+    "Folketrygdloven § 1-4 sier at grunnbeløpet fastsettes av Kongen. Siden 2011 er det regjeringen i statsråd som fastsetter beløpet etter trygdeoppgjøret. Per 1. mai 2026 er G 136 549 kroner. Når noen sier «2 G» eller «6 G», mener de et multiplum av dette beløpet.",
     ["folketrygd", "otp"]
   ),
   c(
@@ -557,7 +557,7 @@ export const extraConcepts: Concept[] = [
     "Equity (home purchase)",
     "personlig",
     "Den delen av boligkjøpet du stiller med selv, ikke låner.",
-    "Egenkapital er boligverdi minus lån. Belåningsgrad er lånet delt på verdien. Utlånsforskriften setter et krav til egenkapitalen. Pengene kan komme fra sparing, salg av bolig eller gave. Annet lån regnes ikke som egenkapital.",
+    "Egenkapital er boligverdi minus lån. Belåningsgrad er lånet delt på verdien. For nedbetalingslån krever utlånsforskriften 10 prosent egenkapital fra 31. desember 2024, fortsatt i 2026, som er det samme som 90 prosent belåningsgrad. Pengene kan komme fra sparing, salg av bolig eller gave. Annet lån regnes ikke som egenkapital.",
     ["belaningsgrad", "utlansforskriften", "bsu", "fellesgjeld"],
     "Egenkapital = verdi − lån. Belåningsgrad = lån / verdi."
   ),
