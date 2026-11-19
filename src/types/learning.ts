@@ -115,6 +115,11 @@ export interface ReturnProgress {
   lastActiveOn?: string;
   /** Antall dager på rad som slutter på lastActiveOn. */
   streak: number;
+  /**
+   * Kalenderdager med minst én vurdering eller én fullført leksjon.
+   * YYYY-MM-DD. Dette er hvilke dager som er gjort, ikke en egen strek.
+   */
+  activeDays: string[];
   /** Sitter (30 dager) som ikke er vist på Hjem ennå. */
   sitterPending: SitterNotice[];
   /** `conceptId@at` for linjer som allerede er vist. */
