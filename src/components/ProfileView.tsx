@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DataBackup } from "@/components/DataBackup";
 import { getConcept, learningPaths } from "@/data/learning";
 import { formatWhen } from "@/lib/format";
@@ -13,7 +13,9 @@ import {
   getAllPathProgress,
   getReviews,
   isIntroduced,
+  listCompletedDays,
   listSchedule,
+  syncCompletedDays,
 } from "@/lib/progress";
 import type { ConceptProgress, RecallStatus, ReviewEntry } from "@/types/learning";
 
@@ -79,9 +81,11 @@ export function ProfileView() {
   const [bucket, setBucket] = useState<"studerer" | "fullfort" | "kan" | null>(null);
   const [repeated, setRepeated] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
+  const [daysOpen, setDaysOpen] = useState(false);
   const [backup, setBackup] = useState(false);
 
   useEffect(() => {
+    syncCompletedDays();
     setReady(true);
   }, []);
 
@@ -107,6 +111,7 @@ export function ProfileView() {
 
   const today = new Date();
   const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const completedDays = listCompletedDays();
   const schedule = listSchedule();
   const dueNow = schedule.filter((item) => item.dueOn <= todayIso);
   const later = schedule.filter((item) => item.dueOn > todayIso);
@@ -204,6 +209,18 @@ export function ProfileView() {
       </section>
 
       <Section
+        title="Fullførte dager"
+        summary={monthDaySummary(completedDays, today)}
+        open={daysOpen}
+        onToggle={() => setDaysOpen((open) => !open)}
+      >
+        <CompletedMonth completed={completedDays} today={todayIso} />
+        <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
+          En dag merkes når du vurderer et konsept eller fullfører en leksjon.
+        </p>
+      </Section>
+
+      <Section
         title="Det du har repetert"
         summary={
           repeatedRows.length === 0
@@ -299,6 +316,107 @@ export function ProfileView() {
       <p className="px-1 pt-1 text-xs leading-relaxed text-slate-400">
         Repetisjonen bygger på glemselskurven til Hermann Ebbinghaus.
       </p>
+    </div>
+  );
+}
+
+const WEEKDAYS = ["ma", "ti", "on", "to", "fr", "lø", "sø"] as const;
+
+function monthDaySummary(days: string[], today: Date): string {
+  const prefix = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-`;
+  const count = days.filter((day) => day.startsWith(prefix)).length;
+  const name = new Intl.DateTimeFormat("nb-NO", { month: "long" }).format(today);
+  if (count === 0) return `Ingen dager i ${name}`;
+  if (count === 1) return `1 dag i ${name}`;
+  return `${count} dager i ${name}`;
+}
+
+function CompletedMonth({ completed, today }: { completed: string[]; today: string }) {
+  const done = new Set(completed);
+  const now = new Date(`${today}T12:00:00`);
+  const [cursor, setCursor] = useState({ year: now.getFullYear(), month: now.getMonth() });
+  const atCurrent = cursor.year === now.getFullYear() && cursor.month === now.getMonth();
+  const first = new Date(cursor.year, cursor.month, 1);
+  const monthLabel = new Intl.DateTimeFormat("nb-NO", {
+    month: "long",
+    year: "numeric",
+  }).format(first);
+  const lead = (first.getDay() + 6) % 7;
+  const count = new Date(cursor.year, cursor.month + 1, 0).getDate();
+  const cells: (number | null)[] = [
+    ...Array.from({ length: lead }, () => null),
+    ...Array.from({ length: count }, (_, index) => index + 1),
+  ];
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  function shift(delta: number) {
+    const next = new Date(cursor.year, cursor.month + delta, 1);
+    const nextKey = next.getFullYear() * 12 + next.getMonth();
+    const maxKey = now.getFullYear() * 12 + now.getMonth();
+    if (nextKey > maxKey) return;
+    setCursor({ year: next.getFullYear(), month: next.getMonth() });
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-2">
+        <button
+          type="button"
+          onClick={() => shift(-1)}
+          className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--muted)] hover:bg-[var(--background)]"
+          aria-label="Forrige måned"
+        >
+          <ChevronLeft className="h-5 w-5" aria-hidden />
+        </button>
+        <p className="text-sm text-[var(--ink)]">{monthLabel}</p>
+        <button
+          type="button"
+          onClick={() => shift(1)}
+          disabled={atCurrent}
+          className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--muted)] hover:bg-[var(--background)] disabled:pointer-events-none disabled:opacity-30"
+          aria-label="Neste måned"
+        >
+          <ChevronRight className="h-5 w-5" aria-hidden />
+        </button>
+      </div>
+      <div className="mt-3 grid grid-cols-7 text-center text-[11px] text-[var(--muted)]">
+        {WEEKDAYS.map((name) => (
+          <span key={name} className="py-1">
+            {name}
+          </span>
+        ))}
+      </div>
+      <div className="grid grid-cols-7 justify-items-center" role="grid" aria-label={monthLabel}>
+        {cells.map((day, index) => {
+          if (!day) return <span key={`empty-${index}`} className="h-9 w-9" />;
+          const iso = `${cursor.year}-${String(cursor.month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+          const marked = done.has(iso);
+          const isToday = iso === today;
+          const future = iso > today;
+          const spoken = new Intl.DateTimeFormat("nb-NO", {
+            day: "numeric",
+            month: "long",
+          }).format(new Date(cursor.year, cursor.month, day));
+          return (
+            <span
+              key={iso}
+              role="gridcell"
+              aria-label={`${spoken}${isToday ? ", i dag" : ""}${marked ? ", fullført" : ""}`}
+              className={`flex h-9 w-9 items-center justify-center rounded-full text-sm tabular-nums ${
+                marked
+                  ? "bg-[var(--accent)] font-medium text-white"
+                  : isToday
+                    ? "text-[var(--ink)] ring-1 ring-[var(--accent)]"
+                    : future
+                      ? "text-[var(--muted)]"
+                      : "text-[var(--ink)]"
+              }`}
+            >
+              {day}
+            </span>
+          );
+        })}
+      </div>
     </div>
   );
 }

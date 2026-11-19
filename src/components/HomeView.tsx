@@ -11,7 +11,7 @@ import {
   formatDueLabel,
   getDueConceptIds,
   listSchedule,
-  nextQueueLabel,
+  idleWaitingLabel,
   peekSitterNotices,
   sitterHomeLine,
   streakLabelForToday,
@@ -65,7 +65,7 @@ export function HomeView() {
       ? Math.round((todayPath.done / todayPath.total) * 100)
       : 0;
   const streakText = ready ? streakLabelForToday() : null;
-  const nextText = ready && due.length === 0 ? nextQueueLabel(schedule) : null;
+  const waitingText = ready && due.length === 0 ? idleWaitingLabel(schedule) : null;
 
   return (
     <div className="mx-auto max-w-xl space-y-10">
@@ -150,7 +150,7 @@ export function HomeView() {
             Dagens løp
           </h2>
           {streakText && (
-            <p className="shrink-0 text-sm text-[var(--muted)]">{streakText}</p>
+            <p className="shrink-0 whitespace-nowrap text-sm text-[var(--muted)]">{streakText}</p>
           )}
         </div>
         {!todayPath ? (
@@ -199,7 +199,7 @@ export function HomeView() {
             </div>
           </Link>
         )}
-        {nextText && <p className="text-sm text-[var(--muted)]">{nextText}</p>}
+        {waitingText && <p className="text-sm text-[var(--muted)]">{waitingText}</p>}
       </section>
 
       {due.length > 0 && (

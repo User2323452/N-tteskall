@@ -96,11 +96,51 @@ export function advanceStreak(
   return { lastActiveOn: day, streak: 1 };
 }
 
-/** «1 dag på rad» eller «3 dager på rad». Tom når det ikke er noen strek. */
-export function streakLabel(count: number): string | null {
-  if (count <= 0) return null;
-  if (count === 1) return "1 dag på rad";
-  return `${count} dager på rad`;
+/** «0 dager på rad», «1 dag på rad» eller «3 dager på rad». */
+export function streakLabel(count: number): string {
+  const n = Math.max(0, Math.floor(count));
+  if (n === 1) return "1 dag på rad";
+  return `${n} dager på rad`;
+}
+
+const LESSON_HREF = /^\/lop\/[^/]+\/[^/]+$/;
+
+function asCalendarDay(value: string | undefined): string | null {
+  if (!value) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return localISO(date);
+}
+
+/**
+ * Dager med en vurdering eller en fullført leksjon.
+ * Strek-vinduet fyller inn dager som loggen kan ha kuttet.
+ * Samme dag telles én gang. En startet løp-rad er ikke en fullført leksjon.
+ */
+export function completedDaySet(input: {
+  activeDays?: string[];
+  lastActiveOn?: string;
+  streak?: number;
+  reviews?: { at: string }[];
+  activities?: { at: string; href: string }[];
+}): string[] {
+  const days = new Set<string>();
+  const add = (value: string | undefined) => {
+    const day = asCalendarDay(value);
+    if (day) days.add(day);
+  };
+  for (const day of input.activeDays ?? []) add(day);
+  const streak = Math.max(0, Math.floor(input.streak ?? 0));
+  if (input.lastActiveOn && streak > 0) {
+    for (let i = 0; i < streak; i++) add(addDays(input.lastActiveOn, -i));
+  }
+  for (const review of input.reviews ?? []) add(review.at);
+  for (const entry of input.activities ?? []) {
+    if (!LESSON_HREF.test(entry.href)) continue;
+    add(entry.at);
+  }
+  return [...days].sort();
 }
 
 /**
@@ -126,6 +166,18 @@ export function nextQueueLabel(
     month: "short",
   }).format(new Date(nextDay + "T12:00:00"));
   return `${count} ${noun} ${pretty}`;
+}
+
+/**
+ * Linje under Dagens løp når ingenting forfaller i dag.
+ * Neste dato, eller «Ingenting venter» når både køen og fremtiden er tom.
+ * Kall den ikke når noe allerede forfaller: da viser Hjem «Til repetisjon».
+ */
+export function idleWaitingLabel(
+  items: { dueOn: string }[],
+  today = todayISO()
+): string {
+  return nextQueueLabel(items, today) ?? "Ingenting venter";
 }
 
 /** Én stille linje: «KPI · Sitter». */
@@ -167,7 +219,14 @@ function writeList<T>(key: string, list: T[]) {
 }
 
 function emptyReturn(): ReturnProgress {
-  return { streak: 0, sitterPending: [], sitterSeen: [] };
+  return { streak: 0, activeDays: [], sitterPending: [], sitterSeen: [] };
+}
+
+function normalizeDays(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return [];
+  return completedDaySet({
+    activeDays: raw.filter((day): day is string => typeof day === "string"),
+  });
 }
 
 function sitterEventKey(conceptId: string, at: string): string {
@@ -210,6 +269,7 @@ function normalizeReturn(raw: unknown): ReturnProgress {
   return {
     streak: lastActiveOn ? streak : 0,
     lastActiveOn,
+    activeDays: normalizeDays(data.activeDays),
     sitterPending,
     sitterSeen,
   };
@@ -231,12 +291,30 @@ function writeReturn(state: ReturnProgress): void {
   localStorage.setItem(RETURN_KEY, JSON.stringify(state));
 }
 
+function sameDays(left: string[], right: string[]): boolean {
+  return left.length === right.length && left.every((day, index) => day === right[index]);
+}
+
 /** Én dag teller én gang, enten den kom fra en vurdering eller en fullført leksjon. */
 function noteReturnActivity(): void {
   const state = readReturn();
-  const next = advanceStreak(state.lastActiveOn, state.streak, todayISO());
-  if (next.lastActiveOn === state.lastActiveOn && next.streak === state.streak) return;
-  writeReturn({ ...state, lastActiveOn: next.lastActiveOn, streak: next.streak });
+  const today = todayISO();
+  const next = advanceStreak(state.lastActiveOn, state.streak, today);
+  const activeDays = completedDaySet({
+    activeDays: [...state.activeDays, today],
+    lastActiveOn: next.lastActiveOn,
+    streak: next.streak,
+    reviews: getReviews(),
+    activities: getActivity(),
+  });
+  if (
+    next.lastActiveOn === state.lastActiveOn &&
+    next.streak === state.streak &&
+    sameDays(state.activeDays, activeDays)
+  ) {
+    return;
+  }
+  writeReturn({ ...state, lastActiveOn: next.lastActiveOn, streak: next.streak, activeDays });
 }
 
 function sitterAlreadyNoted(state: ReturnProgress, conceptId: string): boolean {
@@ -253,9 +331,31 @@ function noteSitterMilestone(conceptId: string, term: string): void {
   writeReturn(state);
 }
 
-export function streakLabelForToday(): string | null {
+export function streakLabelForToday(): string {
   const state = readReturn();
   return streakLabel(visibleStreak(state.lastActiveOn, state.streak, todayISO()));
+}
+
+/** Dager som skal merkes i måneden på Profil. */
+export function listCompletedDays(): string[] {
+  const state = readReturn();
+  return completedDaySet({
+    activeDays: state.activeDays,
+    lastActiveOn: state.lastActiveOn,
+    streak: state.streak,
+    reviews: getReviews(),
+    activities: getActivity(),
+  });
+}
+
+/** Skriver dagene inn i fremdriften, så en avkuttet logg ikke tømmer måneden. */
+export function syncCompletedDays(): string[] {
+  const state = readReturn();
+  const activeDays = listCompletedDays();
+  if (!sameDays(state.activeDays, activeDays)) {
+    writeReturn({ ...state, activeDays });
+  }
+  return activeDays;
 }
 
 /** Sitter-linjer som ennå ikke er vist. Leser bare. */
@@ -472,8 +572,8 @@ export function markLessonComplete(
   map[pathId] = next;
   writeMap(PATH_KEY, map);
   if (wasNew) {
-    noteReturnActivity();
     if (label) logActivity({ label, href: `/lop/${pathId}/${lessonId}` });
+    noteReturnActivity();
   }
   return next;
 }
@@ -601,7 +701,7 @@ function assertSchedule() {
   }
 
   if (visibleStreak(undefined, 0, "2026-11-19") !== 0) {
-    throw new Error("Tom strek skal ikke vises");
+    throw new Error("Ingen aktivitet skal gi strek 0");
   }
   if (visibleStreak("2026-11-19", 4, "2026-11-19") !== 4) {
     throw new Error("Strek fra i dag skal vises");
@@ -636,8 +736,12 @@ function assertSchedule() {
   if (month.streak !== 4 || month.lastActiveOn !== "2026-12-01") {
     throw new Error("Strek skal fortsette over månedsskifte");
   }
-  if (streakLabel(0) !== null || streakLabel(1) !== "1 dag på rad" || streakLabel(3) !== "3 dager på rad") {
-    throw new Error("Strek-teksten skal være stille og på bokmål");
+  if (
+    streakLabel(0) !== "0 dager på rad" ||
+    streakLabel(1) !== "1 dag på rad" ||
+    streakLabel(3) !== "3 dager på rad"
+  ) {
+    throw new Error("Strek-teksten skal være stille og på bokmål, også ved null");
   }
 
   const tomorrow = nextQueueLabel(
@@ -672,6 +776,29 @@ function assertSchedule() {
   }
   if (nextQueueLabel([], "2026-11-19") !== null) {
     throw new Error("Tom kø skal ikke ha en neste dato");
+  }
+  if (idleWaitingLabel([], "2026-11-19") !== "Ingenting venter") {
+    throw new Error("Tom kø og tom fremtid skal si Ingenting venter");
+  }
+  if (
+    idleWaitingLabel(
+      [{ dueOn: "2026-11-20" }, { dueOn: "2026-11-20" }, { dueOn: "2026-11-20" }],
+      "2026-11-19"
+    ) !== "3 konsepter i morgen"
+  ) {
+    throw new Error("Ventelinjen skal si hvor mange konsepter som kommer i morgen");
+  }
+  const marked = completedDaySet({
+    lastActiveOn: "2026-11-19",
+    streak: 2,
+    reviews: [{ at: "2026-10-03T12:00:00.000Z" }, { at: "2026-11-19T12:00:00.000Z" }],
+    activities: [
+      { at: "2026-11-02T12:00:00.000Z", href: "/lop/norsk-pengepolitikk/inflasjon" },
+      { at: "2026-11-02T12:00:00.000Z", href: "/lop/norsk-pengepolitikk" },
+    ],
+  });
+  if (marked.join(",") !== "2026-10-03,2026-11-02,2026-11-18,2026-11-19") {
+    throw new Error(`Fullførte dager ble ${marked.join(", ")}`);
   }
   if (sitterHomeLine("KPI") !== "KPI · Sitter") {
     throw new Error("Sitter-linjen skal være konseptnavnet og ordet Sitter");
