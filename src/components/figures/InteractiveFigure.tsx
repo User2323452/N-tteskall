@@ -282,6 +282,35 @@ function CompoundFigure() {
   );
 }
 
+function FundCostFigure() {
+  const start = 100_000;
+  const years = 30;
+  const gross = 0.06;
+  const [cost, setCost] = useState(0.2);
+  const end = start * (1 + gross - cost / 100) ** years;
+  const cheap = start * (1 + gross - 0.002) ** years;
+  const dear = start * (1 + gross - 0.015) ** years;
+  return (
+    <Card
+      title="Kostnaden spiser av renters rente"
+      note="Regneeksempel, ikke en prognose. 100 000 kroner, 30 år, 6 prosent før kostnad. Kostnaden trekkes fra hvert år. Samme regnestykke som renters rente, med et trekk."
+    >
+      <RangeField
+        label="Årlig kostnad"
+        min={0.2}
+        max={1.5}
+        step={0.1}
+        value={cost}
+        display={`${tall(cost, 1)} %`}
+        onChange={setCost}
+      />
+      <p className="text-sm text-[var(--ink)]">
+        Med {tall(cost, 1)} % kostnad blir beløpet om lag {kroner(end)}. Ved 0,2 % blir det om lag {kroner(cheap)}. Ved 1,5 % blir det om lag {kroner(dear)}. Forskjellen mellom de to er om lag {kroner(cheap - dear)}.
+      </p>
+    </Card>
+  );
+}
+
 const GJELD_MAX = 8;
 
 function RatioFigure({ kind }: { kind: "belaning" | "gjeld" }) {
@@ -492,6 +521,7 @@ export function InteractiveFigure({
 }) {
   if (id === "personfradrag") return <GlassFigure />;
   if (id === "renters-rente") return <CompoundFigure />;
+  if (id === "fondkostnad") return <FundCostFigure />;
   if (id === "belaningsgrad") return <RatioFigure kind="belaning" />;
   if (id === "gjeldsgrad") return <RatioFigure kind="gjeld" />;
   if (id === "trinnskatt") return <TrinnFigure />;

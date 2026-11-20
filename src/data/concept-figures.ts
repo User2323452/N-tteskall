@@ -23,7 +23,8 @@ export type InteractiveId =
   | "nominell"
   | "lanform"
   | "reallonn"
-  | "bolig";
+  | "bolig"
+  | "fondkostnad";
 
 export type FigureSpec =
   | { type: "photo"; src: string; alt: string; caption: string }
@@ -72,7 +73,8 @@ export type SketchKind =
   | "volatilitet"
   | "korrelasjon"
   | "spredning"
-  | "ols";
+  | "ols"
+  | "risiko";
 
 export const conceptFigures: Record<string, FigureSpec> = {
   styringsrenten: {
@@ -133,32 +135,37 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "flow",
     title: "Skatten venter",
     steps: ["Innskudd", "Kjøp og salg inne på kontoen", "Uttak over innskuddet", "Da kommer skatten"],
-    caption: "På aksjesparekonto skattlegges ikke hver handel. Skatten kommer når du tar ut mer enn du har satt inn, etter skjerming.",
+    caption:
+      "Innskuddet tas ut først, uten skatt. Skatt kommer på det du tar ut over innskuddet, etter skjerming. Handel inne på kontoen utløser ikke skatt.",
   },
   skjermingsfradrag: {
-    type: "split",
-    title: "Avkastningen delt i to",
-    parts: [
-      { label: "Skjerming", share: 35, tone: "green" },
-      { label: "Skattlegges", share: 65, tone: "slate" },
+    type: "formula",
+    title: "Fra innskudd til skatt",
+    expression: "100 000 × 3,6 % = 3 600 i skjerming",
+    bits: [
+      { name: "Innskudd", means: "Laveste innskudd i året. Her 100 000 kroner." },
+      { name: "Rente", means: "3,6 prosent for 2025. Renten for 2026 fastsettes i januar 2027." },
+      { name: "Uttak", means: "20 000 kroner over innskuddet, minus 3 600, blir 16 400." },
+      { name: "Skatt", means: "16 400 × 1,72 × 22 % = 6 206 kroner." },
     ],
     caption:
-      "Skjermingen reduserer både skattepliktig utbytte og skattepliktig gevinst, etter aksjonærmodellen. Andelene i stolpen er et eksempel, ikke årets tall.",
+      "Regneeksempel. Renten er for 2025. Faktoren 1,72 og skatten 22 prosent gjelder også i 2026. Skjermingen regnes av innskuddet, ikke av fondets verdi.",
   },
   "risiko-avkastning": {
-    type: "compare",
-    title: "De to følges ad",
-    leftLabel: "Lav risiko",
-    left: "Lavere forventet avkastning. Du sover bedre, og får vanligvis mindre.",
-    rightLabel: "Høy risiko",
-    right: "Høyere forventet avkastning. Du kan tape mer, og må tåle svingningene.",
-    caption: "Høyere forventet avkastning er betalingen for å bære mer risiko. Det er ikke et løfte om gevinst.",
+    type: "sketch",
+    title: "Jevnt eller hakkete",
+    kind: "risiko",
+    caption:
+      "Illustrasjon over 20 år, ikke en prognose. Kontoen stiger jevnt. Aksjene svinger og ender høyere. Utfallet kan også bli tap.",
   },
   diversifisering: {
-    type: "photo",
-    src: "/bilder/begrep-diversifisering.jpg",
-    alt: "Fire små kurver, hver med noen egg.",
-    caption: "Sprer du eggene, ødelegger ikke ett uhell hele beholdningen. Det samme gjelder aksjer som ikke faller samtidig.",
+    type: "compare",
+    title: "Ett selskap mot tjue",
+    leftLabel: "1 aksje",
+    left: "Går selskapet konkurs, er den delen borte.",
+    rightLabel: "20 aksjer",
+    right: "Ett selskap i null tar en tjuendedel. Resten står.",
+    caption: "Illustrasjon. Hele markedet kan falle samtidig. Da hjelper det ikke at du eier tjue.",
   },
   otp: {
     type: "stack",
@@ -171,13 +178,14 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Obligatorisk tjenestepensjon er laget arbeidsgiver må spare, oppå folketrygden.",
   },
   ips: {
-    type: "compare",
-    title: "Bundet eller ikke",
-    leftLabel: "IPS",
-    left: "Fradrag nå, pengene låst til pensjon. Du kan ikke bruke dem som buffer.",
-    rightLabel: "ASK",
-    right: "Ingen binding til pensjonsalder. Skatten utsettes til uttak, uten IPS-fradraget.",
-    caption: "IPS er pensjonssparing med binding. ASK er aksjesparing du kan ta ut tidligere.",
+    type: "stack",
+    title: "IPS i tre linjer",
+    layers: [
+      { label: "Hvem", note: "Du sparer selv", tone: "teal" },
+      { label: "Verktøy", note: "Fradrag nå, skatt ved uttak", tone: "blue" },
+      { label: "Eksempel", note: "Låst til pensjon, så det er ikke buffer", tone: "amber" },
+    ],
+    caption: "IPS er eget pensjonsspor. Årstaket for innskudd står hos Skatteetaten.",
   },
   afp: {
     type: "compare",
@@ -327,23 +335,16 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption:
       "BNP Fastlands-Norge er verdiskapingen uten olje og gass, rørtransport og utenriks sjøfart. Fiske og annen kystaktivitet er med.",
   },
-  indeksfond: {
-    type: "compare",
-    title: "Følge eller prøve å slå",
-    leftLabel: "Indeksfond",
-    left: "Eier bredt det indeksen eier. Lavt honorar. Treffer om lag markedet, minus kostnaden.",
-    rightLabel: "Aktivt fond",
-    right: "Prøver å velge bedre. Høyere honorar. Må slå markedet med mer enn kostnaden for å lønne seg.",
-    caption: "Indeksfondet er et valg om å eie markedet billig, ikke en garanti mot fall.",
-  },
+  indeksfond: { type: "interactive", id: "fondkostnad" },
   bsu: {
-    type: "compare",
-    title: "Vanlig konto eller BSU",
-    leftLabel: "Vanlig sparekonto",
-    left: "Du kan bruke pengene fritt. Ingen skattefradrag for innskuddet.",
-    rightLabel: "BSU",
-    right: "Innskudd kan gi skattefradrag. Pengene er øremerket bolig, innenfor alder og tak.",
-    caption: "BSU er bundet sparing til bolig. Vilkår og satser står hos Skatteetaten og kan endres.",
+    type: "stack",
+    title: "BSU i tre linjer",
+    layers: [
+      { label: "Hvem", note: "Du sparer. Banken holder kontoen.", tone: "teal" },
+      { label: "Verktøy", note: "Skattefradrag, låst til bolig", tone: "blue" },
+      { label: "Eksempel", note: "Fullt innskudd: 2 750 kr mindre i skatt i 2026", tone: "green" },
+    ],
+    caption: "2 750 kroner er 10 prosent av 27 500 kroner, satsene for 2026. Fritidsbolig alene stenger ikke fradraget.",
   },
   folketrygd: {
     type: "stack",
@@ -629,7 +630,7 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "flow",
     title: "Skatt på det du eier",
     steps: ["Ligningsverdi", "Minus gjeld", "Over bunnfradraget", "Formuesskatt"],
-    caption: "Grunnlaget er ikke alltid markedsverdien. Primærbolig og aksjer har rabatter. Satser og bunnfradrag endres. Sjekk året.",
+    caption: "Grunnlaget er ikke alltid markedsverdien. Primærbolig og aksjer har rabatter. Bunnfradrag og satser står i tabellen.",
   },
   tjenestepensjon: {
     type: "flow",

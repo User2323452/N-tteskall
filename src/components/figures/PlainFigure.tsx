@@ -515,6 +515,32 @@ function Sketch({ kind }: { kind: SketchKind }) {
     );
   }
 
+  if (kind === "risiko") {
+    const konto = Array.from({ length: 21 }, (_, index) => 18 + index * 2.4);
+    const noise = [0, 6, -8, 10, -4, 14, -12, 8, -16, 12, -6, 18, -10, 9, -14, 16, -5, 11, -9, 7, 4];
+    const aksjer = konto.map((value, index) => Math.max(8, Math.min(96, value + 12 + noise[index])));
+    return (
+      <>
+        <Wide label="Kontoen stiger jevnt. Aksjene svinger og ender høyere over 20 år.">
+          <path d={linePath(konto, 320, 150)} fill="none" stroke={GREEN} strokeWidth="2.5" />
+          <path d={linePath(aksjer, 320, 150)} fill="none" stroke={BLUE} strokeWidth="2.5" strokeLinejoin="round" />
+          <text x="16" y="142" fontSize="12" fill={MUTED}>
+            år 0
+          </text>
+          <text x="304" y="142" fontSize="12" fill={MUTED} textAnchor="end">
+            år 20
+          </text>
+        </Wide>
+        <Legend
+          items={[
+            { color: GREEN, label: "Konto" },
+            { color: BLUE, label: "Aksjer" },
+          ]}
+        />
+      </>
+    );
+  }
+
   const supplyY = (x: number) => 116 - (96 / 230) * (x - 60);
   const demandY = (x: number) => 24 + (94 / 230) * (x - 60);
   const demand2Y = (x: number) => 46 + (78 / 190) * (x - 60);

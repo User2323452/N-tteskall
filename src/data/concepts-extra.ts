@@ -148,27 +148,30 @@ export const extraConcepts: Concept[] = [
     "Indeksfond",
     "Index fund",
     "personlig",
-    "Fond som følger en indeks, som regel med lav årlig kostnad.",
-    "Du eier en bit av markedet i indeksen, ikke en forvalters utvalgte aksjer. Kostnaden (TER) spiser av renters rente over tid. Markedsrisikoen blir igjen: fondet faller når markedet faller.",
-    ["renters-rente", "risiko-avkastning", "diversifisering", "ask"]
+    "Et fond som eier det en indeks eier, vanligvis med lav årlig kostnad.",
+    "Du eier en bit av markedet, ikke en forvalters utvalg. Den årlige kostnaden kalles [[ter|TER]] og trekkes hvert år. 100 000 kroner i 30 år med 6 prosent før kostnad blir om lag 542 713 kroner ved 0,2 prosent kostnad, og om lag 374 532 kroner ved 1,5 prosent. Fondet faller når markedet faller.",
+    ["renters-rente", "risiko-avkastning", "diversifisering", "ask"],
+    "Lav årlig kostnad. Markedet kan likevel falle."
   ),
   c(
     "bsu",
     "Boligsparing for ungdom (BSU)",
     "Home savings scheme for youth",
     "personlig",
-    "Spareordning med skattefradrag, under vilkår om alder og at pengene brukes til bolig.",
-    "BSU bygger egenkapital til bolig. Det er et annet valg enn ASK: formålet er låst, og forventet avkastning er lavere enn i aksjemarkedet. Du kan spare inntil {{sats:bsu-aar}}, samlet inntil {{sats:bsu-samlet}}, med fradrag på {{sats:bsu-fradrag}}. Sparing med fradrag gjelder til og med {{sats:bsu-alder}}.",
-    ["belaningsgrad", "ask"]
+    "Sparing til bolig med skattefradrag, innenfor alder og beløp.",
+    "Du kan spare inntil {{sats:bsu-aar}} i året, samlet inntil {{sats:bsu-samlet}}, med fradrag på {{sats:bsu-fradrag}}. Fullt årsinnskudd gir da 2 750 kroner mindre i skatt. Du kan spare med fradrag til og med {{sats:bsu-alder}}, så lenge du ikke eier primær- eller sekundærbolig 31. desember, verken direkte eller gjennom et selskap. Fritidsbolig alene er i orden.",
+    ["belaningsgrad", "ask"],
+    "Fradraget hører til bolig. Annen bruk kan kreve det tilbake."
   ),
   c(
     "folketrygd",
     "Folketrygd",
     "National insurance pension",
     "personlig",
-    "Den offentlige alderspensjonen. I det nye systemet er den inntektspensjon pluss garantipensjon.",
-    "Folketrygden er det nederste laget. Oppå kommer tjenestepensjon fra arbeidsgiver, og eventuelt egen sparing. Inntekt og uttakstidspunkt betyr mest for inntektspensjonen. Botid, som trygdetid, betyr mest for garantipensjonen. Grunnpensjon er en ytelse i det gamle systemet, sammen med tilleggspensjon. Grunnbeløpet (G) brukes når ytelsene beregnes. Fra 1. mai er det {{sats:grunnbelop}}.",
-    ["grunnbelop", "otp", "ips"]
+    "Den offentlige alderspensjonen, det nederste laget under det jobben og du sparer.",
+    "I det nye systemet er alderspensjonen inntektspensjon pluss garantipensjon. Jobben og egen sparing kommer oppå. Grunnbeløpet, {{sats:grunnbelop}} fra 1. mai, er enheten ytelsene regnes i. Grunnpensjon hører til det gamle systemet, ikke dagens inntektspensjon.",
+    ["grunnbelop", "otp", "ips"],
+    "Folketrygd underst. Jobben og egen sparing oppå."
   ),
   c(
     "grunnbelop",
@@ -229,27 +232,30 @@ export const extraConcepts: Concept[] = [
     "Alminnelig inntekt",
     "Ordinary income",
     "personlig",
-    "Inntektsgrunnlaget etter fradrag, som skattlegges med den flate satsen på alminnelig inntekt.",
-    "Lønn, renter og aksjeinntekt behandles ulikt før de havner her. Personfradrag og minstefradrag er vanlige poster på veien. Satsen på alminnelig inntekt er {{sats:alminnelig-sats}}. Den vedtas for hvert år.",
-    ["personfradrag", "minstefradrag", "rentefradrag"]
+    "Det som er igjen etter fradrag, og som skattlegges med én flat sats.",
+    "Lønn, renter og aksjeinntekt behandles ulikt før de havner her. Personfradrag og minstefradrag er vanlige poster på veien. Satsen er {{sats:alminnelig-sats}}. En vanlig misforståelse er at denne satsen er hele skatten på lønn. Trinnskatt kommer oppå.",
+    ["personfradrag", "minstefradrag", "rentefradrag"],
+    "Ett flatt lag. Trinnskatt er et annet lag."
   ),
   c(
     "personfradrag",
     "Personfradrag",
     "Personal allowance",
     "personlig",
-    "Et bunnfradrag i alminnelig inntekt. Beløpet reguleres årlig.",
-    "Fradraget gjelder skatten på alminnelig inntekt. Ubrukt fradrag følger ikke med inn i neste år. Beløpet i år er {{sats:personfradrag}}.",
-    ["alminnelig-inntekt", "minstefradrag"]
+    "Et fast beløp som trekkes fra før skatten på alminnelig inntekt.",
+    "Beløpet i år er {{sats:personfradrag}}. Det senker skatten når du har inntekt å trekke det fra. Ubrukt fradrag blir ikke med til neste år. En vanlig misforståelse er at det er det samme som minstefradraget. Minstefradraget følger lønnen, personfradraget er fast.",
+    ["alminnelig-inntekt", "minstefradrag"],
+    "Fast beløp, likt uansett lønn."
   ),
   c(
     "minstefradrag",
     "Minstefradrag",
     "Minimum standard deduction",
     "personlig",
-    "Standardfradrag i lønnsinntekt: en prosent av lønnen, opp til et tak.",
-    "Fradraget skal grovt dekke kostnader ved å ha jobb. I lønn er satsen {{sats:minstefradrag-sats}}, med øvre grense {{sats:minstefradrag-tak}}.",
-    ["personfradrag", "alminnelig-inntekt"]
+    "Et standardfradrag i lønn: en prosent opp til et tak.",
+    "I lønn er satsen {{sats:minstefradrag-sats}}, med øvre grense {{sats:minstefradrag-tak}}. Det skal grovt dekke vanlige jobbkostnader, så du slipper å sende kvitteringer. Når lønnen er høy nok til å nå taket, øker ikke fradraget mer. En vanlig misforståelse er at det erstatter personfradraget. Du kan ha begge.",
+    ["personfradrag", "alminnelig-inntekt"],
+    "Prosent av lønnen, til taket er nådd."
   ),
   c(
     "tidsverdi",
@@ -265,9 +271,10 @@ export const extraConcepts: Concept[] = [
     "Nåverdi",
     "Present value",
     "marked",
-    "Verdien i dag av beløp som kommer senere, etter at tidsverdien er trukket fra.",
-    "Høyere diskonteringsrente gir lavere nåverdi. Det er kjernen i nåverdimetoden (DCF).",
-    ["tidsverdi", "dcf", "wacc"]
+    "Hva et beløp du får senere, er verdt i dag.",
+    "1 000 kroner om ti år er om lag 614 kroner i dag hvis du krever 5 prosent i året, fordi 614 kroner vokser til 1 000. Høyere krav gir lavere verdi i dag. En vanlig misforståelse er at 1 000 kroner senere er 1 000 kroner nå. Tiden har en pris.",
+    ["tidsverdi", "dcf", "wacc"],
+    "Senere kroner er færre kroner i dag."
   ),
   c(
     "multiplikatorer",
@@ -526,8 +533,8 @@ export const extraConcepts: Concept[] = [
     "Trinnskatt",
     "Bracket tax",
     "personlig",
-    "Progressiv skatt på personinntekt, i tillegg til den flate skatten på alminnelig inntekt.",
-    "Trinnskatten gjelder lønn, trygd og annen personinntekt. Inntekt over et trinn får en høyere sats. Den høyeste satsen gjelder bare den delen som ligger over trinnet, ikke hele inntekten. Satser og grenser vedtas hvert år. Skatteetaten viser gjeldende trinn.",
+    "Skatt på personinntekt i trinn, oppå den flate skatten.",
+    "Den gjelder lønn, trygd og annen personinntekt. Bare den delen som ligger over et trinn, får den satsen. Figuren regner med trinnene for året. En vanlig misforståelse er at den høyeste satsen gjelder hele lønnen.",
     ["minstefradrag", "alminnelig-inntekt", "formuesskatt"],
     "Den høyeste satsen gjelder bare inntekten over trinnet."
   ),
@@ -536,9 +543,10 @@ export const extraConcepts: Concept[] = [
     "Formuesskatt",
     "Wealth tax",
     "personlig",
-    "Skatt på nettoformue — eiendeler minus gjeld — over et bunnfradrag.",
-    "Formueskatt er samme skatt. Grunnlaget er ligningsverdi, ikke nødvendigvis markedsverdi: primærbolig og aksjer verdsettes lavere. Gjeld trekkes fra. Skatten har en kommunal og en statlig del. Bunnfradrag og satser står i budsjettet. Sjekk Skatteetaten for året.",
-    ["trinnskatt", "ask", "alminnelig-inntekt", "verdsettingsrabatt"]
+    "Skatt på det du eier minus gjeld, når nettoformuen er over et bunnfradrag.",
+    "Bunnfradraget for én person er {{sats:formue-bunn}}. Satsen er {{sats:formue-sats}} når kommunen bruker høyeste sats, opp til {{sats:formue-topp}}. Over det er satsen {{sats:formue-sats-hoy}}. Et regneeksempel for 2026: nettoformue 2 500 000 kroner gir 600 000 kroner over fradraget, og 6 000 kroner i skatt. En vanlig misforståelse er at hele formuen skattes, mens bare det over bunnfradraget gjør det.",
+    ["trinnskatt", "ask", "alminnelig-inntekt", "verdsettingsrabatt"],
+    "Gjeld trekkes fra. Primærbolig og aksjer teller lavere enn salgsverdien."
   ),
   c(
     "tjenestepensjon",
@@ -909,9 +917,10 @@ export const extraConcepts: Concept[] = [
     "Buffer",
     "Cash buffer",
     "personlig",
-    "Kontantreserven som skal tåle et uventet utlegg.",
-    "Bufferen er penger på en konto du kan bruke uten å selge fond eller ta opp gjeld. Den kommer før langsiktig sparing i ASK eller indeksfond, og før ekstra nedbetaling på lånet. Hvor stor den skal være, følger faste utgifter og hvor sikker inntekten er. Fondsandeler er ikke en buffer hvis du ikke tåler å selge dem når markedet har falt.",
-    ["ask", "indeksfond", "renters-rente"]
+    "Penger på konto til et utlegg du ikke hadde planlagt.",
+    "Det er kontanter du kan bruke med en gang, uten å selge fond eller ta opp gjeld. De kommer før langsiktig sparing og før ekstra avdrag på lån. En vanlig misforståelse er at fondsandeler er det samme. De er det bare hvis du tåler å selge når kursen har falt.",
+    ["ask", "indeksfond", "renters-rente"],
+    "Tommelfingerregel, ikke et råd: nok til et par måneders faste utgifter."
   ),
   c(
     "innskuddspensjon",
@@ -1092,6 +1101,47 @@ const eksempel: Record<string, { example: string; forYou: string }> = {
     example: "Du kjøper andelen på børsen mens den er åpen, til prisen der og da.",
     forYou: "Se på både årlig kostnad og det du betaler per handel.",
   },
+  indeksfond: {
+    example:
+      "100 000 kroner, 30 år, 6 prosent før kostnad: 0,2 prosent kostnad gir om lag 542 713 kroner, 1,5 prosent gir om lag 374 532 kroner.",
+    forYou: "Se på den årlige kostnaden før du velger fond til penger som skal stå lenge.",
+  },
+  bsu: {
+    example: "27 500 kroner inn gir 2 750 kroner mindre i skatt det året, med satsene for 2026.",
+    forYou: "Aktuelt hvis du sparer til første bolig og er innenfor alderen.",
+  },
+  folketrygd: {
+    example: "Lønn gjennom livet bygger inntektspensjon. Kort botid betyr mer for garantipensjonen.",
+    forYou: "Se folketrygden som bunnen. Jobben og egen sparing ligger oppå.",
+  },
+  naverdi: {
+    example: "614 kroner i dag og 1 000 kroner om ti år er samme regnestykke ved 5 prosent.",
+    forYou: "Bruk det når du sammenligner penger nå med penger om mange år.",
+  },
+  "alminnelig-inntekt": {
+    example: "Fradragene trekkes fra først. Det som er igjen, skattes med den flate satsen.",
+    forYou: "Lønnsskatten har dette flate laget pluss trinnskatt.",
+  },
+  personfradrag: {
+    example: "Fradraget i tabellen trekkes fra alminnelig inntekt, uansett om lønnen er høy eller lav.",
+    forYou: "Det ligger i skattemeldingen av seg selv.",
+  },
+  minstefradrag: {
+    example: "Under taket følger fradraget lønnen. Over taket står det stille.",
+    forYou: "Mer lønn gir samme minstefradrag når taket er nådd.",
+  },
+  trinnskatt: {
+    example: "600 000 kroner i lønn i 2026 ligger under trinn 3. Figuren regner skatten.",
+    forYou: "Prøv din egen lønn i figuren. Satsen på toppen gjelder bare toppen.",
+  },
+  formuesskatt: {
+    example: "2 500 000 kroner minus bunnfradraget for 2026 gir 600 000 kroner. 1 prosent av det er 6 000 kroner.",
+    forYou: "Skatten gjelder det du eier. Lønnen har sin egen skatt.",
+  },
+  buffer: {
+    example: "Vaskemaskinen ryker. Du betaler fra kontoen.",
+    forYou: "Fyll bufferen før du setter langsiktige penger i fond.",
+  },
   "kostnader-i-fond": {
     example:
       "100 000 kroner, 30 år, 6 prosent før kostnad: 0,2 prosent kostnad gir om lag 542 713 kroner, 1,5 prosent gir om lag 374 532 kroner.",
@@ -1118,6 +1168,7 @@ const satsPaKonsept: Record<string, string[]> = {
   "alminnelig-inntekt": ["alminnelig-sats"],
   personfradrag: ["personfradrag"],
   minstefradrag: ["minstefradrag-sats", "minstefradrag-tak"],
+  formuesskatt: ["formue-bunn", "formue-sats", "formue-topp", "formue-sats-hoy"],
   egenkapital: ["utlan-belaning"],
   "strukturelt-underskudd": ["sou-mrd", "sou-pst"],
   oppjusteringsfaktor: ["oppjustering"],
