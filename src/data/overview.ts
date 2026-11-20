@@ -68,6 +68,7 @@ export const overviewAreas: OverviewArea[] = [
           "reallonn",
           "sykepenger",
           "dagpenger",
+          "arbeidsledighet",
         ],
       },
     ],
@@ -98,7 +99,7 @@ export const overviewAreas: OverviewArea[] = [
         id: "strom-og-kraft",
         name: "Strøm og kraft",
         pathId: "strom-og-kraft",
-        conceptIds: ["spotpris", "nettleie", "fastprisavtale", "prisomrader", "stromstotte"],
+        conceptIds: ["spotpris", "nettleie", "fastprisavtale", "prisomrader", "stromstotte", "norgespris"],
       },
       {
         id: "verdiskaping",

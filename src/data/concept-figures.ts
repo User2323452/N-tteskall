@@ -103,10 +103,17 @@ export const conceptFigures: Record<string, FigureSpec> = {
       "Regelen er om lag 3 prosent forventet realavkastning over tid. Årets anslag står i tabellen under.",
   },
   oljefondet: {
-    type: "photo",
-    src: "/bilder/begrep-oljefondet.jpg",
-    alt: "En liten globus ved siden av en stabel mynter.",
-    caption: "Oljefondet er sparepenger investert i verden utenfor Norge, ikke en konto som ligger i Nordsjøen.",
+    type: "flow",
+    title: "Fra sokkelen til budsjettet",
+    steps: [
+      "Olje- og gassinntekter",
+      "Fondet",
+      "Investert i utlandet",
+      "Om lag 3 % forventet avkastning",
+      "Statsbudsjettet",
+    ],
+    caption:
+      "Oljefondet er sparepengene, investert i utlandet. Om lag 3 prosent er forventet realavkastning over tid. Årets bruk står i tabellen.",
   },
   nibor: {
     type: "pair",
@@ -300,14 +307,16 @@ export const conceptFigures: Record<string, FigureSpec> = {
       { name: "Strukturelt", means: "Samme tall justert for konjunktur. Det sammenlignes med handlingsregelen." },
     ],
     caption:
-      "I anslaget for 2026 er overføringen 454,8 milliarder kroner. Det strukturelle underskuddet står i tabellen.",
+      "Strukturelt betyr et normalår, etter at konjunkturen er justert bort. Det tallet sammenlignes med handlingsregelen og står i tabellen.",
   },
   finanspolitikk: {
-    type: "pair",
-    title: "Budsjettet, ikke renta",
-    a: "Skatt og utgifter",
-    b: "Bruk av oljefondet",
-    link: "er finanspolitikk",
+    type: "stack",
+    title: "Finanspolitikken i tre linjer",
+    layers: [
+      { label: "Eksempel", note: "bruk av fondet over budsjettet", tone: "amber" },
+      { label: "Verktøy", note: "skatt og utgifter", tone: "teal" },
+      { label: "Hvem", note: "Stortinget", tone: "blue" },
+    ],
     caption: "Finanspolitikken vedtas i statsbudsjettet. Styringsrenten er pengepolitikk og settes av Norges Bank.",
   },
   realavkastning: {
@@ -654,10 +663,11 @@ export const conceptFigures: Record<string, FigureSpec> = {
       "Leie mot eie er en avtale om å leie en periode og senere kunne eller skulle kjøpe. En del av leien kan avtales å telle som egenkapital. Vilkårene varierer.",
   },
   frontfagsmodellen: {
-    type: "photo",
-    src: "/bilder/begrep-frontfag.jpg",
-    alt: "En lys fabrikkhall med metalldeler og dreiebenker.",
-    caption: "Frontfaget er industrien som konkurrerer med utlandet. Den forhandler først, så de andre ikke priser Norge ut av markedet.",
+    type: "flow",
+    title: "Hvem som går først",
+    steps: ["Frontfaget forhandler", "Rammen", "Staten, kommunene og handelen følger"],
+    caption:
+      "Industrien som selger til utlandet, forhandler først. Rammen skal hindre at lønningene priser bedriftene ut.",
   },
   lonnsoppgjor: {
     type: "flow",
@@ -669,7 +679,8 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "flow",
     title: "Hvem som betaler når du er syk",
     steps: ["Du blir syk", "Arbeidsgiverperioden", "NAV etterpå"],
-    caption: "Arbeidsgiver betaler de første dagene. Deretter kan NAV overta. Du får ikke nødvendigvis hele lønnen i hele løpet. Sjekk NAV.",
+    caption:
+      "Arbeidsgiver betaler de første 16 dagene. NAV kan overta etterpå, opp til 6 G, i opptil 52 uker. Grunnbeløpet står i tabellen.",
   },
   dagpenger: {
     type: "split",
@@ -678,13 +689,22 @@ export const conceptFigures: Record<string, FigureSpec> = {
       { label: "Dekkes ikke", share: 38, tone: "slate" },
       { label: "Dagpenger", share: 62, tone: "teal" },
     ],
-    caption: "Dagpenger erstatter en del av tidligere inntekt når du er ledig og fyller vilkårene. Stolpen er et bilde, ikke årets sats. Satsen står hos NAV.",
+    caption:
+      "Dagpenger er {{sats:dagpenger-sats}} av tidligere inntekt, opp til 6 G. Stolpen er et bilde av andelen. Varigheten står hos NAV.",
   },
   spotpris: {
-    type: "photo",
-    src: "/bilder/begrep-spotpris.jpg",
-    alt: "En strømmåler med mørk skjerm foran kraftlinjer og master.",
-    caption: "Spotprisen er prisen på strøm der og da i markedet, time for time. Den er ikke det samme som regningen etter nettleie og støtte.",
+    type: "bars",
+    title: "Et døgn, som eksempel",
+    items: [
+      { label: "06", value: 45 },
+      { label: "08", value: 80 },
+      { label: "12", value: 40 },
+      { label: "16", value: 55 },
+      { label: "18", value: 90 },
+      { label: "21", value: 50 },
+    ],
+    caption:
+      "Eksempel, ikke dagens priser. Døgnmarkedet settes hvert kvarter fra 1. oktober 2025. Stolpene viser formen på et døgn, ikke hvert kvarter.",
   },
   prisomrader: {
     type: "bars",
@@ -702,7 +722,17 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "flow",
     title: "Når prisen blir høy",
     steps: ["Spotpris", "Over terskelen", "Staten dekker en del", "Du betaler resten"],
-    caption: "Strømstøtten skjærer toppen av spotprisen over en terskel. Nettleie og forbruket ditt ligger utenfor den enkle figuren. Sjekk gjeldende ordning.",
+    caption:
+      "Strømstøtten skjærer toppen av spotprisen over en terskel. Den gjelder når du ikke har valgt Norgespris. Nettleie ligger utenfor.",
+  },
+  norgespris: {
+    type: "pair",
+    title: "To ordninger, ett valg",
+    a: "Strømstøtte",
+    b: "Norgespris",
+    link: "eller",
+    caption:
+      "Norgespris er statens faste pris, {{sats:norgespris}} ekskl. mva ut 2026. Du kan ha én av ordningene. Nettleie og avgifter kommer i tillegg.",
   },
   importpriser: {
     type: "flow",
@@ -833,7 +863,7 @@ export const conceptFigures: Record<string, FigureSpec> = {
     title: "Flat mot ujevn",
     kind: "fastpris",
     caption:
-      "Linjene er kraftprisen. På fastpris ligger den flatt i avtaleperioden, på spot hopper den time for time. Nettleie og avgifter kommer i tillegg på begge.",
+      "Linjene er kraftprisen. På fastpris ligger den flatt i avtaleperioden, på spot hopper den kvart for kvart. Nettleie og avgifter kommer i tillegg på begge.",
   },
   utbytte: {
     type: "split",

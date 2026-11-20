@@ -101,8 +101,9 @@ export const extraConcepts: Concept[] = [
     "Norges Bank Investment Management",
     "olje",
     "Den operative forvalteren av Oljefondet (Statens pensjonsfond utland).",
-    "NBIM investerer fondet i utlandet etter et mandat. Norges Bank som sentralbank setter styringsrenten. Samme institusjonsfamilie, to ulike oppgaver.",
-    ["oljefondet", "handlingsregelen"]
+    "NBIM investerer fondet i utlandet etter et mandat. Fondet var verdt {{sats:spu-verdi}}. Norges Bank setter styringsrenten. En vanlig misforståelse er at NBIM og rentebeslutningen er samme oppgave.",
+    ["oljefondet", "handlingsregelen"],
+    "NBIM passer fondet. Norges Bank setter renta."
   ),
   c(
     "strukturelt-underskudd",
@@ -110,8 +111,9 @@ export const extraConcepts: Concept[] = [
     "Structural non-oil deficit",
     "olje",
     "Det oljekorrigerte underskuddet justert for konjunktur. Dette tallet sammenlignes med handlingsregelen.",
-    "Overføringen fra Statens pensjonsfond utland er lik det oljekorrigerte underskuddet, det faktiske underskuddet uten oljeinntekter. Det strukturelle tallet er det samme justert for konjunktur. I anslaget for 2026 er den faktiske overføringen 454,8 milliarder kroner. Det strukturelle underskuddet står i tabellen. Det er et budsjettmål, ikke en rente.",
-    ["handlingsregelen", "finanspolitikk", "oljefondet"]
+    "Strukturelt betyr hva underskuddet ville vært i et normalt år. Overføringen fra fondet er det faktiske underskuddet uten oljeinntekter. Det strukturelle tallet står i tabellen og sammenlignes med regelen. En vanlig misforståelse er at tallet er styringsrenten.",
+    ["handlingsregelen", "finanspolitikk", "oljefondet"],
+    "Normalår først. Så sammenlign med regelen."
   ),
   c(
     "finanspolitikk",
@@ -119,8 +121,9 @@ export const extraConcepts: Concept[] = [
     "Fiscal policy",
     "olje",
     "Statens inntekter, utgifter og bruk av oljepenger over statsbudsjettet.",
-    "Finanspolitikken vedtas av Stortinget. Pengepolitikken besluttes av Norges Bank. De påvirker hverandre, men de er ikke samme virkemiddel.",
-    ["handlingsregelen", "pengepolitikk"]
+    "Stortinget vedtar budsjettet. Et eksempel er bruken av Oljefondet, med årets anslag i tabellen hos handlingsregelen. Norges Bank setter styringsrenten. En vanlig misforståelse er at budsjettet og renta er samme verktøy.",
+    ["handlingsregelen", "pengepolitikk"],
+    "Stortinget vedtar budsjettet. Norges Bank setter renta."
   ),
   c(
     "realavkastning",
@@ -128,9 +131,9 @@ export const extraConcepts: Concept[] = [
     "Real return",
     "olje",
     "Avkastning etter at inflasjon er trukket fra.",
-    "Handlingsregelen tar utgangspunkt i forventet realavkastning av fondet over tid, ofte omtalt rundt 3 prosent. Anslaget oppdateres — sjekk gjeldende budsjettdokumenter.",
+    "Realavkastning er det som er igjen etter prisvekst. Handlingsregelen bruker forventet realavkastning av fondet, om lag 3 prosent over tid. Årets bruk står i tabellen og kan ligge lavere. En vanlig misforståelse er at 3 prosent er avkastningen fondet fikk i fjor.",
     ["handlingsregelen", "oljefondet", "inflasjon"],
-    "3 prosent er et anslag som kan endres. Sjekk året."
+    "3 prosent er forventningen over tid."
   ),
   c(
     "bnp",
@@ -607,8 +610,9 @@ export const extraConcepts: Concept[] = [
     "Front-runner wage bargaining",
     "makro",
     "Lønnsdannelse der konkurranseutsatt industri forhandler først og setter normen.",
-    "Frontfaget er industrien som konkurrerer med utlandet. Oppgjøret der blir en ramme for lønnsveksten i sektorene som følger, slik at lønningene ikke løper fra konkurranseevnen. Frontfaget er i praksis industrioverenskomsten mellom partene i industrien.",
-    ["lonnsoppgjor"]
+    "Norge selger mye til utlandet. Frontfaget forhandler først, og rammen følger til staten, kommunene og handelen. For høy lønnsvekst kan prise bedriftene ut. En vanlig misforståelse er at modellen er en rente Norges Bank setter.",
+    ["lonnsoppgjor"],
+    "Industrien først. Så de andre."
   ),
   c(
     "lonnsoppgjor",
@@ -616,8 +620,9 @@ export const extraConcepts: Concept[] = [
     "Wage settlement",
     "makro",
     "Forhandlingene om lønn og tariffavtaler mellom partene i arbeidslivet.",
-    "Hovedoppgjør annet hvert år tar hele avtalen. Mellomoppgjør i året mellom gjelder i hovedsak lønn. Frontfaget går først. Rammen oppgis ofte som årslønnsvekst, inkludert overheng. Den lokale økningen din kan avvike fra rammen.",
-    ["frontfagsmodellen"]
+    "Hovedoppgjør annet hvert år tar hele avtalen. Mellomoppgjøret året mellom gjelder i hovedsak lønn. Rammen er årslønnsvekst, inkludert overheng fra i fjor. En vanlig misforståelse er at rammen er prosenten på én lønnsslipp.",
+    ["frontfagsmodellen"],
+    "Rammen er året. Slippen kan avvike."
   ),
   c(
     "sykepenger",
@@ -625,8 +630,9 @@ export const extraConcepts: Concept[] = [
     "Sickness benefit",
     "makro",
     "Inntekt fra folketrygden når du ikke kan jobbe på grunn av sykdom.",
-    "For arbeidstakere betaler arbeidsgiver som regel de første 16 dagene. Deretter kan NAV overta. Ytelsen har tak knyttet til grunnbeløpet (G) og en avgrenset periode. Du må som hovedregel være sykmeldt. Selvstendige har andre satser.",
-    ["dagpenger", "folketrygd", "grunnbelop"]
+    "Arbeidsgiver betaler de første 16 dagene. NAV kan overta etterpå. Ytelsen er hele inntekten, opp til 6 G, i opptil 52 uker. En vanlig misforståelse er at NAV betaler fra dag 1.",
+    ["dagpenger", "folketrygd", "grunnbelop"],
+    "16 dager hos arbeidsgiver. Så NAV, opp til 6 G."
   ),
   c(
     "dagpenger",
@@ -634,17 +640,19 @@ export const extraConcepts: Concept[] = [
     "Unemployment benefit",
     "makro",
     "Folketrygdens ytelse når du har mistet arbeidstid og søker jobb.",
-    "NAV krever tilstrekkelig tidligere inntekt, at du er registrert som arbeidssøker, og at du er reell jobbsøker. Ytelsen er en andel av tidligere inntekt, med tak, i en avgrenset periode. Det er ikke sykepenger: her er du arbeidsfør.",
-    ["sykepenger", "folketrygd"]
+    "Ytelsen er {{sats:dagpenger-sats}} av tidligere inntekt, opp til 6 G. Minst 2 G gir inntil 104 uker, og under 2 G inntil 52 uker. Du må være registrert som arbeidssøker. En vanlig misforståelse er at dagpenger er det samme som sykepenger.",
+    ["sykepenger", "folketrygd"],
+    "Andel av lønna, opp til 6 G. Du skal søke jobb."
   ),
   c(
     "spotpris",
     "Spotpris",
     "Spot price (electricity)",
     "olje",
-    "Timeprisen på kraft i døgnmarkedet, i prisområdet der du bor.",
-    "Prisen settes time for time på kraftbørsen Nord Pool, ut fra tilbud og etterspørsel. En spotavtale følger den, pluss leverandørens påslag. Nettleie, avgifter og merverdiavgift kommer i tillegg og er ikke spotpris.",
-    ["prisomrader", "stromstotte", "nettleie", "fastprisavtale"]
+    "Prisen på kraft i døgnmarkedet, i prisområdet der du bor.",
+    "Fra 1. oktober 2025 settes prisen hvert kvarter på Nord Pool. En spotavtale følger den, pluss leverandørens påslag. Nettleie og avgifter kommer i tillegg. En vanlig misforståelse er at spotprisen er hele strømregningen.",
+    ["prisomrader", "stromstotte", "nettleie", "fastprisavtale"],
+    "Kvartsprisen på kraften. Nettleien kommer i tillegg."
   ),
   c(
     "prisomrader",
@@ -661,9 +669,19 @@ export const extraConcepts: Concept[] = [
     "Electricity support",
     "olje",
     "Statlig støtte som dekker en del av høy spotpris for husholdninger.",
-    "Også kalt strømstønad. Når spotprisen i prisområdet ditt ligger over en terskel, dekker staten en andel av det overskytende for et vanlig forbruk. Støtten går vanligvis via nettselskapet. Terskel og andel vedtas av Stortinget og kan endres.",
-    ["spotpris", "prisomrader"],
-    "Støtten demper regningen. Den fjerner ikke spotprisen."
+    "Når spotprisen ligger over en terskel, dekker staten en andel av det overskytende. Støtten går vanligvis via nettselskapet. Den gjelder når du har valgt strømstøtte, og Norgespris er det andre valget. En vanlig misforståelse er at støtten fjerner hele regningen.",
+    ["spotpris", "prisomrader", "norgespris"],
+    "Støtten demper toppen. Norgespris er det andre valget."
+  ),
+  c(
+    "norgespris",
+    "Norgespris",
+    "State fixed electricity price",
+    "olje",
+    "Statens faste pris på kraften for husholdninger som bestiller den.",
+    "Prisen er {{sats:norgespris}} eksklusiv merverdiavgift ut 2026. Er spotprisen høyere, dekker staten forskjellen. Er den lavere, betaler du forskjellen. En vanlig misforståelse er at Norgespris og strømstøtte kan stables, eller at nettleien er med.",
+    ["stromstotte", "spotpris", "fastprisavtale"],
+    "Ett valg. Nettleie kommer i tillegg."
   ),
   c(
     "importpriser",
@@ -720,8 +738,9 @@ export const extraConcepts: Concept[] = [
     "Unemployment",
     "makro",
     "Andelen av arbeidsstyrken som er uten arbeid og søker jobb.",
-    "Ledigheten er antall ledige delt på arbeidsstyrken. SSB måler den i arbeidskraftundersøkelsen (AKU): personer uten arbeid som har søkt jobb og kan begynne. NAV teller dem som er registrert som helt ledige. De to tallene skiller lag, og de skal ikke byttes om. Norges Bank leser ledigheten ved siden av produksjonsgapet når den vurderer presset i økonomien.",
-    ["produksjonsgap", "dagpenger"]
+    "Ledigheten er antall ledige delt på arbeidsstyrken. SSB spør et utvalg. NAV teller dem som er registrert som helt ledige. De to tallene skiller lag. En vanlig misforståelse er at ledigheten er det samme som dagpengeutbetalingen.",
+    ["produksjonsgap", "dagpenger"],
+    "SSB spør. NAV teller de registrerte."
   ),
   c(
     "konjunktur",
@@ -795,8 +814,9 @@ export const extraConcepts: Concept[] = [
     "Petroleum revenues",
     "olje",
     "Statens inntekter fra olje og gass.",
-    "Skatt og statens eierskap på sokkelen gir inntektene. De går inn i oljefondet. Handlingsregelen sier noe om bruken etterpå, ikke om hvor mye som kommer inn. Inntektene svinger med pris, produksjon og kostnader. De er ikke det samme som avkastningen fondet får på aksjene sine.",
-    ["oljefondet", "handlingsregelen", "oljepris"]
+    "Skatt og statens eierskap på sokkelen gir inntektene. De går inn i oljefondet. Inntektene svinger med prisen på olje og gass, produksjon og kostnader. En vanlig misforståelse er at inntektene er det samme som avkastningen på fondets aksjer.",
+    ["oljefondet", "handlingsregelen", "oljepris"],
+    "Det som betales inn. Avkastningen kommer etterpå."
   ),
   c(
     "automatiske-stabilisatorer",
@@ -813,8 +833,9 @@ export const extraConcepts: Concept[] = [
     "Grid tariff",
     "olje",
     "Betalingen for å få kraften fram, i tillegg til spotprisen.",
-    "Strømregningen er mer enn kraften. Spotprisen er prisen på kraften i prisområdet ditt. Nettleie er det nettselskapet tar for å frakte den, ofte med et fast ledd og et ledd som følger forbruket. Avgifter kommer i tillegg. Strømstøtte regnes av spotprisen, ikke av nettleien.",
-    ["spotpris", "stromstotte", "prisomrader"]
+    "Strømregningen er mer enn kraften. Spotprisen er prisen på kraften. Nettleie er det nettselskapet tar for å frakte den, ofte med et fast ledd og et ledd som følger forbruket. Avgifter kommer i tillegg. En vanlig misforståelse er at strømstøtte regnes av nettleien.",
+    ["spotpris", "stromstotte", "prisomrader"],
+    "Kraftpris pluss frakt. Støtten gjelder kraften."
   ),
   c(
     "fastprisavtale",
@@ -822,8 +843,9 @@ export const extraConcepts: Concept[] = [
     "Fixed-price electricity contract",
     "olje",
     "Strømavtale der prisen på kraften ligger fast i en avtalt periode.",
-    "På en spotavtale følger kraftprisen markedet time for time, pluss leverandørens påslag. På en fastprisavtale er prisen på kraften avtalt for perioden. Nettleie og avgifter kommer i tillegg på begge. Fastpris er valget mot spot når du vil ha en kjent kraftpris og slippe svingningen i markedet.",
-    ["spotpris", "nettleie"]
+    "På en spotavtale følger kraftprisen markedet, kvart for kvart, pluss leverandørens påslag. På en fastprisavtale er prisen på kraften avtalt for perioden. Nettleie og avgifter kommer i tillegg. En vanlig misforståelse er at fastprisavtalen er det samme som Norgespris.",
+    ["spotpris", "nettleie", "norgespris"],
+    "Avtale med leverandøren. Norgespris er statens ordning."
   ),
   c(
     "utbytte",
@@ -1292,6 +1314,62 @@ const eksempel: Record<string, { example: string; forYou: string }> = {
     example: "Kronen svekkes, og varen koster flere kroner. KPI kan følge etter.",
     forYou: "Den første endringen er prisen i kroner. KPI er virkningen, hvis den kommer.",
   },
+  nbim: {
+    example: "30. juni 2026 var fondet verdt 22 683 milliarder kroner. NBIM passer investeringene.",
+    forYou: "NBIM forvalter sparepengene. Norges Bank setter renta.",
+  },
+  "strukturelt-underskudd": {
+    example: "Et svakt år gir lavere skatteinntekter. Det strukturelle tallet spør hva underskuddet ville vært i et normalår.",
+    forYou: "Det er budsjettets tall mot handlingsregelen.",
+  },
+  finanspolitikk: {
+    example: "Stortinget vedtar hvor mye av fondet som brukes. Det er en budsjettpost.",
+    forYou: "Budsjettet merkes på skatt og velferd. Renta merkes på lånet.",
+  },
+  realavkastning: {
+    example: "3 prosent forventet realavkastning er det som er igjen etter prisvekst, som et anslag over tid.",
+    forYou: "Handlingsregelen bruker denne forventningen. Årets bruk kan ligge lavere.",
+  },
+  frontfagsmodellen: {
+    example: "Industrien avtaler rammen. Oppgjørene i staten og handelen kommer etter.",
+    forYou: "Derfor kan lønnsveksten i nyhetene ligne på industriens, også i jobben din.",
+  },
+  lonnsoppgjor: {
+    example: "Et tillegg i september i fjor løfter årslønna i år, selv om slippen står stille i januar. Det er overheng.",
+    forYou: "Sammenlign rammen med prisveksten hvis du vil vite om reallønna stiger.",
+  },
+  sykepenger: {
+    example: "10 sykedager betales av arbeidsgiver. Dag 17 kan NAV overta, opp til 6 G.",
+    forYou: "Taket følger grunnbeløpet i tabellen.",
+  },
+  dagpenger: {
+    example: "400 000 kroner i inntekt, under 6 G, gir 62,4 prosent i dagpenger hvis vilkårene er fylt.",
+    forYou: "Registrer deg som arbeidssøker. Ytelsen er en andel, ikke hele lønna.",
+  },
+  arbeidsledighet: {
+    example: "To personer uten jobb. SSB teller begge hvis de søker. NAV teller den som er registrert.",
+    forYou: "Dagpenger er ytelsen. Ledigheten er tallet i nyhetene.",
+  },
+  spotpris: {
+    example: "Prisen kan være lav klokken 12 og høyere klokken 18. Det er spotprisen, kvart for kvart.",
+    forYou: "Se på den før du leser nettleie og avgift inn i samme tall.",
+  },
+  nettleie: {
+    example: "To regninger kan ha lik spotpris og ulik nettleie, fordi nettselskapene er ulike.",
+    forYou: "Støtten regnes av kraftprisen. Nettleien ligger ved siden av.",
+  },
+  fastprisavtale: {
+    example: "Du avtaler 80 øre per kWh med leverandøren i tre år. Nettleien kommer i tillegg. Tallet er et eksempel.",
+    forYou: "Fastpris er en avtale med leverandøren. Norgespris er statens ordning.",
+  },
+  norgespris: {
+    example: "Spotprisen er høyere enn 40 øre. Staten dekker forskjellen opp til 5 000 kWh i måneden i boligen.",
+    forYou: "Du velger Norgespris eller strømstøtte. Nettleien kommer uansett.",
+  },
+  petroleumsinntekter: {
+    example: "Høyere pris på olje og gass kan gi høyere inntekter til staten når volumet er det samme.",
+    forYou: "Inntektene fyller fondet. Bruken etterpå følger handlingsregelen.",
+  },
 };
 
 for (const concept of extraConcepts) {
@@ -1314,6 +1392,9 @@ const satsPaKonsept: Record<string, string[]> = {
   formuesskatt: ["formue-bunn", "formue-sats", "formue-topp", "formue-sats-hoy"],
   egenkapital: ["utlan-belaning", "utlan-stress", "utlan-gulv"],
   "strukturelt-underskudd": ["sou-mrd", "sou-pst"],
+  nbim: ["spu-verdi"],
+  dagpenger: ["dagpenger-sats"],
+  norgespris: ["norgespris"],
   oppjusteringsfaktor: ["oppjustering"],
   verdsettingsrabatt: ["verdsettingsrabatt"],
   innskuddsgaranti: ["innskuddsgaranti"],
