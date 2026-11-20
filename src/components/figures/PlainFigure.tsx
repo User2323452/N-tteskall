@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { MarkedText } from "@/components/MarkedText";
 import type { FigureSpec, SketchKind, Tone } from "@/data/concept-figures";
 
 const toneClass: Record<Tone, string> = {
@@ -27,7 +28,9 @@ function Frame({
         </figcaption>
       )}
       <div className={title ? "mt-2" : undefined}>{children}</div>
-      <p className="mt-2 text-xs leading-relaxed text-[var(--muted)]">{caption}</p>
+      <p className="mt-2 text-xs leading-relaxed text-[var(--muted)]">
+        <MarkedText text={caption} />
+      </p>
     </figure>
   );
 }
@@ -44,7 +47,7 @@ export function PlainFigure({ spec }: { spec: Exclude<FigureSpec, { type: "inter
           className="aspect-[4/3] w-full rounded-xl object-cover"
         />
         <figcaption className="mt-2 text-xs leading-relaxed text-[var(--muted)]">
-          {spec.caption}
+          <MarkedText text={spec.caption} />
         </figcaption>
       </figure>
     );

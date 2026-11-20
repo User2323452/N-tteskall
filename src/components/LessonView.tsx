@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { ConceptFigure } from "@/components/figures/ConceptFigure";
+import { MarkedText } from "@/components/MarkedText";
+import { SatsTabell } from "@/components/SatsTabell";
 import { figureKey } from "@/data/concept-figures";
 import {
   getConcept,
@@ -14,6 +16,7 @@ import {
   srsConceptIds,
 } from "@/data/learning";
 import { useLessonMotion } from "@/components/lesson-motion";
+import { stripMarkup } from "@/lib/markup";
 import { useNav } from "@/components/nav-memory";
 import {
   getConceptProgress,
@@ -167,9 +170,17 @@ export function LessonView({
 
       <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-slate-700">
         {lesson.body.map((paragraph, index) => (
-          <p key={index}>{paragraph}</p>
+          <p key={index}>
+            <MarkedText text={paragraph} />
+          </p>
         ))}
       </div>
+
+      {lesson.satsIds && lesson.satsIds.length > 0 && (
+        <div className="mt-6">
+          <SatsTabell ids={lesson.satsIds} />
+        </div>
+      )}
 
       {concepts.length > 0 && (
         <section className="mt-8">
@@ -186,7 +197,7 @@ export function LessonView({
                   <Link href={`/konsept/${c.id}`} className="block">
                     <span className="font-medium text-slate-900">{c.term}</span>
                     <span className="mt-0.5 block text-sm text-slate-500">
-                      {c.definition}
+                      {stripMarkup(c.definition)}
                     </span>
                   </Link>
                   {figureOwners.get(figureKey(c.id)) === c.id && (
@@ -253,13 +264,19 @@ export function LessonView({
               <span className="inline-flex items-center gap-1 font-medium text-emerald-700">
                 <Check className="h-4 w-4" /> Riktig.
               </span>{" "}
-              {lesson.quiz.explain}
+              <MarkedText text={lesson.quiz.explain} />
             </p>
           ) : (
             <div className="mt-3 space-y-3">
               <p className="text-sm text-slate-600">
                 <span className="font-medium text-rose-700">Ikke helt.</span>{" "}
-                {lesson.quiz.explain}
+                <MarkedText
+                  text={
+                    quizChoice !== null
+                      ? lesson.quiz.whyWrong?.[quizChoice] || lesson.quiz.explain
+                      : lesson.quiz.explain
+                  }
+                />
               </p>
               <button
                 type="button"
@@ -317,10 +334,6 @@ export function LessonView({
           Svar riktig på spørsmålet for å gå videre.
         </p>
       )}
-      <p className="mt-6 text-xs leading-relaxed text-slate-400">
-        Læringstekst. Tall som endres, må sjekkes mot Norges Bank, SSB eller
-        Skatteetaten.
-      </p>
     </article>
   );
 }

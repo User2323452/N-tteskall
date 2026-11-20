@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { categoryLabel, searchLearning } from "@/data/learning";
+import { stripMarkup } from "@/lib/markup";
 
 export function SearchView() {
   const params = useSearchParams();
@@ -60,7 +61,7 @@ export function SearchView() {
                       <span className="text-slate-400"> · {c.english}</span>
                     )}
                     <span className="mt-0.5 block text-sm text-slate-500">
-                      {c.definition}
+                      {stripMarkup(c.definition)}
                     </span>
                     <span className="mt-1 block text-[11px] uppercase tracking-wide text-slate-400">
                       {categoryLabel[c.category]}
@@ -134,7 +135,7 @@ export function SearchView() {
                         {l.title}
                       </span>
                       <span className="mt-0.5 block text-sm text-slate-500">
-                        {l.summary}
+                        {stripMarkup(l.summary)}
                       </span>
                     </Link>
                   </li>

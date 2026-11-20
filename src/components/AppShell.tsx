@@ -4,6 +4,7 @@ import Link from "next/link";
 import { BookOpen, Home, Map, Route, UserRound } from "lucide-react";
 import { IdeaFab } from "@/components/IdeaFab";
 import { LogoMark } from "@/components/LogoMark";
+import { OrdlagProvider } from "@/components/MarkedText";
 import { NavMemory } from "@/components/nav-memory";
 import { usePathname } from "next/navigation";
 
@@ -66,6 +67,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <NavMemory>
+    <OrdlagProvider>
     <div
       className={`flex h-dvh flex-col overflow-hidden bg-[var(--background)] text-[var(--ink)] ${detail ? "is-detail" : ""}`}
     >
@@ -175,6 +177,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {showIdeaFab && <IdeaFab />}
     </div>
+    </OrdlagProvider>
     </NavMemory>
   );
 }

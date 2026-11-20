@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { MarkedText } from "@/components/MarkedText";
 import type { InteractiveId } from "@/data/concept-figures";
 import {
   AKSJE_FAKTOR,
@@ -12,6 +13,7 @@ import {
   MINSTE_TAK,
   PERSONFRADRAG,
 } from "@/data/glass";
+import { formatVerdi, getSats, satsNumber, sisteVedtatteAr, trinnsteg } from "@/data/satser";
 import { kroner, tall } from "@/lib/format";
 import { RangeField } from "@/components/figures/RangeField";
 import { BondFigure } from "@/components/figures/BondFigure";
@@ -35,7 +37,9 @@ function Card({
       <figcaption className="text-sm font-semibold text-[var(--ink)]">{title}</figcaption>
       {year && <p className="mt-1 text-xs text-[var(--muted)]">{year}</p>}
       <div className="mt-4 space-y-4">{children}</div>
-      <p className="mt-4 text-xs leading-relaxed text-[var(--muted)]">{note}</p>
+      <p className="mt-4 text-xs leading-relaxed text-[var(--muted)]">
+        <MarkedText text={note} />
+      </p>
     </figure>
   );
 }
@@ -43,7 +47,11 @@ function Card({
 const GLASS_LAYERS = [
   { name: "Lønn", color: "#3B6FD8", pick: (fill: GlassFill) => fill.lonnPlass },
   { name: "Renter", color: "#C4843A", pick: (fill: GlassFill) => fill.rentePlass },
-  { name: "Aksjegevinst × 1,72", color: "#0F766E", pick: (fill: GlassFill) => fill.aksjePlass },
+  {
+    name: `Aksjegevinst × ${formatVerdi(satsNumber("oppjustering"), "tekst")}`,
+    color: "#0F766E",
+    pick: (fill: GlassFill) => fill.aksjePlass,
+  },
 ];
 
 function GlassFigure() {
@@ -72,7 +80,7 @@ function GlassFigure() {
     <Card
       title="Personfradraget som et glass"
       year={`Inntektsåret ${GLASS_YEAR}. Læringsfigur, ikke skatteråd.`}
-      note="Forutsetninger: skatteklasse 1, personfradrag 114 540 kr, minstefradrag 46 % av lønn opp til 95 700 kr, renter 1:1, realisert aksjegevinst × 1,72, 22 % skatt på det som renner over. Ingen andre fradrag, ingen trinnskatt og ingen trygdeavgift. 1,72 × 22 % = 37,84 % av selve gevinsten når den ligger over kanten. Sølet er ikke i skala, beløpet står i teksten."
+      note={`Forutsetninger: skatteklasse 1, personfradrag ${formatVerdi(PERSONFRADRAG, "kr")}, minstefradrag ${formatVerdi(MINSTE_SATS * 100, "%")} av lønn opp til ${formatVerdi(MINSTE_TAK, "kr")}, renter 1:1, realisert aksjegevinst × ${formatVerdi(AKSJE_FAKTOR, "tekst")}, ${formatVerdi(ALMINNELIG_SATS * 100, "%")} skatt på det som renner over. Ingen andre fradrag, ingen trinnskatt og ingen trygdeavgift. ${formatVerdi(AKSJE_FAKTOR, "tekst")} × ${formatVerdi(ALMINNELIG_SATS * 100, "%")} = ${formatVerdi(AKSJE_FAKTOR * ALMINNELIG_SATS * 100, "%")} av selve gevinsten når den ligger over kanten. Sølet er ikke i skala, beløpet står i teksten. Tallene er for ${GLASS_YEAR}.`}
     >
       <div className="sticky top-0 z-10 -mx-4 border-b border-[var(--line)] bg-white/95 px-4 pb-3 pt-2 backdrop-blur">
         <div className="flex items-end gap-3">
@@ -294,7 +302,7 @@ function RatioFigure({ kind }: { kind: "belaning" | "gjeld" }) {
     return (
       <Card
         title="Belåningsgrad"
-        note="Læringsfigur. Streken er 90 %, grensen for nedbetalingslån i utlånsforskriften fra 31. desember 2024, fortsatt i 2026. Rammekreditt med pant i bolig har et tak på 60 %. Banken kan være strengere."
+        note={`Læringsfigur. Streken er ${formatVerdi(satsNumber("utlan-belaning"), "%")}, grensen for nedbetalingslån. ${getSats("utlan-belaning").merknad ?? ""} Rammekreditt med pant i bolig har et tak på ${formatVerdi(satsNumber("utlan-ramme"), "%")}. Banken kan være strengere.`}
       >
         <RangeField label="Boligverdi" min={1_000_000} max={12_000_000} step={100_000} value={base} display={kroner(base)} onChange={changeBase} />
         <RangeField label="Lån" min={0} max={loanMax} step={50_000} value={shownLoan} display={kroner(shownLoan)} onChange={setLoan} />
@@ -302,11 +310,11 @@ function RatioFigure({ kind }: { kind: "belaning" | "gjeld" }) {
           <div className="relative flex h-6 overflow-hidden rounded-full bg-slate-100">
             <div className="h-6 bg-[#3B6FD8]" style={{ width: `${pct}%` }} />
             <div className="h-6 flex-1 bg-[#0f6e56]" />
-            <div className="absolute top-0 h-6 w-0.5 bg-[var(--ink)]" style={{ left: "90%" }} />
+            <div className="absolute top-0 h-6 w-0.5 bg-[var(--ink)]" style={{ left: `${satsNumber("utlan-belaning")}%` }} />
           </div>
           <div className="relative mt-1 h-4 text-xs text-[var(--muted)]">
-            <span className="absolute -translate-x-1/2" style={{ left: "90%" }}>
-              90 %
+            <span className="absolute -translate-x-1/2" style={{ left: `${satsNumber("utlan-belaning")}%` }}>
+              {formatVerdi(satsNumber("utlan-belaning"), "%")}
             </span>
           </div>
           <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-[var(--ink)]">
@@ -322,55 +330,49 @@ function RatioFigure({ kind }: { kind: "belaning" | "gjeld" }) {
         </div>
         <p className="text-sm text-[var(--ink)]">
           Lånet er {tall(pct, 0)}&nbsp;% av boligverdien, og egenkapitalen er {tall(100 - pct, 0)}&nbsp;%.{" "}
-          {pct > 90
-            ? `Det er over streken på 90 %. Med denne boligen trenger du minst ${kroner(base * 0.1)} i egenkapital.`
-            : "Det er innenfor streken på 90 %."}
+          {pct > satsNumber("utlan-belaning")
+            ? `Det er over streken på ${formatVerdi(satsNumber("utlan-belaning"), "%")}. Med denne boligen trenger du minst ${kroner(base * (1 - satsNumber("utlan-belaning") / 100))} i egenkapital.`
+            : `Det er innenfor streken på ${formatVerdi(satsNumber("utlan-belaning"), "%")}.`}
         </p>
       </Card>
     );
   }
 
   const bar = Math.min(100, (ratio / GJELD_MAX) * 100);
-  const marker = (5 / GJELD_MAX) * 100;
+  const debtCap = satsNumber("utlan-gjeld");
+  const marker = (debtCap / GJELD_MAX) * 100;
   return (
     <Card
       title="Gjeldsgrad"
-      note="Læringsfigur. Streken er 5 ganger brutto inntekt, en vanlig ramme. Sjekk gjeldende forskrift. Ikke et lånetilsagn."
+      note={`Læringsfigur. Streken er ${debtCap} ganger brutto inntekt, rammen i utlånsforskriften. Ikke et lånetilsagn.`}
     >
       <RangeField label="Brutto inntekt" min={200_000} max={2_000_000} step={25_000} value={base} display={kroner(base)} onChange={changeBase} />
       <RangeField label="Samlet gjeld" min={0} max={loanMax} step={50_000} value={shownLoan} display={kroner(shownLoan)} onChange={setLoan} />
       <div>
         <div className="relative h-4 rounded-full bg-slate-100">
-          <div className={`h-4 rounded-full ${ratio > 5 ? "bg-rose-700" : "bg-[#0f6e56]"}`} style={{ width: `${bar}%` }} />
+          <div className={`h-4 rounded-full ${ratio > debtCap ? "bg-rose-700" : "bg-[#0f6e56]"}`} style={{ width: `${bar}%` }} />
           <div className="absolute top-0 h-4 w-0.5 bg-[var(--ink)]" style={{ left: `${marker}%` }} />
         </div>
         <div className="relative mt-1 h-4 text-xs text-[var(--muted)]">
           <span className="absolute left-0">0</span>
           <span className="absolute -translate-x-1/2" style={{ left: `${marker}%` }}>
-            5
+            {debtCap}
           </span>
           <span className="absolute right-0">{GJELD_MAX}+</span>
         </div>
       </div>
       <p className="text-sm text-[var(--ink)]">
-        Gjelden er {tall(ratio, 1)} ganger inntekten. Streken er 5, som gir {kroner(base * 5)} i samlet gjeld med denne inntekten.
+        Gjelden er {tall(ratio, 1)} ganger inntekten. Streken er {debtCap}, som gir {kroner(base * debtCap)} i samlet gjeld med denne inntekten.
         {ratio > GJELD_MAX ? ` Stolpen stopper ved ${GJELD_MAX}.` : ""}
       </p>
     </Card>
   );
 }
 
-const TRINN = [
-  { from: 226_100, rate: 0.017 },
-  { from: 318_300, rate: 0.04 },
-  { from: 725_050, rate: 0.137 },
-  { from: 980_100, rate: 0.168 },
-  { from: 1_467_200, rate: 0.178 },
-];
-
 function trinnskatt(income: number) {
-  return TRINN.map((step, index) => {
-    const end = TRINN[index + 1]?.from ?? Number.POSITIVE_INFINITY;
+  const steps = trinnsteg();
+  return steps.map((step, index) => {
+    const end = steps[index + 1]?.from ?? Number.POSITIVE_INFINITY;
     const slice = Math.max(0, Math.min(income, end) - step.from);
     return { ...step, slice, tax: slice * step.rate };
   });
@@ -382,9 +384,9 @@ function TrinnFigure() {
   const tax = parts.reduce((sum, part) => sum + part.tax, 0);
   return (
     <Card
-      title="Trinnskatt 2026"
+      title={`Trinnskatt ${sisteVedtatteAr(getSats("trinn-1-fra"))}`}
       year="Bare personinntekt. Ikke skatten på alminnelig inntekt."
-      note="Satsene er trinnskatt for 2026. Bare inntekten over hvert trinn får den satsen. Figuren er ikke et skattekort."
+      note={`Satsene er trinnskatt for ${sisteVedtatteAr(getSats("trinn-1-fra"))}. Bare inntekten over hvert trinn får den satsen. Figuren er ikke et skattekort.`}
     >
       <RangeField label="Personinntekt" min={0} max={2_000_000} step={10_000} value={income} display={kroner(income)} onChange={setIncome} />
       <ul className="space-y-1">
@@ -448,7 +450,7 @@ function DeductionFigure() {
   return (
     <Card
       title="Minstefradrag i lønn, 2026"
-      note="46 % av lønnsinntekt, øvre grense 95 700 kr. Figuren har ingen nedre grense og ingen andre inntekter. Sjekk Skatteetaten."
+      note={`${formatVerdi(MINSTE_SATS * 100, "%")} av lønnsinntekt, øvre grense ${formatVerdi(MINSTE_TAK, "kr")}. Figuren har ingen nedre grense og ingen andre inntekter.`}
     >
       <RangeField label="Lønn" min={0} max={500_000} step={5_000} value={salary} display={kroner(salary)} onChange={setSalary} />
       <div className="h-4 overflow-hidden rounded-full bg-slate-100">

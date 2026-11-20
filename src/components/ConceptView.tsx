@@ -8,7 +8,10 @@ import {
   learningPaths,
   lessons,
 } from "@/data/learning";
+import { MarkedText } from "@/components/MarkedText";
+import { SatsTabell } from "@/components/SatsTabell";
 import { BackLink } from "@/components/nav-memory";
+import { stripMarkup } from "@/lib/markup";
 import { formatWhen } from "@/lib/format";
 import {
   formatDueLabel,
@@ -163,7 +166,7 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
       )}
 
       <p className="mt-4 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 text-[15px] font-medium leading-relaxed text-slate-800">
-        {concept.definition}
+        {stripMarkup(concept.definition)}
       </p>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -191,12 +194,17 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
       {revealed ? (
         <ConceptTeaching id={concept.id}>
           <div className="space-y-4 text-[15px] leading-relaxed text-slate-700">
-            <p>{concept.explanation}</p>
+            <p>
+              <MarkedText text={concept.explanation} />
+            </p>
             {concept.tip && (
               <p className="rounded-xl border border-amber-200/70 bg-amber-50/60 px-3.5 py-3 text-sm text-amber-950">
                 <span className="font-semibold">Husk: </span>
-                {concept.tip}
+                <MarkedText text={concept.tip} />
               </p>
+            )}
+            {concept.satsIds && concept.satsIds.length > 0 && (
+              <SatsTabell ids={concept.satsIds} />
             )}
           </div>
         </ConceptTeaching>
@@ -263,11 +271,6 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
           </ul>
         </section>
       )}
-
-      <p className="mt-8 text-xs leading-relaxed text-slate-400">
-        Læringstekst. Tall som endres, må sjekkes mot Norges Bank, SSB eller
-        Skatteetaten.
-      </p>
 
       {paths.length > 0 && (
         <section className="mt-8 border-t border-slate-200 pt-6">
