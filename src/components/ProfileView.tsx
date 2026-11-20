@@ -119,7 +119,8 @@ export function ProfileView() {
   const activity = getActivity();
   const last = activity[0];
   const sitting = Object.entries(conceptProgress).filter(
-    ([, item]) => isIntroduced(item) && item.status === "Sitter"
+    ([id, item]) =>
+      isIntroduced(item) && item.status === "Sitter" && getConcept(id)?.level !== "fordypning"
   );
   const completedPaths = learningPaths.filter((path) => {
     const progress = pathProgress[path.id];

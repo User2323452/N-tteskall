@@ -31,6 +31,8 @@ export interface Concept {
   relatedIds?: string[];
   /** Satser som vises i «Tall som endres» på konseptsiden. */
   satsIds?: string[];
+  /** Fordypning teller ikke med i «Konsepter som sitter … av N». */
+  level?: "grunnleggende" | "fordypning";
 }
 
 export interface Lesson {

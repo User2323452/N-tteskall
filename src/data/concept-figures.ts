@@ -347,11 +347,14 @@ export const conceptFigures: Record<string, FigureSpec> = {
       "BNP Fastlands-Norge holder olje og gass, rørtransport og utenriks sjøfart utenfor. Utenriks sjøfart er egen virksomhet, ved siden av petroleumsvirksomheten. Fiske og annen kystaktivitet er med.",
   },
   "bnp-fastland": {
-    type: "photo",
-    src: "/bilder/begrep-fastland.jpg",
-    alt: "En fiskebåt ved bryggen i et kystvær, med naust og kasser.",
+    type: "stack",
+    title: "Fastlandet er merket",
+    layers: [
+      { label: "Holdes utenfor", note: "olje, gass, rør og utenriks sjøfart", tone: "slate" },
+      { label: "BNP Fastlands-Norge", note: "resten, med fiske og kyst", tone: "teal" },
+    ],
     caption:
-      "BNP Fastlands-Norge er verdiskapingen uten olje og gass, rørtransport og utenriks sjøfart. Fiske og annen kystaktivitet er med.",
+      "Fastlandet er den merkede delen. Olje, gass, rørtransport og utenriks sjøfart holdes utenfor. Fiske er med.",
   },
   indeksfond: { type: "interactive", id: "fondkostnad" },
   bsu: {
@@ -968,7 +971,7 @@ export const conceptFigures: Record<string, FigureSpec> = {
       { label: "Motsyklisk buffer", note: "det øverste laget, kan settes ned", tone: "rose" },
       { label: "Annet kapitalkrav", note: "bunnen, inkludert ren kjernekapital", tone: "blue" },
     ],
-    caption: "Bufferen er det øverste laget. I november 2026 var kravet 2,5 prosent. Stabelen er formen, ikke hele kravet til én bank.",
+    caption: "Bufferen er det øverste laget. Kravet står i tabellen. Stabelen er formen, ikke hele kravet til én bank.",
   },
   fastrente: {
     type: "sketch",

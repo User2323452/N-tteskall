@@ -394,6 +394,20 @@ export const satser: Sats[] = [
       "Studieåret 2026–2027, fulltid i høyere utdanning, elleve måneder. Ett beløp for studieåret, derfor samme tall i begge kolonner.",
   },
   {
+    id: "motsyklisk",
+    navn: "Motsyklisk kapitalbuffer",
+    kortNavn: "Motsyklisk buffer",
+    enhet: "%",
+    verdier: {
+      2025: { verdi: 2.5, status: "vedtatt" },
+      2026: { verdi: 2.5, status: "vedtatt" },
+    },
+    kilde: "https://www.norges-bank.no/aktuelt/nyheter/Nyhetsmeldinger/2026/2026-11-11-mkb/",
+    sistSjekket: SJEKKET,
+    merknad:
+      "Vedtak 4. november 2026, publisert 11. november: kravet holdes uendret på 2,5 prosent. Derfor er 2025-kolonnen den samme. Kravet skal i utgangspunktet ligge mellom 0 og 2,5 prosent.",
+  },
+  {
     id: "utlan-belaning",
     navn: "Utlånsforskriften – maks belåningsgrad, nedbetalingslån",
     kortNavn: "Maks belåningsgrad",
