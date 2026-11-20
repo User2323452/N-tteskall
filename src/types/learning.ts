@@ -24,6 +24,10 @@ export interface Concept {
   explanation: string;
   /** Valgfri huskeregel. */
   tip?: string;
+  /** Ett hverdagseksempel. Vises i forklaringen. */
+  example?: string;
+  /** Hvorfor det angår deg. Vises i forklaringen. */
+  forYou?: string;
   relatedIds?: string[];
   /** Satser som vises i «Tall som endres» på konseptsiden. */
   satsIds?: string[];
@@ -41,6 +45,11 @@ export interface Lesson {
   conceptIds: string[];
   /** Satser som vises i «Tall som endres» i leksjonen. */
   satsIds?: string[];
+  /**
+   * Når feltet er satt, viser leksjonen bare figuren til dette konseptet.
+   * Eldre leksjoner lar feltet stå tomt og viser alle figurene.
+   */
+  figureConceptId?: string;
   /** Statisk figur i leksjonen. */
   visual?: "transmisjon";
   /** Enkel flervalgsspørsmål (valgfritt). */

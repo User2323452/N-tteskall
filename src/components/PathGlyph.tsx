@@ -195,7 +195,17 @@ function Kronekurs() {
   );
 }
 
+function StartHer() {
+  return (
+    <Frame>
+      <circle cx="18" cy="18" r="10" fill={soft} stroke={accent} strokeWidth="1.5" />
+      <path d="M18 12.5v11M12.5 18h11" stroke={accent} strokeWidth="1.6" strokeLinecap="round" />
+    </Frame>
+  );
+}
+
 const glyphs: Record<string, () => React.ReactNode> = {
+  "start-her": StartHer,
   "norsk-pengepolitikk": Pengepolitikk,
   "personlig-sparing": Sparing,
   "skatt-for-privatpersoner": Skatt,

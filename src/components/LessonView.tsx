@@ -87,6 +87,7 @@ export function LessonView({
   const lessonConceptIds = lesson.conceptIds;
   const figureOwners = new Map<string, string>();
   for (const id of lessonConceptIds) {
+    if (lesson.figureConceptId && id !== lesson.figureConceptId) continue;
     if (!figureOwners.has(figureKey(id))) figureOwners.set(figureKey(id), id);
   }
   const lessonTitle = lesson.title;

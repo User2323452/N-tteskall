@@ -35,7 +35,7 @@ export const overviewAreas: OverviewArea[] = [
       {
         id: "inflasjon-tema",
         name: "Inflasjon og kjøpekraft",
-        conceptIds: ["inflasjon", "deflasjon", "kpi", "kpi-jae", "kjopkraft", "importert-inflasjon"],
+        conceptIds: ["inflasjon", "deflasjon", "kpi", "kpi-jae", "kjopkraft", "importert-inflasjon", "realrente"],
       },
       {
         id: "norges-bank",
@@ -54,6 +54,8 @@ export const overviewAreas: OverviewArea[] = [
           "produksjonsgap",
           "konjunktur",
           "arbeidsledighet",
+          "rente",
+          "penger-og-banker",
         ],
       },
       {
@@ -197,6 +199,11 @@ export const overviewAreas: OverviewArea[] = [
           "skjermingsfradrag",
           "indeksfond",
           "diversifisering",
+          "aksje",
+          "fond",
+          "etf",
+          "kostnader-i-fond",
+          "kurtasje-valutapaslag",
         ],
       },
       {

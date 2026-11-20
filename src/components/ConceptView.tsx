@@ -197,6 +197,18 @@ export function ConceptView({ conceptId }: { conceptId: string }) {
             <p>
               <MarkedText text={concept.explanation} />
             </p>
+            {concept.example && (
+              <p>
+                <span className="font-semibold">Eksempel. </span>
+                <MarkedText text={concept.example} />
+              </p>
+            )}
+            {concept.forYou && (
+              <p>
+                <span className="font-semibold">For deg. </span>
+                <MarkedText text={concept.forYou} />
+              </p>
+            )}
             {concept.tip && (
               <p className="rounded-xl border border-amber-200/70 bg-amber-50/60 px-3.5 py-3 text-sm text-amber-950">
                 <span className="font-semibold">Husk: </span>
