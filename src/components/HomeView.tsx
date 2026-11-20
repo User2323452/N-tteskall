@@ -99,9 +99,9 @@ export function HomeView() {
   const reviewedToday = ready ? hasReviewToday() : false;
   const lessonDoneToday = ready ? hasLessonToday() : false;
   const reviewedCount = ready ? todayReviewCount() : 0;
-  const sitting = ready
-    ? Object.values(getAllConceptProgress()).filter((item) => item.status === "Sitter").length
-    : 0;
+  const progress = ready ? getAllConceptProgress() : {};
+  const countable = concepts.filter((concept) => concept.level !== "fordypning");
+  const sitting = countable.filter((concept) => progress[concept.id]?.status === "Sitter").length;
   const streak = ready ? currentStreak() : null;
   const dayComplete = Boolean(target && lessonDoneToday && dueIds.length === 0);
   const minutes =
@@ -284,7 +284,7 @@ export function HomeView() {
           >
             <span className="font-semibold text-[var(--ink)]">Konsepter som sitter</span>
             <span className="shrink-0 font-semibold text-[var(--ink)]">
-              {sitting} av {concepts.length}
+              {sitting} av {countable.length}
             </span>
           </Link>
           <Link

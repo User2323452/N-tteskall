@@ -359,13 +359,13 @@ export const extraConcepts: Concept[] = [
     "Durasjon",
     "Duration",
     "marked",
-    "Mål på rentefølsomhet: hvor mye obligasjonsprisen faller når renta stiger.",
-    "Lang durasjon betyr at prisen reagerer kraftig på renteendringer. Pris og rente beveger seg motsatt vei.",
+    "Mål på hvor mye obligasjonsprisen flytter seg når renta endres.",
+    "Stiger renta, faller prisen. Faller renta, stiger prisen. Lang durasjon betyr at utslaget er større. En vanlig misforståelse er at prisen bare kan falle.",
     ["yield", "obligasjon"]
   ),
   c(
     "yield",
-    "Effektiv rente (yield)",
+    "Yield (avkastning på obligasjon)",
     "Yield to maturity",
     "marked",
     "Årlig avkastning på en obligasjon hvis du kjøper til dagens pris og holder til forfall.",
@@ -943,9 +943,9 @@ export const extraConcepts: Concept[] = [
     "Countercyclical capital buffer",
     "bank",
     "Et tillegg i kravet til ren kjernekapital som kan settes opp og ned med konjunkturen.",
-    "Bufferen skal gjøre banken mer solid når sårbarheten i økonomien er høy, slik at den kan tåle tap og fortsatt låne ut i en nedgang. Norges Bank fastsetter satsen hvert kvartal. Kravet skal i utgangspunktet ligge mellom 0 og 2,5 prosent av risikovektede eiendeler. I november 2026 holdt Norges Bank kravet uendret på 2,5 prosent. Det er et kapitalkrav, ikke en egen konto med kontanter.",
+    "Bufferen skal gjøre banken mer solid når sårbarheten er høy, slik at den kan tåle tap og fortsatt låne ut. Norges Bank fastsetter satsen hvert kvartal. Årets krav står i tabellen, regnet av [[risikovektede-eiendeler]]. Det er et kapitalkrav, ikke en egen konto med kontanter.",
     ["cet1", "konjunktur"],
-    "2,5 prosent i november 2026. Sjekk Norges Bank."
+    "Et tillegg som kan skrus opp og ned."
   ),
   c(
     "fastrente",
@@ -1038,7 +1038,7 @@ export const extraConcepts: Concept[] = [
     "Standard deviation",
     "metode",
     "Et mål på hvor spredt tallene ligger rundt snittet.",
-    "Lavt standardavvik betyr at observasjonene ligger tett på snittet. Høyt standardavvik betyr at de spriker. Volatilitet i finans er ofte standardavviket til avkastningen. Beta fra en OLS-regresjon hviler på hvordan avkastningen samvarierer med markedet, og spredningen inngår i det regnestykket. Standardavviket er spredningen. Volatilitet er navnet når spredningen gjelder avkastning.",
+    "Lavt standardavvik betyr at observasjonene ligger tett på snittet. Høyt standardavvik betyr at de spriker. Volatilitet i finans er ofte standardavviket til avkastningen. Standardavviket er spredningen.",
     ["volatilitet", "ols", "beta", "sharpe"]
   ),
   c(
@@ -1512,7 +1512,7 @@ const eksempel: Record<string, { example: string; forYou: string }> = {
   },
   "investeringskonto-zero": {
     example: "Du tar ut 20 prosent av verdien. Da følger 20 prosent av gevinsten med. Innskuddet tas ikke ut først. 20 prosent er et eksempel på metoden.",
-    forYou: "Kontoen dekkes ikke av innskuddsgarantien. Nordnet oppgir 101 prosent av verdien ved dødsfall.",
+    forYou: "Kontoen dekkes ikke av innskuddsgarantien. TODO: verifiser hos Nordnet hvor mange prosent av verdien som utbetales ved dødsfall.",
   },
   kapitalforsikring: {
     example: "Du selger et fond inne i forsikringen. Skatten venter til du tar penger ut av kontoen.",
@@ -1568,6 +1568,25 @@ const eksempel: Record<string, { example: string; forYou: string }> = {
   },
 };
 
+const fordypning = new Set([
+  "wacc",
+  "capm",
+  "beta",
+  "risikopremie",
+  "sharpe",
+  "ols",
+  "standardavvik",
+  "rentebytte",
+  "cet1",
+  "motsyklisk-buffer",
+  "eierbrok",
+  "sparebankstiftelse",
+]);
+
+for (const concept of extraConcepts) {
+  if (fordypning.has(concept.id)) concept.level = "fordypning";
+}
+
 for (const concept of extraConcepts) {
   const tekst = eksempel[concept.id];
   if (!tekst) continue;
@@ -1597,6 +1616,7 @@ const satsPaKonsept: Record<string, string[]> = {
   frikort: ["frikort-grense", "frikort-trekk"],
   feriepenger: ["feriepenger-sats"],
   studielan: ["studielan-basis"],
+  "motsyklisk-buffer": ["motsyklisk"],
   kpi: ["kpi-basis"],
   inflasjonsmal: ["inflasjon-mal"],
 };
