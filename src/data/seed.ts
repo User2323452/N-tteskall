@@ -353,7 +353,7 @@ export const seedTerms: Term[] = [
     english: "Fiscal rule",
     areaId: "makro",
     explanation:
-      "Retningslinje for bruk av oljefondet over statsbudsjettet. Forventet realavkastning er om lag 3 prosent over tid. I normale år bør bruken ligge rundt 2,7 prosent.",
+      "Retningslinje for bruk av oljefondet over statsbudsjettet. Normen er om lag 3 prosent forventet realavkastning over tid. Årets anslag kan ligge lavere.",
     status: "Ny",
   },
   {

@@ -149,7 +149,50 @@ export const satser: Sats[] = [
     },
     kilde: "https://www.regjeringen.no/no/aktuelt/nokkeltall-i-nasjonalbudsjettet-2027/id3174610/",
     sistSjekket: SJEKKET,
-    merknad: "Prosent av Statens pensjonsfond utland ved inngangen til året.",
+    merknad: "Prosent av Statens pensjonsfond utland ved inngangen til året. Normen i handlingsregelen er om lag 3 prosent forventet realavkastning over tid. 2,7 prosent er årets anslag, ikke normen.",
+  },
+  {
+    id: "spu-verdi",
+    navn: "Oljefondets verdi",
+    kortNavn: "Fondets verdi",
+    enhet: "tekst",
+    verdier: {
+      2025: { verdi: "21 268 mrd. kr ved årsslutt", status: "vedtatt" },
+      2026: { verdi: "22 683 mrd. kr 30. juni", status: "vedtatt" },
+    },
+    kilde:
+      "https://www.nbim.no/no/nyheter-og-innsikt/rapporter/2026/halvarsrapport-2026/nettrapport-halvarsrapport-2026/",
+    sistSjekket: SJEKKET,
+    merknad:
+      "2025 er fondets verdi ved utgangen av 2025. 2026 er verdien 30. juni 2026. Samme dag var investeringsporteføljen 22 695 mrd. kr: aksjer 16 358 (72,1 prosent), renter 5 860 (25,8 prosent), unotert eiendom 373 (1,6 prosent) og unotert infrastruktur 104 (0,5 prosent).",
+  },
+  {
+    id: "dagpenger-sats",
+    navn: "Dagpenger av tidligere inntekt",
+    kortNavn: "Dagpengesats",
+    enhet: "%",
+    verdier: {
+      2025: { verdi: 62.4, status: "vedtatt" },
+      2026: { verdi: 62.4, status: "vedtatt" },
+    },
+    kilde: "https://www.nav.no/dagpenger",
+    sistSjekket: SJEKKET,
+    merknad:
+      "Inntekt over 6 G regnes ikke med. Minst 2 G gir inntil 104 uker. Under 2 G gir inntil 52 uker. Satsen er den NAV beskriver som gjeldende.",
+  },
+  {
+    id: "norgespris",
+    navn: "Norgespris på strøm",
+    kortNavn: "Norgespris",
+    enhet: "tekst",
+    verdier: {
+      2026: { verdi: "40 øre/kWh", status: "vedtatt" },
+      2027: { verdi: "45 øre/kWh", status: "forslag" },
+    },
+    kilde: "https://www.regjeringen.no/no/tema/energi/strom/regjeringens-stromtiltak/id2900232/",
+    sistSjekket: SJEKKET,
+    merknad:
+      "Eksklusiv merverdiavgift. 40 øre gjelder fra 1. oktober 2025 til 31. desember 2026. 45 øre er forslaget fra 1. januar 2027. Nettleie og avgifter kommer i tillegg. Gjelder de første 5 000 kWh i måneden i boligen.",
   },
   {
     id: "personfradrag",
