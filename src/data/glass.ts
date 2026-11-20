@@ -1,10 +1,12 @@
-/** Læringsmodell for personfradrag, inntektsåret 2026. Ikke et skattevedtak. */
-export const GLASS_YEAR = 2026;
-export const PERSONFRADRAG = 114_540;
-export const MINSTE_SATS = 0.46;
-export const MINSTE_TAK = 95_700;
-export const AKSJE_FAKTOR = 1.72;
-export const ALMINNELIG_SATS = 0.22;
+import { getSats, satsNumber, sisteVedtatteAr } from "@/data/satser";
+
+/** Læringsmodell for personfradrag. Tallene kommer fra satser.ts. */
+export const GLASS_YEAR = sisteVedtatteAr(getSats("personfradrag"));
+export const PERSONFRADRAG = satsNumber("personfradrag");
+export const MINSTE_SATS = satsNumber("minstefradrag-sats") / 100;
+export const MINSTE_TAK = satsNumber("minstefradrag-tak");
+export const AKSJE_FAKTOR = satsNumber("oppjustering");
+export const ALMINNELIG_SATS = satsNumber("alminnelig-sats") / 100;
 
 export interface GlassFill {
   minst: number;

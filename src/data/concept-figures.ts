@@ -1,4 +1,6 @@
 import { concepts } from "@/data/learning";
+import { formatVerdi, getSats, satsNumber, sisteVedtatteAr } from "@/data/satser";
+import { assertSatsRefs, ordIdsIn } from "@/lib/markup";
 
 /**
  * Figurene ligger ved siden av forklaringen. De erstatter den ikke.
@@ -98,9 +100,9 @@ export const conceptFigures: Record<string, FigureSpec> = {
     leftLabel: "Forventet realavkastning",
     left: "Om lag 3 prosent over tid. Et anslag, ikke et tall som skal treffes hvert år.",
     rightLabel: "Bruk i normale år",
-    right: "Bør ligge under det, rundt 2,7 prosent, slik at uttaket over tid kan tilsvare 3 prosent når kriseår regnes med.",
+    right: "Bør ligge under det, slik at uttaket over tid kan tilsvare 3 prosent når kriseår regnes med.",
     caption:
-      "Nasjonalbudsjettet 2027 anslår det strukturelle oljekorrigerte underskuddet for 2026 til 583,4 milliarder kroner, 2,7 prosent av fondet.",
+      "Regelen er om lag 3 prosent forventet realavkastning over tid. Årets anslag står i tabellen under.",
   },
   oljefondet: {
     type: "photo",
@@ -192,11 +194,19 @@ export const conceptFigures: Record<string, FigureSpec> = {
     title: "Tre rammer banken ser på",
     layers: [
       { label: "Betjeningsevne", note: "tåler du høyere rente?", tone: "rose" },
-      { label: "Gjeldsgrad", note: "fortsatt fem ganger inntekt", tone: "amber" },
-      { label: "Belåningsgrad", note: "90 % på nedbetalingslån, 60 % på rammekreditt", tone: "blue" },
+      {
+        label: "Gjeldsgrad",
+        note: String(getSats("utlan-gjeld").verdier[sisteVedtatteAr(getSats("utlan-gjeld"))].verdi),
+        tone: "amber",
+      },
+      {
+        label: "Belåningsgrad",
+        note: `${formatVerdi(satsNumber("utlan-belaning"), "%")} på nedbetalingslån, ${formatVerdi(satsNumber("utlan-ramme"), "%")} på rammekreditt`,
+        tone: "blue",
+      },
     ],
     caption:
-      "For nedbetalingslån er grensen 90 prosent fra 31. desember 2024, fortsatt i 2026. Egenkapitalkravet er 10 prosent. Banken kan være strengere.",
+      "For nedbetalingslån er grensen {{sats:utlan-belaning}}. Resten er egenkapital. Banken kan være strengere.",
   },
   kpi: {
     type: "compare",
@@ -280,7 +290,7 @@ export const conceptFigures: Record<string, FigureSpec> = {
       { name: "Strukturelt", means: "Samme tall justert for konjunktur. Det sammenlignes med handlingsregelen." },
     ],
     caption:
-      "I anslaget for 2026 er det strukturelle underskuddet 583,4 milliarder kroner, og overføringen 454,8 milliarder kroner.",
+      "I anslaget for 2026 er overføringen 454,8 milliarder kroner. Det strukturelle underskuddet står i tabellen.",
   },
   finanspolitikk: {
     type: "pair",
@@ -889,7 +899,7 @@ export const conceptFigures: Record<string, FigureSpec> = {
     left: "Innskuddet dekkes av garantien.",
     rightLabel: "Over taket",
     right: "Den vanlige garantien dekker ikke resten.",
-    caption: "I 2026 er taket 2 millioner kroner per kunde per bank, for innskudd i en norsk bank i Norge. Flere kontoer i samme bank teller samlet.",
+    caption: "Taket er {{sats:innskuddsgaranti}} per kunde per bank, for innskudd i en norsk bank i Norge. Flere kontoer i samme bank teller samlet.",
   },
   rentemargin: {
     type: "formula",
@@ -955,18 +965,18 @@ export const conceptFigures: Record<string, FigureSpec> = {
     title: "Grunnlaget før og etter",
     items: [
       { label: "Før", value: 1 },
-      { label: "Etter × 1,72", value: 1.72 },
+      { label: `Etter × ${formatVerdi(satsNumber("oppjustering"), "tekst")}`, value: satsNumber("oppjustering") },
     ],
-    caption: "Den høyre stolpen er grunnlaget etter faktoren 1,72 for inntektsåret 2026. Faktoren vedtas for hvert år, så sjekk Skatteetaten.",
+    caption: "Den høyre stolpen er grunnlaget etter faktoren {{sats:oppjustering}}. Faktoren vedtas for hvert år.",
   },
   verdsettingsrabatt: {
     type: "bars",
     title: "Markedsverdi og det som teller",
     items: [
       { label: "Marked", value: 100 },
-      { label: "I formuen", value: 80 },
+      { label: "I formuen", value: 100 - satsNumber("verdsettingsrabatt") },
     ],
-    caption: "I 2026 teller aksjer med 80 prosent, en rabatt på 20. Stolpene viser den formen. Sjekk Skatteetaten for året.",
+    caption: "Aksjer teller med det som er igjen etter rabatten {{sats:verdsettingsrabatt}}. Stolpene viser den formen.",
   },
   avskrivning: {
     type: "split",
@@ -1028,6 +1038,19 @@ function assertFigures() {
   const extra = Object.keys(conceptFigures).filter((id) => !known.has(id));
   if (extra.length > 0) {
     throw new Error(`Ukjent figur: ${extra.join(", ")}`);
+  }
+  for (const concept of concepts) {
+    const spec = conceptFigures[concept.id];
+    const caption = spec && spec.type !== "interactive" ? spec.caption : "";
+    const texts = [concept.explanation, concept.tip ?? "", caption];
+    const seen = new Map<string, number>();
+    for (const text of texts) {
+      assertSatsRefs(text, `Konsept ${concept.id}`);
+      for (const id of ordIdsIn(text)) seen.set(id, (seen.get(id) ?? 0) + 1);
+    }
+    for (const [id, count] of seen) {
+      if (count > 1) throw new Error(`Konsept ${concept.id} merker «${id}» ${count} ganger`);
+    }
   }
 }
 

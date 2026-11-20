@@ -25,6 +25,8 @@ export interface Concept {
   /** Valgfri huskeregel. */
   tip?: string;
   relatedIds?: string[];
+  /** Satser som vises i «Tall som endres» på konseptsiden. */
+  satsIds?: string[];
 }
 
 export interface Lesson {
@@ -37,6 +39,8 @@ export interface Lesson {
   /** Avsnitt med læringsinnhold. */
   body: string[];
   conceptIds: string[];
+  /** Satser som vises i «Tall som endres» i leksjonen. */
+  satsIds?: string[];
   /** Statisk figur i leksjonen. */
   visual?: "transmisjon";
   /** Enkel flervalgsspørsmål (valgfritt). */
@@ -46,6 +50,8 @@ export interface Lesson {
     /** Indeks i options. */
     answerIndex: number;
     explain: string;
+    /** Én forklaring per alternativ. Tom streng på riktig svar. */
+    whyWrong?: string[];
   };
 }
 

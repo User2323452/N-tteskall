@@ -1,3 +1,5 @@
+import { MarkedText } from "@/components/MarkedText";
+
 export function FigureCard({
   title,
   year,
@@ -14,7 +16,9 @@ export function FigureCard({
       <figcaption className="text-sm font-semibold text-[var(--ink)]">{title}</figcaption>
       {year && <p className="mt-1 text-xs text-[var(--muted)]">{year}</p>}
       <div className="mt-4 space-y-4">{children}</div>
-      <p className="mt-4 text-xs leading-relaxed text-[var(--muted)]">{note}</p>
+      <p className="mt-4 text-xs leading-relaxed text-[var(--muted)]">
+        <MarkedText text={note} />
+      </p>
     </figure>
   );
 }

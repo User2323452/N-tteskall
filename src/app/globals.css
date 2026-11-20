@@ -84,6 +84,32 @@ body {
   }
 }
 
+/* Trykkbart fagord. Pseudo-elementet utvider flaten uten å skyve linjen. */
+.fagord {
+  position: relative;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.18em;
+}
+
+.fagord::after {
+  content: "";
+  position: absolute;
+  left: -0.2em;
+  right: -0.2em;
+  top: -0.6em;
+  bottom: -0.6em;
+}
+
 .ProseMirror p.is-editor-empty:first-child::before {
   color: #94a3b8;
   content: attr(data-placeholder);

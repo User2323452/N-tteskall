@@ -4,10 +4,12 @@ import { useState } from "react";
 import { FigureCard, StickyView, Swatch } from "@/components/figures/FigureCard";
 import { RangeField } from "@/components/figures/RangeField";
 import { round } from "@/components/figures/useScrub";
+import { getSats, satsNumber } from "@/data/satser";
 import { kroner, tall } from "@/lib/format";
 
-const MAKS_BELANING = 0.9;
-const MAKS_GJELDSGRAD = 5;
+const MAKS_BELANING = satsNumber("utlan-belaning") / 100;
+const MAKS_GJELDSGRAD = satsNumber("utlan-gjeld");
+const EGENKAPITALANDEL = 1 - MAKS_BELANING;
 const EK = "#0F766E";
 const LAN = "#3B6FD8";
 const FELLES = "#93A8D8";
@@ -81,21 +83,21 @@ export function HousingFigure() {
     Math.abs(l.maksPrisBelaning - l.maksPrisGjeld) < 1
       ? "Begge reglene stopper deg samtidig."
       : l.maksPrisBelaning < l.maksPrisGjeld
-        ? "Egenkapitalen stopper deg først (90-prosentregelen)."
-        : "Inntekten stopper deg først (fem ganger inntekten).";
+        ? `Egenkapitalen stopper deg først (${tall(MAKS_BELANING * 100, 0)}-prosentregelen).`
+        : `Inntekten stopper deg først (${tall(MAKS_GJELDSGRAD, 0)} ganger inntekten).`;
 
   return (
     <FigureCard
       title="Hva stopper deg først?"
       year="Belåningsgrad, egenkapital og gjeldsgrad i samme bolig."
-      note="Læringsfigur, ikke et lånetilsagn. Utlånsforskriften fra 31. desember 2024, fortsatt i 2026: nedbetalingslån høyst 90 % av boligverdien (10 % egenkapital), og samlet gjeld høyst fem ganger brutto årsinntekt. Figuren antar at du ikke har annen gjeld, som studielån eller billån. Fellesgjeld regnes med i lånet og i verdien, slik banken normalt gjør. Banken skal også sjekke at du tåler høyere rente, og kan være strengere."
+      note={`Læringsfigur, ikke et lånetilsagn. Utlånsforskriften. ${getSats("utlan-belaning").merknad ?? ""} Nedbetalingslån høyst ${tall(MAKS_BELANING * 100, 0)} % av boligverdien (${tall(EGENKAPITALANDEL * 100, 0)} % egenkapital), og samlet gjeld høyst ${tall(MAKS_GJELDSGRAD, 0)} ganger brutto årsinntekt. Figuren antar at du ikke har annen gjeld, som studielån eller billån. Fellesgjeld regnes med i lånet og i verdien, slik banken normalt gjør. Banken skal også prøve om du tåler høyere rente, og kan være strengere.`}
     >
       <StickyView>
         <div className="flex items-center gap-3">
           <House ekShare={pris > 0 ? ek / pris : 0} fellesShare={pris > 0 ? fellesgjeld / pris : 0} />
           <div className="min-w-0 flex-1 space-y-2">
-            <Rule ok={okBelaning} label="Belåningsgrad" value={`${tall(l.belaning * 100, 1)} %`} limit="90 %" />
-            <Rule ok={okGjeld} label="Gjeldsgrad" value={`${tall(l.gjeldsgrad, 1)} × inntekt`} limit="5 ×" />
+            <Rule ok={okBelaning} label="Belåningsgrad" value={`${tall(l.belaning * 100, 1)} %`} limit={`${tall(MAKS_BELANING * 100, 0)} %`} />
+            <Rule ok={okGjeld} label="Gjeldsgrad" value={`${tall(l.gjeldsgrad, 1)} × inntekt`} limit={`${tall(MAKS_GJELDSGRAD, 0)} ×`} />
           </div>
         </div>
         <ul className="space-y-0.5 text-xs text-[var(--ink)]">
@@ -104,7 +106,7 @@ export function HousingFigure() {
           {fellesgjeld > 0 && (
             <li className="flex justify-between gap-2"><span><Swatch color={FELLES} />Fellesgjeld</span><span className="tabular-nums">{kroner(fellesgjeld)}</span></li>
           )}
-          <li className="text-[var(--muted)]">Den stiplete streken er 10 % av verdien. Egenkapitalen må nå opp til den.</li>
+          <li className="text-[var(--muted)]">Den stiplete streken er {tall(EGENKAPITALANDEL * 100, 0)} % av verdien. Egenkapitalen må nå opp til den.</li>
           {egenkapital > pris && (
             <li className="text-[var(--muted)]">Egenkapitalen er større enn prisen, så lånet er 0 kr.</li>
           )}
@@ -126,8 +128,8 @@ export function HousingFigure() {
         onChange={setFelles}
       />
       <div className="space-y-1 rounded-xl bg-[var(--background)] p-3 text-sm text-[var(--ink)]">
-        <p>Høyeste totalpris med {kroner(egenkapital)} i egenkapital: {kroner(l.maksPrisBelaning)} (10 × egenkapitalen).</p>
-        <p>Høyeste totalpris med {kroner(inntekt)} i inntekt: {kroner(l.maksPrisGjeld)} (5 × inntekten + egenkapitalen).</p>
+        <p>Høyeste totalpris med {kroner(egenkapital)} i egenkapital: {kroner(l.maksPrisBelaning)} ({tall(1 / EGENKAPITALANDEL, 0)} × egenkapitalen).</p>
+        <p>Høyeste totalpris med {kroner(inntekt)} i inntekt: {kroner(l.maksPrisGjeld)} ({tall(MAKS_GJELDSGRAD, 0)} × inntekten + egenkapitalen).</p>
         <p className="font-medium">
           {stopper} Taket er {kroner(maksPris)}.
         </p>

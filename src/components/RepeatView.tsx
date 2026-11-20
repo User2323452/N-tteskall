@@ -4,7 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { BackLink } from "@/components/nav-memory";
 import { StreakFlame } from "@/components/StreakFlame";
+import { MarkedText } from "@/components/MarkedText";
 import { concepts, getConcept } from "@/data/learning";
+import { stripMarkup } from "@/lib/markup";
 import { pickContinueTarget } from "@/lib/continue-path";
 import {
   formatDueLabel,
@@ -273,11 +275,13 @@ export function RepeatView() {
               <section className="rounded-2xl border border-[var(--accent)]/25 bg-[var(--accent-soft)] px-4 py-3">
                 <h2 className="text-xs font-medium text-[var(--accent)]">Fasiten</h2>
                 <p className="mt-2 text-[15px] font-medium leading-relaxed text-slate-800">
-                  {current.definition}
+                  {stripMarkup(current.definition)}
                 </p>
               </section>
             </div>
-            <p className="text-sm leading-relaxed text-slate-600">{current.explanation}</p>
+            <p className="text-sm leading-relaxed text-slate-600">
+              <MarkedText text={current.explanation} />
+            </p>
             <button
               type="button"
               onClick={writeAgain}

@@ -1,4 +1,7 @@
 import { extraConcepts } from "@/data/concepts-extra";
+import { ordliste } from "@/data/ordliste";
+import { getSats } from "@/data/satser";
+import { assertSatsRefs, hasMarkup, ordIdsIn, stripMarkup } from "@/lib/markup";
 import type { Concept, LearningPath, Lesson } from "@/types/learning";
 
 /** Kuraterte konsepter — korte, korrekte definisjoner på bokmål. */
@@ -57,8 +60,9 @@ const coreConcepts: Concept[] = [
     definition:
       "Retningslinje for hvor mye av Oljefondet staten kan bruke over statsbudsjettet hvert år.",
     explanation:
-      "Handlingsregelen sier at den forventede realavkastningen av Statens pensjonsfond utland, om lag 3 prosent over tid, skal styre bruken. Det er et anslag over tid. I normale år bør bruken ligge under 3 prosent, rundt 2,7 prosent, slik at uttaket over tid kan tilsvare 3 prosent når kriseår regnes med. Nasjonalbudsjettet 2027 anslår det strukturelle oljekorrigerte underskuddet for 2026 til 583,4 milliarder kroner, 2,7 prosent av fondet. Målet er å jevne ut oljeinntekter, unngå å bruke opp fondet, og skjerme fastlandsøkonomien mot store svingninger. Dette er finanspolitikk, vedtatt over statsbudsjettet — ikke et virkemiddel Norges Bank bruker når den setter styringsrenten.",
-    tip: "3 prosent er forventet realavkastning over tid. Normal bruk ligger lavere, rundt 2,7 prosent. Sjekk gjeldende anslag.",
+      "Handlingsregelen sier at den forventede realavkastningen av Statens pensjonsfond utland, om lag 3 prosent over tid, skal styre bruken. Det er et anslag over tid. I normale år bør bruken ligge under 3 prosent, slik at uttaket over tid kan tilsvare 3 prosent når kriseår regnes med. Årets anslag står i tabellen under. Målet er å jevne ut oljeinntekter, unngå å bruke opp fondet, og skjerme fastlandsøkonomien mot store svingninger. Dette er finanspolitikk, vedtatt over statsbudsjettet — ikke et virkemiddel Norges Bank bruker når den setter styringsrenten.",
+    tip: "3 prosent er forventet realavkastning over tid. Normal bruk ligger lavere.",
+    satsIds: ["sou-mrd", "sou-pst"],
     relatedIds: ["oljefondet", "finanspolitikk", "strukturelt-underskudd", "realavkastning"],
   },
   {
@@ -91,7 +95,7 @@ const coreConcepts: Concept[] = [
     definition:
       "Vektet snitt av faktiske usikrede overnattenlån. Anbefalt alternativ til NIBOR, og en fallback.",
     explanation:
-      "NOWA har eksistert siden 2011 og ble lagt om i 2020. Norges Bank skrev i 2025 at den i liten grad brukes som referanse. Den er anbefalt alternativ og en fallback hvis NIBOR skulle opphøre. Markedet bruker fortsatt NIBOR. NIBOR er en panelkvotering fra én uke til seks måneder. NOWA er overnatt. De måler ikke samme rente. For deg som lærer: husk at «referanserente» er bakgrunnen mange kontrakter prises fra.",
+      "NOWA har eksistert siden 2011 og ble lagt om i 2020. Norges Bank skrev i 2025 at den i liten grad brukes som referanse. Den er anbefalt alternativ og en fallback hvis NIBOR skulle opphøre. Markedet bruker fortsatt NIBOR. NIBOR er en panelkvotering fra én uke til seks måneder. NOWA er overnatt. De måler ikke samme rente.",
     relatedIds: ["nibor", "styringsrenten"],
   },
   {
@@ -191,8 +195,9 @@ const coreConcepts: Concept[] = [
     category: "personlig",
     definition: "Boliglånet delt på boligens markedsverdi.",
     explanation:
-      "Belåningsgrad er lånet delt på boligverdien. 90 prosent belåningsgrad betyr 10 prosent egenkapital. Høy belåningsgrad gir ofte høyere rente og krav om tilleggssikkerhet. For nedbetalingslån til bolig er grensen i utlånsforskriften 90 prosent fra 31. desember 2024, og den gjelder fortsatt i 2026. Rammekreditt med pant i bolig har et eget tak på 60 prosent.",
+      "Belåningsgrad er lånet delt på boligverdien. Høy belåningsgrad gir ofte høyere rente og krav om tilleggssikkerhet. For nedbetalingslån til bolig er grensen {{sats:utlan-belaning}}. Resten er egenkapital. Rammekreditt med pant i bolig har et eget tak på {{sats:utlan-ramme}}.",
     relatedIds: ["utlansforskriften"],
+    satsIds: ["utlan-belaning", "utlan-ramme"],
   },
   {
     id: "utlansforskriften",
@@ -202,8 +207,9 @@ const coreConcepts: Concept[] = [
     definition:
       "Krav til bankenes utlån — ofte kalt boliglånsforskriften — om egenkapital, gjeldsgrad og stresstest.",
     explanation:
-      "Forskriften, fastsatt av Finansdepartementet, skal dempe risikoen for at husholdninger tar opp mer gjeld enn de tåler. Den viderefører reglene fra boliglånsforskriften og gjelder boliglån og en del andre lån. Kravene går til egenkapital, samlet gjeld mot inntekt, og at lånet skal tåle en høyere rente. For nedbetalingslån er belåningsgraden maksimalt 90 prosent fra 31. desember 2024, fortsatt i 2026, så egenkapitalkravet er 10 prosent. Gjelden kan fortsatt være inntil fem ganger brutto inntekt. Rammekreditt med pant i bolig har et tak på 60 prosent. Bankene kan ha egne, strengere regler.",
+      "Forskriften, fastsatt av Finansdepartementet, skal dempe risikoen for at husholdninger tar opp mer gjeld enn de tåler. Den viderefører reglene fra boliglånsforskriften og gjelder boliglån og en del andre lån. Kravene går til egenkapital, samlet gjeld mot inntekt, og at lånet skal tåle en høyere rente. For nedbetalingslån er belåningsgraden høyst {{sats:utlan-belaning}}. Gjelden kan være inntil {{sats:utlan-gjeld}}. Rammekreditt med pant i bolig har et tak på {{sats:utlan-ramme}}. Bankene kan ha egne, strengere regler.",
     relatedIds: ["belaningsgrad", "egenkapital", "gjeldsgrad"],
+    satsIds: ["utlan-belaning", "utlan-gjeld", "utlan-ramme"],
   },
 ];
 
@@ -219,18 +225,24 @@ export const lessons: Lesson[] = [
     body: [
       "Inflasjon er en vedvarende økning i det generelle prisnivået. Enkeltpriser hopper opp og ned hele tiden. Inflasjon handler om at prisene samlet sett stiger, slik at en krone rekker til mindre.",
       "SSB måler dette med konsumprisindeksen (KPI). Indeksen følger en handlekurv av varer og tjenester husholdningene kjøper. Når nyhetene sier at prisveksten er så og så høy, er det som regel tolvmånedersveksten i KPI.",
-      "Kjøpekraft er hvor mye du får for pengene. Nominelle kroner er beløpet på konto eller lønnsslipp. Reelt er det samme beløpet etter prisvekst. Stiger prisene raskere enn lønna, faller kjøpekraften.",
+      "Kjøpekraft er hvor mye du får for pengene. [[nominell|Nominelle]] kroner er beløpet på konto eller lønnsslipp. [[reell|Reelt]] er det samme beløpet etter prisvekst. Stiger prisene raskere enn lønna, faller kjøpekraften.",
     ],
     conceptIds: ["inflasjon", "kpi", "kjopkraft"],
     quiz: {
       question: "Hva måler konsumprisindeksen (KPI)?",
       options: [
-        "Avkastningen i pensjonsfondet",
         "Prisutviklingen på husholdningenes varer og tjenester",
+        "Avkastningen i pensjonsfondet",
         "Styringsrenten neste kvartal",
         "Bare strømprisen",
       ],
-      answerIndex: 1,
+      answerIndex: 0,
+      whyWrong: [
+        "",
+        "Pensjonsfondets avkastning er noe annet enn prisene husholdningene møter.",
+        "Styringsrenten er Norges Banks rente, ikke det KPI måler.",
+        "Strøm er med i handlekurven, men indeksen er bredere enn én pris.",
+      ],
       explain:
         "KPI er SSBs indeks for prisene husholdningene møter. Energipriser er med i KPI, men indeksen er bredere enn strøm.",
     },
@@ -242,8 +254,8 @@ export const lessons: Lesson[] = [
     order: 1,
     summary: "Nær 2 prosent over tid — og fleksibelt.",
     body: [
-      "Norges Bank har et operativt mål om at konsumprisveksten skal ligge nær 2 prosent over tid. Tallet er et anker for forventningene. Det er ikke et krav om at KPI treffer 2 prosent hver eneste måned.",
-      "Styringen er fleksibel. Banken legger også vekt på produksjon og sysselsetting, og styringen skal kunne motvirke oppbygging av finansielle ubalanser. Den prøver ikke å presse inflasjonen tilbake på én måned hvis det ville gitt et unødvendig hopp i ledigheten.",
+      "Norges Bank har et [[operativt-mal|operativt mål]] om at konsumprisveksten skal ligge nær 2 prosent over tid. Tallet er et anker for forventningene. Det er ikke et krav om at KPI treffer 2 prosent hver eneste måned.",
+      "Styringen er fleksibel. Banken legger også vekt på produksjon og sysselsetting, og styringen skal kunne motvirke oppbygging av [[finansielle-ubalanser|finansielle ubalanser]]. Den prøver ikke å presse inflasjonen tilbake på én måned hvis det ville gitt et unødvendig hopp i ledigheten.",
       "KPI-JAE er KPI uten energivarer og justert for avgiftsendringer. Den brukes ofte når man vil se den underliggende prisveksten, fordi strøm og avgifter svinger uten at det alltid sier noe om presset i økonomien.",
     ],
     conceptIds: ["inflasjonsmal", "fleksibel-inflasjonsstyring", "kpi-jae"],
@@ -251,11 +263,17 @@ export const lessons: Lesson[] = [
       question: "Hva ligger i fleksibel inflasjonsstyring?",
       options: [
         "Inflasjonen skal være null hver måned",
-        "Hensyn til inflasjon, aktivitet og sysselsetting, og finansielle ubalanser",
         "Styringsrenten er alltid lik boliglånsrenta",
+        "Hensyn til inflasjon, aktivitet og sysselsetting, og finansielle ubalanser",
         "KPI-JAE er det eneste tallet som teller",
       ],
-      answerIndex: 1,
+      answerIndex: 2,
+      whyWrong: [
+        "Målet er nær 2 prosent over tid, ikke null hver måned.",
+        "Boliglånsrenta ligger normalt over styringsrenten. De er ikke like.",
+        "",
+        "KPI-JAE brukes for å se underliggende prisvekst. Den er ikke det eneste hensynet.",
+      ],
       explain:
         "Fleksibel inflasjonsstyring veier inflasjon mot produksjon og sysselsetting, og skal kunne motvirke oppbygging av finansielle ubalanser. Horisonten er noen år.",
     },
@@ -267,8 +285,8 @@ export const lessons: Lesson[] = [
     order: 2,
     summary: "Foliorenten — og hvorfor boliglånet ditt ligger høyere.",
     body: [
-      "Styringsrenten er foliorenten: renta bankene får på innskudd i Norges Bank, opp til en kvote. Det er hovedverktøyet i pengepolitikken.",
-      "Pengepolitikk er styring av rente og likviditet i kronemarkedet. Når styringsrenten settes opp, blir det dyrere for bankene å finansiere seg, og utlånsrentene følger vanligvis etter. Sparing blir litt mer attraktivt, og nytt lån litt dyrere.",
+      "Styringsrenten er [[foliorente|foliorenten]]: renta bankene får på innskudd i Norges Bank, opp til en [[kvote]]. Det er hovedverktøyet i pengepolitikken.",
+      "Pengepolitikk er styring av rente og [[likviditet]] i kronemarkedet. Når styringsrenten settes opp, blir det dyrere for bankene å finansiere seg, og utlånsrentene følger vanligvis etter. Sparing blir litt mer attraktivt, og nytt lån litt dyrere.",
       "Boliglånsrenta ligger normalt over styringsrenten. Banken har egne kostnader, påslag og risiko. Styringsrenten trekker boliglånsrenta med seg, men de to tallene er ikke like.",
     ],
     conceptIds: ["styringsrenten", "pengepolitikk"],
@@ -308,6 +326,12 @@ export const lessons: Lesson[] = [
         "Renta på en sparekonto",
       ],
       answerIndex: 1,
+      whyWrong: [
+        "Banen er et anslag, ikke et lovfestet tak på boliglånet.",
+        "",
+        "NIBOR er en markedsrente. Rentebanen er Norges Banks prognose.",
+        "Sparekontoen er bankens rente til deg, ikke prognosen for styringsrenten.",
+      ],
       explain:
         "Rentebanen er Norges Banks anslag, publisert i Pengepolitisk rapport. Den kan endres neste gang ny informasjon kommer.",
     },
@@ -319,20 +343,26 @@ export const lessons: Lesson[] = [
     order: 5,
     summary: "Inflasjon og aktivitet peker ikke alltid samme vei.",
     body: [
-      "Fleksibel inflasjonsstyring er en avveining. Høy prisvekst og høy aktivitet taler for høyere rente. Stigende ledighet og inflasjon under målet taler for lavere rente. Forskrift for pengepolitikken § 3 sier i tillegg at styringen skal kunne motvirke oppbygging av finansielle ubalanser. Ofte peker hensynene hver sin vei, og komiteen må veie dem over horisonten.",
+      "Fleksibel inflasjonsstyring er en avveining. Høy prisvekst og høy aktivitet taler for høyere rente. Stigende ledighet og inflasjon under målet taler for lavere rente. Forskrift for pengepolitikken § 3 sier i tillegg at styringen skal kunne motvirke oppbygging av [[finansielle-ubalanser|finansielle ubalanser]]. Ofte peker hensynene hver sin vei, og komiteen må veie dem over horisonten.",
       "Produksjonsgapet er et anslag på avviket mellom faktisk produksjon og det økonomien kan produsere uten at inflasjonspresset bygger seg opp. Positivt gap betyr press. Negativt gap betyr slakk.",
-      "Renta treffer husholdningene særlig via boliglån, forbruk og kronekurs. Hvor mye som brukes over statsbudsjettet, er et annet spor. Det ligger på kartet under norsk økonomi.",
+      "Renta treffer husholdningene særlig via boliglån, forbruk og kronekurs. Hvor mye som brukes over statsbudsjettet, er et annet spor.",
     ],
     conceptIds: ["fleksibel-inflasjonsstyring", "produksjonsgap"],
     quiz: {
       question: "Hvem setter styringsrenten i Norge?",
       options: [
         "Finansdepartementet",
-        "Norges Bank",
         "Finanstilsynet",
         "Oslo Børs",
+        "Norges Bank",
       ],
-      answerIndex: 1,
+      answerIndex: 3,
+      whyWrong: [
+        "Finansdepartementet fastsetter blant annet utlånsforskriften, ikke styringsrenten.",
+        "Finanstilsynet fører tilsyn. Det setter ikke styringsrenten.",
+        "Oslo Børs er en markedsplass, ikke den som setter renta.",
+        "",
+      ],
       explain: "Norges Banks komité for pengepolitikk setter styringsrenten.",
     },
   },
@@ -352,12 +382,18 @@ export const lessons: Lesson[] = [
     quiz: {
       question: "Hva beskriver renters rente?",
       options: [
-        "Renta banken tar på boliglån",
         "Avkastning også på tidligere avkastning",
+        "Renta banken tar på boliglån",
         "At skatten på aksjer alltid er null",
         "At inflasjonen er null",
       ],
-      answerIndex: 1,
+      answerIndex: 0,
+      whyWrong: [
+        "",
+        "Boliglånsrenta er prisen på lånet. Renters rente er avkastning på avkastning.",
+        "Aksjegevinst skattlegges. Renters rente sier ingenting om at skatten er null.",
+        "Inflasjonen er prisvekst. Den er ikke null, og det er ikke det renters rente beskriver.",
+      ],
       explain:
         "Renters rente er avkastning på avkastning. Derfor vokser beløpet raskere jo lenger tidshorisonten er.",
     },
@@ -392,11 +428,17 @@ export const lessons: Lesson[] = [
       question: "Når utløses skatt på gevinst på en aksjesparekonto?",
       options: [
         "Ved hver handel inne på kontoen",
-        "Når du tar ut mer enn innskuddet, etter skjerming",
         "Aldri",
+        "Når du tar ut mer enn innskuddet, etter skjerming",
         "Bare hvis fondet er et indeksfond",
       ],
-      answerIndex: 1,
+      answerIndex: 2,
+      whyWrong: [
+        "Handel inne på kontoen utsetter skatten. Den utløses ikke ved hvert kjøp og salg.",
+        "Gevinsten skattlegges når du tar ut mer enn du har satt inn.",
+        "",
+        "Indeksfond og andre aksjefond på ASK følger samme uttaksregel.",
+      ],
       explain:
         "Handel inne på ASK utsetter skatten. Gevinst skattlegges når du tar ut mer enn innskutt beløp, etter skjermingsfradrag.",
     },
@@ -408,7 +450,7 @@ export const lessons: Lesson[] = [
     order: 3,
     summary: "Folketrygd, tjenestepensjon og egen sparing.",
     body: [
-      "Pensjonen i Norge er lag på lag. Folketrygdens alderspensjon er det offentlige laget de fleste bygger på. I det nye systemet er den inntektspensjon pluss garantipensjon. Inntekt og uttakstidspunkt betyr mest for inntektspensjonen. Botid, som trygdetid, betyr mest for garantipensjonen. Grunnbeløpet (G) fastsettes av Kongen og reguleres hvert år fra 1. mai. Per 1. mai 2026 er G 136 549 kroner.",
+      "Pensjonen i Norge er lag på lag. Folketrygdens alderspensjon er det offentlige laget de fleste bygger på. I det nye systemet er den inntektspensjon pluss garantipensjon. Inntekt og uttakstidspunkt betyr mest for inntektspensjonen. Botid, som trygdetid, betyr mest for garantipensjonen. Grunnbeløpet (G) fastsettes av Kongen og reguleres hvert år fra 1. mai. Fra 1. mai er det {{sats:grunnbelop}}.",
       "Obligatorisk tjenestepensjon (OTP) er penger arbeidsgiver må spare for deg, ofte i fond, oppå folketrygden. Minstesatsen er lav. Mange arbeidsgivere sparer mer.",
       "Individuell pensjonssparing (IPS) er privat sparing med fradrag i inntekten. Pengene er bundet til pensjonsalder. De er ikke en buffer du kan ta ut når du vil. I privat sektor er AFP i Fellesordningen et livsvarig påslag fra 62 år. I offentlig sektor gjelder livsvarig AFP fra 2025 for årskull fra 1963, mens eldre årskull har tidligpensjon fra 62 til 67 år. Sjekk om du er omfattet før du bytter jobb sent.",
     ],
@@ -421,11 +463,12 @@ export const lessons: Lesson[] = [
     order: 4,
     summary: "Sparing med skattefradrag, øremerket bolig.",
     body: [
-      "BSU, boligsparing for ungdom, gir skattefradrag innenfor vilkår: alder, hvor mye du kan spare i året, og at pengene brukes til bolig. Satser og aldersgrense endres. Sjekk Skatteetaten for året du er i.",
+      "BSU, boligsparing for ungdom, gir skattefradrag innenfor vilkår: alder, hvor mye du kan spare i året, og at pengene brukes til bolig. Du kan spare inntil {{sats:bsu-aar}}, samlet inntil {{sats:bsu-samlet}}. Fradraget er {{sats:bsu-fradrag}}. Du kan spare med fradrag til og med {{sats:bsu-alder}}.",
       "BSU er egenkapital til bolig, ikke et aksjefond. Formålet er låst, og forventet avkastning er lavere enn i aksjemarkedet. Derfor er det et annet valg enn ASK.",
       "Belåningsgrad — lån delt på boligens verdi — avgjør hvor mye egenkapital du trenger når du kjøper. Det tas grundigere i løpet om boliglån. Her er poenget at BSU bygger den egenkapitalen.",
     ],
     conceptIds: ["bsu"],
+    satsIds: ["bsu-aar", "bsu-samlet", "bsu-fradrag", "bsu-alder"],
     quiz: {
       question: "Hva er BSU først og fremst?",
       options: [
@@ -435,6 +478,12 @@ export const lessons: Lesson[] = [
         "Et krav om 3 prosent avkastning",
       ],
       answerIndex: 1,
+      whyWrong: [
+        "ASK er aksjesparing uten at pengene er øremerket bolig. BSU er det motsatte sporet.",
+        "",
+        "IPS er bundet pensjonssparing. BSU er sparing til bolig.",
+        "3 prosent er handlingsregelens anslag, ikke et krav til BSU-kontoen.",
+      ],
       explain:
         "BSU er boligsparing for ungdom: skattefradrag mot at pengene brukes til bolig, innenfor alder og beløpsgrenser.",
     },
@@ -461,18 +510,24 @@ export const lessons: Lesson[] = [
     body: [
       "Skatt på lønn er to lag. Alminnelig inntekt, etter fradrag, skattlegges med en flat sats. Trinnskatt kommer på toppen, og bare på personinntekt — lønn, trygd og lignende.",
       "Trinnskatten er progressiv. Inntekt over et trinn skattlegges med en høyere sats enn inntekten under. Den høyeste satsen gjelder bare den delen som ligger over trinnet, ikke hele lønna.",
-      "Satser og grenser vedtas hvert år. Skatteetaten viser gjeldende trinn. Konseptet er mekanismen, ikke årets tall.",
+      "Satser og grenser vedtas hvert år. Skatteetaten viser gjeldende trinn.",
     ],
     conceptIds: ["trinnskatt"],
     quiz: {
       question: "Hva er trinnskatt?",
       options: [
         "Flat skatt på all alminnelig inntekt",
-        "Progressiv skatt på personinntekt, oppå skatten på alminnelig inntekt",
         "Skatt på nettoformue",
         "Fradrag for gjeldsrenter",
+        "Progressiv skatt på personinntekt, oppå skatten på alminnelig inntekt",
       ],
-      answerIndex: 1,
+      answerIndex: 3,
+      whyWrong: [
+        "Skatten på alminnelig inntekt er det flate laget. Trinnskatt kommer oppå, og bare på personinntekt.",
+        "Skatt på nettoformue er formuesskatt, ikke trinnskatt.",
+        "Rentefradrag trekker gjeldsrenter fra. Det er ikke trinnskatt.",
+        "",
+      ],
       explain:
         "Trinnskatt treffer personinntekt i trinn. Skatten på alminnelig inntekt er et eget, flatt lag.",
     },
@@ -486,9 +541,10 @@ export const lessons: Lesson[] = [
     body: [
       "Minstefradraget er et standardfradrag i lønn, pensjon og enkelte andre inntekter. Det beregnes som en prosent av inntekten. Den nedre grensen for vanlige lønns- og pensjonsinntekter ble opphevet fra inntektsåret 2023, så prosentsatsen gjelder helt ned til null. Du får det automatisk i skattemeldingen.",
       "Fradraget skal grovt dekke vanlige kostnader ved å være i jobb, slik at du slipper å dokumentere dem. Har du høyere kostnader av den typen fradraget dekker, kan faktiske kostnader brukes i stedet.",
-      "I 2026 er minstefradraget i lønn 46 prosent, med øvre grense 95 700 kr. Prosentsats og tak settes i skattereglene og endres. Sjekk Skatteetaten for året du er i.",
+      "Minstefradraget i lønn er {{sats:minstefradrag-sats}}, med øvre grense {{sats:minstefradrag-tak}}. Prosentsats og tak settes i skattereglene og endres.",
     ],
     conceptIds: ["minstefradrag", "personfradrag"],
+    satsIds: ["minstefradrag-sats", "minstefradrag-tak", "personfradrag"],
   },
   {
     id: "sk-3",
@@ -499,20 +555,27 @@ export const lessons: Lesson[] = [
     body: [
       "BSU, boligsparing for ungdom, gir fradrag i skatt for det du setter inn, innenfor et årlig tak. Ordningen har også et samlet tak og en aldersgrense. Pengene skal brukes til å kjøpe bolig eller nedbetale boliglån.",
       "Bruker du pengene til noe annet, kan tidligere fradrag bli tilbakeført. BSU er bundet sparing, ikke en vanlig sparekonto og ikke en aksjesparekonto.",
-      "Fradragssats, tak og alder står hos Skatteetaten og kan endres. Renta på kontoen er et bankprodukt. Skattefradraget er det som gjør ordningen til et konsept i skatten.",
+      "Renta på kontoen er et bankprodukt. Skattefradraget er det som gjør ordningen til et konsept i skatten. Grensene står i tabellen under.",
     ],
     conceptIds: ["bsu"],
+    satsIds: ["bsu-aar", "bsu-samlet", "bsu-fradrag", "bsu-alder"],
     quiz: {
       question: "Hva skiller BSU fra en vanlig sparekonto?",
       options: [
-        "Den er et aksjefond uten binding",
         "Innskudd kan gi skattefradrag, og pengene er øremerket bolig",
+        "Den er et aksjefond uten binding",
         "Den er det samme som IPS",
         "Skatteetaten garanterer avkastningen",
       ],
-      answerIndex: 1,
+      answerIndex: 0,
+      whyWrong: [
+        "",
+        "BSU er ikke et aksjefond, og pengene er øremerket bolig.",
+        "IPS er pensjonssparing. BSU er sparing til bolig.",
+        "Skatteetaten gir fradrag etter reglene. Den garanterer ikke avkastningen på kontoen.",
+      ],
       explain:
-        "BSU gir skattefradrag for innskudd innenfor tak, mot at pengene brukes til bolig. Vilkårene står hos Skatteetaten.",
+        "BSU gir skattefradrag for innskudd innenfor tak, mot at pengene brukes til bolig.",
     },
   },
   {
@@ -537,18 +600,24 @@ export const lessons: Lesson[] = [
     body: [
       "Formuesskatt — også kalt formueskatt — er skatt på nettoformue: ligningsverdi av eiendeler minus gjeld, over et bunnfradrag. Den har en kommunal og en statlig del.",
       "Primærbolig og aksjer verdsettes lavere enn markedsverdi. Skattegrunnlaget er derfor ikke det samme som det du kunne solgt for. Gjeld reduserer grunnlaget.",
-      "Bunnfradrag, rabatter og satser vedtas i budsjettet. Sjekk Skatteetaten for året. Formuesskatt treffer formue, ikke årets lønn. Konseptene fra løpet ligger i repetisjonen.",
+      "Bunnfradrag, rabatter og satser vedtas i budsjettet. Sjekk Skatteetaten for året. Formuesskatt treffer formue, ikke årets lønn.",
     ],
     conceptIds: ["formuesskatt"],
     quiz: {
       question: "Hva er grunnlaget for formuesskatt?",
       options: [
         "Brutto lønn før fradrag",
-        "Nettoformue over et bunnfradrag",
         "Bare bankinnskudd",
+        "Nettoformue over et bunnfradrag",
         "Gevinst på aksjesparekonto ved hver handel",
       ],
-      answerIndex: 1,
+      answerIndex: 2,
+      whyWrong: [
+        "Brutto lønn er inntekt. Formuesskatt treffer det du eier, minus gjeld.",
+        "Bankinnskudd kan inngå, men grunnlaget er hele nettoformuen, ikke bare kontoen.",
+        "",
+        "Gevinst på ASK skattlegges ved uttak. Det er ikke grunnlaget for formuesskatt.",
+      ],
       explain:
         "Formuesskatt beregnes av ligningsverdi minus gjeld, over bunnfradraget. Trinnskatt er skatten på personinntekt.",
     },
@@ -561,7 +630,7 @@ export const lessons: Lesson[] = [
     summary: "Den offentlige pensjonen.",
     body: [
       "Folketrygden er den offentlige trygdeordningen. Alderspensjonen derfra er laget de fleste bygger på. For årskull i det nye systemet er den inntektspensjon pluss garantipensjon. Inntekt og uttakstidspunkt betyr mest for inntektspensjonen. Botid, som trygdetid, betyr mest for garantipensjonen. Grunnpensjon hører til det gamle systemet, sammen med tilleggspensjon.",
-      "NAV forvalter ytelsene. Grunnbeløpet (G) fastsettes av Kongen etter folketrygdloven § 1-4 og reguleres hvert år fra 1. mai i takt med lønnsveksten. Siden 2011 er det regjeringen i statsråd som fastsetter beløpet etter trygdeoppgjøret. Per 1. mai 2026 er G 136 549 kroner.",
+      "NAV forvalter ytelsene. Grunnbeløpet (G) fastsettes av Kongen etter folketrygdloven § 1-4 og reguleres hvert år fra 1. mai i takt med lønnsveksten. Siden 2011 er det regjeringen i statsråd som fastsetter beløpet etter trygdeoppgjøret. Fra 1. mai er grunnbeløpet {{sats:grunnbelop}}.",
       "Folketrygden betaler ikke hele pensjonen for de fleste. Tjenestepensjon og eventuell egen sparing ligger oppå.",
     ],
     conceptIds: ["folketrygd"],
@@ -587,6 +656,12 @@ export const lessons: Lesson[] = [
         "En ytelse fra NAV når du er syk",
       ],
       answerIndex: 1,
+      whyWrong: [
+        "IPS er noe du oppretter selv. OTP er arbeidsgivers plikt.",
+        "",
+        "Folketrygden er det offentlige laget. OTP kommer oppå, fra jobben.",
+        "Sykepenger er en ytelse når du er syk. OTP er sparing til pensjon.",
+      ],
       explain:
         "OTP er minstesparingen arbeidsgiver skal gjøre. Folketrygden er det offentlige laget under.",
     },
@@ -613,7 +688,7 @@ export const lessons: Lesson[] = [
     body: [
       "Pensjonen er folketrygd, pluss tjenestepensjon fra jobben, pluss det du sparer selv. Ingen av lagene erstatter de andre.",
       "Folketrygden følger inntekten din over tid. Tjenestepensjonen følger jobben. IPS er frivillig og bundet.",
-      "Når løpet er ferdig, ligger konseptene i repetisjonen. Si dem med egne ord: hvem som sparer, og om pengene er låst.",
+      "Si dem med egne ord: hvem som sparer, og om pengene er låst.",
     ],
     conceptIds: ["folketrygd", "tjenestepensjon", "ips"],
   },
@@ -625,19 +700,26 @@ export const lessons: Lesson[] = [
     summary: "Kravene banken må følge.",
     body: [
       "Boliglånsforskriften er det gamle navnet. Reglene står nå i utlånsforskriften, fastsatt av Finansdepartementet. Den setter rammer for boliglån og en del andre lån til husholdninger.",
-      "Tre krav går igjen. Du må stille med egenkapital, så belåningsgraden ikke blir for høy. Samlet gjeld må stå i forhold til inntekten. Banken skal sjekke at du tåler en høyere rente enn den du får i dag.",
-      "For nedbetalingslån er grensen 90 prosent av boligverdien fra 31. desember 2024, og den gjelder fortsatt i 2026. Egenkapitalkravet er dermed 10 prosent. Gjelden er fortsatt begrenset til fem ganger brutto inntekt. Rammekreditt med pant i bolig har et tak på 60 prosent. Banken kan være strengere.",
+      "Tre krav går igjen. Du må stille med egenkapital, så belåningsgraden ikke blir for høy. Samlet gjeld må stå i forhold til inntekten. Banken skal prøve om du tåler en høyere rente enn den du får i dag.",
+      "For nedbetalingslån er grensen {{sats:utlan-belaning}}. Resten er egenkapital. Gjelden er begrenset til {{sats:utlan-gjeld}}. Rammekreditt med pant i bolig har et tak på {{sats:utlan-ramme}}. Banken kan være strengere.",
     ],
     conceptIds: ["utlansforskriften", "belaningsgrad", "gjeldsgrad"],
+    satsIds: ["utlan-belaning", "utlan-gjeld", "utlan-ramme"],
     quiz: {
       question: "Hvem fastsetter utlånsforskriften?",
       options: [
         "Norges Bank",
-        "Finansdepartementet",
         "Skatteetaten",
         "Borettslaget",
+        "Finansdepartementet",
       ],
-      answerIndex: 1,
+      answerIndex: 3,
+      whyWrong: [
+        "Norges Bank setter styringsrenten, ikke utlånsforskriften.",
+        "Skatteetaten fastsetter ikke rammene for bankenes utlån.",
+        "Borettslaget kan ha egen gjeld. Det fastsetter ikke forskriften.",
+        "",
+      ],
       explain:
         "Finansdepartementet fastsetter utlånsforskriften. Norges Bank setter styringsrenten.",
     },
@@ -649,10 +731,10 @@ export const lessons: Lesson[] = [
     order: 1,
     summary: "Den delen du ikke låner.",
     body: [
-      "Egenkapital i et boligkjøp er den delen av prisen du stiller med selv. Belåningsgrad er lånet delt på boligens verdi. 10 prosent egenkapital er det samme som 90 prosent belåningsgrad. Det er grensen for nedbetalingslån fra 31. desember 2024, fortsatt i 2026.",
+      "Egenkapital i et boligkjøp er den delen av prisen du stiller med selv. Belåningsgrad er lånet delt på boligens verdi. Grensen for nedbetalingslån er {{sats:utlan-belaning}}. Resten er egenkapital.",
       "Pengene kan komme fra sparing, for eksempel BSU, fra salg av en annen bolig, eller fra gave. Et nytt lån regnes ikke som egenkapital. Banken vurderer også at du kan betjene gjelden.",
       "Høyere egenkapital gir lavere belåningsgrad. Det er ofte et vilkår for lånet, og det demper hvor hardt et prisfall treffer deg.",
-      "Begge reglene gjelder samtidig. Lånet kan være høyst 90 prosent av verdien, og samlet gjeld høyst fem ganger brutto inntekt. Med 400 000 kroner i egenkapital er taket etter 90-prosentregelen en totalpris på 4 000 000 kroner. Med 700 000 kroner i inntekt, og ingen annen gjeld, kan boliggjelden være 3 500 000 kroner, og totalprisen dermed 3 900 000 kroner. Regelen med lavest tak stopper deg først, her inntekten.",
+      "Begge reglene gjelder samtidig. Lånet kan være høyst {{sats:utlan-belaning}} av verdien, og samlet gjeld høyst {{sats:utlan-gjeld}}. Regneeksempel med de grensene: 400 000 kroner i egenkapital gir en høyeste totalpris på 4 000 000 kroner, fordi egenkapitalen da er 10 prosent. Med 700 000 kroner i inntekt, og ingen annen gjeld, kan boliggjelden være 3 500 000 kroner, og totalprisen dermed 3 900 000 kroner. Regelen med lavest tak stopper deg først, her inntekten.",
     ],
     conceptIds: ["egenkapital"],
   },
@@ -671,8 +753,14 @@ export const lessons: Lesson[] = [
     conceptIds: ["annuitetslan", "serielan"],
     quiz: {
       question: "Hvilket lån har fast avdrag og synkende terminbeløp?",
-      options: ["Annuitetslån", "Serielån", "Rammekreditt", "Begge"],
-      answerIndex: 1,
+      options: ["Serielån", "Annuitetslån", "Rammekreditt", "Begge"],
+      answerIndex: 0,
+      whyWrong: [
+        "",
+        "Annuitetslån har fast terminbeløp, ikke fast avdrag.",
+        "Rammekreditt er en kredittramme, ikke et lån med fast avdrag.",
+        "Bare serielån har fast avdrag og synkende terminbeløp.",
+      ],
       explain:
         "Serielån har fast avdrag. Renta regnes av lavere restgjeld for hver termin, så terminbeløpet faller. Annuitetslån har fast terminbeløp.",
     },
@@ -693,11 +781,17 @@ export const lessons: Lesson[] = [
       question: "Hva er totalpris i et borettslag?",
       options: [
         "Bare felleskostnaden per måned",
-        "Innskudd pluss din andel av fellesgjelden",
         "Egenkapitalen banken krever",
+        "Innskudd pluss din andel av fellesgjelden",
         "Skatten på boligen",
       ],
-      answerIndex: 1,
+      answerIndex: 2,
+      whyWrong: [
+        "Felleskostnaden er det du betaler løpende, ikke kjøpesummen.",
+        "Egenkapital er det du stiller med selv. Totalpris er prisen på andelen.",
+        "",
+        "Skatt på boligen er noe annet enn prisen du betaler for andelen.",
+      ],
       explain:
         "Totalpris er innskuddet pluss fellesgjeld. Felleskostnaden er det du betaler løpende, ikke kjøpesummen.",
     },
@@ -711,7 +805,7 @@ export const lessons: Lesson[] = [
     body: [
       "Leie mot eie, også kalt leie til eie, er en avtale der du leier boligen en periode og siden kan eller skal kjøpe den. En del av leien kan være avtalt å telle som egenkapital. Vilkårene varierer mellom utbyggere og kommuner.",
       "Det er ikke en vanlig leiekontrakt. Du må fortsatt oppfylle bankens krav når kjøpet skal skje, inkludert utlånsforskriften. Får du ikke lån, avhenger resten av det som står i avtalen.",
-      "Les hva leien dekker, om prisen er låst, og hva som skjer hvis du ikke kjøper. Ordningen er et spor mot eie, ikke en garanti for boliglån. Konseptene fra løpet ligger i repetisjonen.",
+      "Les hva leien dekker, om prisen er låst, og hva som skjer hvis du ikke kjøper. Ordningen er et spor mot eie, ikke en garanti for boliglån.",
     ],
     conceptIds: ["leie-mot-eie"],
   },
@@ -736,10 +830,11 @@ export const lessons: Lesson[] = [
     summary: "Hvor mye av fondet som brukes over tid.",
     body: [
       "Handlingsregelen er retningslinjen for bruken av fondet over statsbudsjettet. Forventet realavkastning er om lag 3 prosent over tid. Det er et anslag, ikke et tak som skal treffes hvert år.",
-      "I normale år bør bruken ligge under 3 prosent, rundt 2,7 prosent, slik at uttaket over tid kan tilsvare 3 prosent når kriseår regnes med. Nasjonalbudsjettet 2027 anslår det strukturelle oljekorrigerte underskuddet for 2026 til 583,4 milliarder kroner, 2,7 prosent av fondet. Regelen skal jevne ut svingninger i oljeinntektene, la fondet vare, og hindre at fastlandsøkonomien overopphetes av oljepenger.",
+      "I normale år bør bruken ligge under 3 prosent, slik at uttaket over tid kan tilsvare 3 prosent når kriseår regnes med. Årets anslag står i tabellen under. Regelen skal jevne ut svingninger i oljeinntektene, la fondet vare, og hindre at fastlandsøkonomien overopphetes av oljepenger.",
       "Dette er finanspolitikk. Stortinget vedtar budsjettet etter forslag fra Finansdepartementet. Norges Bank styrer ikke handlingsregelen når den setter renta.",
     ],
     conceptIds: ["handlingsregelen"],
+    satsIds: ["sou-mrd", "sou-pst"],
     quiz: {
       question: "Hva styrer handlingsregelen?",
       options: [
@@ -749,6 +844,12 @@ export const lessons: Lesson[] = [
         "Prisen på strøm i Nord-Norge",
       ],
       answerIndex: 1,
+      whyWrong: [
+        "Styringsrenten er Norges Banks virkemiddel, ikke handlingsregelen.",
+        "",
+        "Skatt på ASK er personlig skatt. Handlingsregelen styrer oljepengebruken.",
+        "Strømprisen settes i kraftmarkedet, ikke av handlingsregelen.",
+      ],
       explain:
         "Handlingsregelen er en retningslinje for oljepengebruken over budsjettet. Styringsrenten er Norges Banks virkemiddel.",
     },
@@ -761,10 +862,11 @@ export const lessons: Lesson[] = [
     summary: "Underskuddet uten oljeinntekter.",
     body: [
       "Det som sammenlignes med handlingsregelen, er det strukturelle oljekorrigerte underskuddet: underskuddet uten oljeinntekter, justert for konjunktur.",
-      "Overføringen fra Statens pensjonsfond utland er lik det oljekorrigerte underskuddet, altså det faktiske underskuddet uten oljeinntekter. Det strukturelle underskuddet er det samme tallet justert for konjunktur, og det er dette som sammenlignes med handlingsregelen. I anslaget for 2026 er det strukturelle underskuddet 583,4 milliarder kroner, og overføringen 454,8 milliarder kroner. Finansdepartementet foreslår tallene. Stortinget vedtar budsjettet.",
-      "Pengebruken er ikke det samme som fondets avkastning et enkelt år. Fondet kan falle i verdi i markedet samtidig som budsjettet bruker penger etter regelen. Konseptene fra løpet ligger i repetisjonen.",
+      "Overføringen fra Statens pensjonsfond utland er lik det oljekorrigerte underskuddet, altså det faktiske underskuddet uten oljeinntekter. Det strukturelle underskuddet er det samme tallet justert for konjunktur, og det er dette som sammenlignes med handlingsregelen. I anslaget for 2026 er overføringen 454,8 milliarder kroner. Finansdepartementet foreslår tallene. Stortinget vedtar budsjettet.",
+      "Pengebruken er ikke det samme som fondets avkastning et enkelt år. Fondet kan falle i verdi i markedet samtidig som budsjettet bruker penger etter regelen.",
     ],
     conceptIds: ["strukturelt-underskudd", "finanspolitikk"],
+    satsIds: ["sou-mrd", "sou-pst"],
   },
   {
     id: "ar-1",
@@ -796,11 +898,17 @@ export const lessons: Lesson[] = [
       question: "Hva er frontfaget i et lønnsoppgjør?",
       options: [
         "NAV, som utbetaler sykepenger",
-        "Konkurranseutsatt industri, som forhandler først",
         "Finansdepartementet",
         "Norges Bank",
+        "Konkurranseutsatt industri, som forhandler først",
       ],
-      answerIndex: 1,
+      answerIndex: 3,
+      whyWrong: [
+        "NAV utbetaler ytelser. Frontfaget er partene i konkurranseutsatt industri.",
+        "Finansdepartementet lager budsjettet. Det forhandler ikke frontfaget.",
+        "Norges Bank setter renta. Den setter ikke lønnsnormen.",
+        "",
+      ],
       explain:
         "Frontfaget er konkurranseutsatt industri. Oppgjøret der setter normen for de andre.",
     },
@@ -827,7 +935,7 @@ export const lessons: Lesson[] = [
     body: [
       "Dagpenger er folketrygdens ytelse når du har mistet arbeidstid. NAV krever at du har hatt tilstrekkelig inntekt, at du registrerer deg som arbeidssøker, og at du er reell jobbsøker.",
       "Ytelsen er en andel av tidligere inntekt, med tak, og den varer i en avgrenset periode. Reglene står hos NAV og kan endres.",
-      "Dagpenger er ikke sykepenger. Her er du arbeidsfør og søker jobb. Konseptene fra løpet ligger i repetisjonen.",
+      "Dagpenger er ikke sykepenger. Her er du arbeidsfør og søker jobb.",
     ],
     conceptIds: ["dagpenger"],
   },
@@ -859,12 +967,18 @@ export const lessons: Lesson[] = [
     quiz: {
       question: "Hvorfor kan strømprisen være ulik i Sør-Norge og Nord-Norge?",
       options: [
-        "Fordi folketrygden har ulike satser",
         "Fordi nettet har begrenset kapasitet mellom prisområdene",
+        "Fordi folketrygden har ulike satser",
         "Fordi Norges Bank setter en rente per fylke",
         "Fordi formuesskatten er høyere i sør",
       ],
-      answerIndex: 1,
+      answerIndex: 0,
+      whyWrong: [
+        "",
+        "Folketrygden har ikke ulike satser per landsdel. Prisen følger kraftnettet.",
+        "Norges Bank setter én styringsrente, ikke en rente per fylke.",
+        "Formuesskatten forklarer ikke prisforskjellen mellom prisområdene.",
+      ],
       explain:
         "Prisområdene er atskilt av begrenset nettkapasitet. NO4 er Nord-Norge. De sørlige områdene har ofte en annen pris.",
     },
@@ -878,7 +992,7 @@ export const lessons: Lesson[] = [
     body: [
       "Strømstøtte, også kalt strømstønad, er en statlig ordning for husholdninger. Når spotprisen i prisområdet ligger over en terskel, dekker staten en andel av det som ligger over, for et vanlig forbruk.",
       "Støtten går vanligvis via nettselskapet, så den trekkes fra på regningen. Terskel og andel vedtas av Stortinget og kan endres. Ordningen fjerner ikke spotprisen.",
-      "Nettleie og avgifter er ikke det samme som spotprisen støtten regnes av. Sjekk gjeldende regler hvis du skal bruke tallene. Konseptene fra løpet ligger i repetisjonen.",
+      "Nettleie og avgifter er ikke det samme som spotprisen støtten regnes av. Sjekk gjeldende regler hvis du skal bruke tallene.",
     ],
     conceptIds: ["stromstotte"],
   },
@@ -898,11 +1012,17 @@ export const lessons: Lesson[] = [
       question: "Hva betyr en svakere krone?",
       options: [
         "At du betaler færre kroner for én euro",
-        "At du betaler flere kroner for utenlandsk valuta",
         "At styringsrenten settes til null",
+        "At du betaler flere kroner for utenlandsk valuta",
         "At Oljefondet utbetaler pensjon direkte",
       ],
-      answerIndex: 1,
+      answerIndex: 2,
+      whyWrong: [
+        "Færre kroner per euro er en sterkere krone, ikke en svakere.",
+        "Styringsrenten settes av Norges Bank ut fra pengepolitikken, ikke av at kronen er svak.",
+        "",
+        "Oljefondet utbetaler ikke pensjon direkte til deg, uansett kronekurs.",
+      ],
       explain:
         "Svakere krone vil si at utenlandsk valuta koster flere kroner. Det gjør import dyrere.",
     },
@@ -929,7 +1049,7 @@ export const lessons: Lesson[] = [
     body: [
       "Når Norges Bank hever styringsrenten, kan kronen styrkes fordi plasseringer i kroner blir mer attraktive. Sterkere krone demper importprisene, og det trekker inflasjonen ned. Settes renta ned, kan kronen svekke seg og løfte importert prispress.",
       "Det er valutakurskanalen. Den virker sammen med etterspørselen: høyere rente demper også lån og forbruk.",
-      "Norges Bank styrer mot inflasjonsmålet, ikke mot en bestemt kronekurs. En renteendring er ikke et løfte om at kronen beveger seg. Konseptene fra løpet ligger i repetisjonen.",
+      "Norges Bank styrer mot inflasjonsmålet, ikke mot en bestemt kronekurs. En renteendring er ikke et løfte om at kronen beveger seg.",
     ],
     conceptIds: ["styringsrenten", "kronekurs"],
   },
@@ -1056,6 +1176,17 @@ export const srsConceptIds = new Set<string>([
   "kronekurs",
   "importpriser",
   "eos",
+  "pengepolitikk",
+  "produksjonsgap",
+  "reallonn",
+  "diversifisering",
+  "yield",
+  "naverdi",
+  "annuitetslan",
+  "serielan",
+  "belaningsgrad",
+  "gjeldsgrad",
+  "personfradrag",
 ]);
 
 const synonyms: Record<string, string[]> = {
@@ -1168,7 +1299,7 @@ export function searchLearning(query: string): {
   const conceptHits = concepts.filter((c) => {
     const syn = (synonyms[c.id] ?? []).join(" ");
     const hay = fold(
-      `${c.term} ${c.english ?? ""} ${c.definition} ${c.explanation} ${syn}`
+      stripMarkup(`${c.term} ${c.english ?? ""} ${c.definition} ${c.explanation} ${c.tip ?? ""} ${syn}`)
     );
     return hay.includes(q);
   });
@@ -1176,7 +1307,7 @@ export function searchLearning(query: string): {
     fold(`${p.title} ${p.subtitle}`).includes(q)
   );
   const lessonHits = lessons.filter((l) =>
-    fold(`${l.title} ${l.summary} ${l.body.join(" ")}`).includes(q)
+    fold(stripMarkup(`${l.title} ${l.summary} ${l.body.join(" ")} ${l.quiz?.explain ?? ""}`)).includes(q)
   );
   const comingHits = comingPaths.filter((p) =>
     fold(`${p.title} ${p.subtitle}`).includes(q)
@@ -1197,6 +1328,29 @@ export const categoryLabel: Record<Concept["category"], string> = {
   personlig: "Personlig",
   metode: "Metode",
 };
+
+function lessonTexts(lesson: Lesson): string[] {
+  const quiz = lesson.quiz;
+  return [
+    lesson.summary,
+    ...lesson.body,
+    quiz?.question ?? "",
+    ...(quiz?.options ?? []),
+    quiz?.explain ?? "",
+    ...(quiz?.whyWrong ?? []),
+  ];
+}
+
+function assertNoDuplicateOrd(label: string, texts: string[]) {
+  const seen = new Map<string, number>();
+  for (const text of texts) {
+    assertSatsRefs(text, label);
+    for (const id of ordIdsIn(text)) seen.set(id, (seen.get(id) ?? 0) + 1);
+  }
+  for (const [id, count] of seen) {
+    if (count > 1) throw new Error(`${label} merker «${id}» ${count} ganger`);
+  }
+}
 
 function assertLearning() {
   const path = learningPaths.find((p) => p.id === "norsk-pengepolitikk");
@@ -1223,6 +1377,81 @@ function assertLearning() {
   ];
   for (const id of required) {
     if (!getConcept(id)) throw new Error(`Mangler konsept ${id}`);
+  }
+
+  const ordById = new Map(ordliste.map((ord) => [ord.id, ord]));
+  const usedOrd = new Set<string>();
+  for (const ord of ordliste) {
+    if (!ord.kort || ord.kort.length > 200) {
+      throw new Error(`Fagord ${ord.id} mangler kort forklaring, eller den er over 200 tegn`);
+    }
+    if (hasMarkup(ord.term) || hasMarkup(ord.kort)) {
+      throw new Error(`Fagord ${ord.id} har merking i termen eller forklaringen`);
+    }
+  }
+  for (const concept of concepts) {
+    if (hasMarkup(concept.term) || hasMarkup(concept.definition)) {
+      throw new Error(`Konsept ${concept.id} har merking i termen eller definisjonen`);
+    }
+    for (const id of concept.satsIds ?? []) {
+      try {
+        getSats(id);
+      } catch {
+        throw new Error(`Konsept ${concept.id} viser ukjent sats ${id}`);
+      }
+    }
+  }
+  for (const lesson of lessons) {
+    assertNoDuplicateOrd(`Leksjon ${lesson.id}`, lessonTexts(lesson));
+    for (const text of lessonTexts(lesson)) {
+      for (const id of ordIdsIn(text)) {
+        if (!ordById.has(id)) throw new Error(`Leksjon ${lesson.id} merker ukjent fagord ${id}`);
+        usedOrd.add(id);
+      }
+    }
+    for (const id of lesson.satsIds ?? []) {
+      try {
+        getSats(id);
+      } catch {
+        throw new Error(`Leksjon ${lesson.id} viser ukjent sats ${id}`);
+      }
+    }
+    if (lesson.satsIds && lesson.satsIds.length > 5) {
+      throw new Error(`Leksjon ${lesson.id} har mer enn fem satser i tabellen`);
+    }
+    for (const conceptId of lesson.conceptIds) {
+      if (!srsConceptIds.has(conceptId)) {
+        throw new Error(`Konsept ${conceptId} i leksjon ${lesson.id} mangler i repetisjonen`);
+      }
+    }
+  }
+  const unused = ordliste.filter((ord) => !usedOrd.has(ord.id)).map((ord) => ord.id);
+  if (unused.length > 0) {
+    console.warn(`Fagord som ikke er merket i en leksjon ennå: ${unused.join(", ")}`);
+  }
+
+  const quizzes = lessons.flatMap((lesson) => (lesson.quiz ? [lesson.quiz] : []));
+  const counts = new Map<number, number>();
+  for (const quiz of quizzes) {
+    if (quiz.answerIndex < 0 || quiz.answerIndex >= quiz.options.length) {
+      throw new Error(`Svarindeks utenfor alternativene: ${quiz.question}`);
+    }
+    counts.set(quiz.answerIndex, (counts.get(quiz.answerIndex) ?? 0) + 1);
+    if (!quiz.whyWrong || quiz.whyWrong.length !== quiz.options.length) {
+      throw new Error(`whyWrong mangler eller har feil lengde: ${quiz.question}`);
+    }
+    quiz.whyWrong.forEach((reason, index) => {
+      if (index === quiz.answerIndex) {
+        if (reason !== "") throw new Error(`whyWrong på riktig svar skal være tom: ${quiz.question}`);
+      } else if (!reason.trim()) {
+        throw new Error(`Mangler forklaring på feil svar: ${quiz.question}`);
+      }
+    });
+  }
+  for (const [index, count] of counts) {
+    if (count / quizzes.length > 0.4) {
+      throw new Error(`For mange quizer har svar ${index}: ${count} av ${quizzes.length}`);
+    }
   }
 }
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BookOpen, Check, ChevronRight, Search } from "lucide-react";
 import { concepts, getConcept, learningPaths, searchLearning } from "@/data/learning";
+import { stripMarkup } from "@/lib/markup";
 import { pickContinueTarget } from "@/lib/continue-path";
 import { LogoMark } from "@/components/LogoMark";
 import { StreakFlame } from "@/components/StreakFlame";
@@ -158,7 +159,7 @@ export function HomeView() {
               >
                 <span className="text-sm font-medium text-[var(--ink)]">{concept.term}</span>
                 <span className="mt-0.5 block truncate text-xs text-[var(--muted)]">
-                  {concept.definition}
+                  {stripMarkup(concept.definition)}
                 </span>
               </Link>
             ))}

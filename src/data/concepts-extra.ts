@@ -39,9 +39,9 @@ export const extraConcepts: Concept[] = [
     "Inflation target",
     "makro",
     "Operativt mål for pengepolitikken: konsumprisveksten skal over tid ligge nær 2 prosent.",
-    "Målet er et anker for lønns- og prisfastsetting, ikke et krav om at KPI treffer 2 prosent hver måned. Tallet står i mandatet — sjekk Norges Bank hvis du skal sitere det i et arbeid.",
+    "Målet er et anker for lønns- og prisfastsetting, ikke et krav om at KPI treffer 2 prosent hver måned.",
     ["inflasjon", "fleksibel-inflasjonsstyring", "styringsrenten"],
-    "Sjekk gjeldende mandat. 2 prosent er ankeret, ikke en månedlig fasit."
+    "2 prosent er ankeret, ikke en månedlig fasit."
   ),
   c(
     "fleksibel-inflasjonsstyring",
@@ -76,7 +76,7 @@ export const extraConcepts: Concept[] = [
     "Monetary policy",
     "makro",
     "Norges Banks styring av rente og likviditet i kronemarkedet for å nå inflasjonsmålet.",
-    "Verktøyet folk møter, er styringsrenten. Finanspolitikken — statsbudsjettet og bruken av oljepenger — er et annet spor og ligger under norsk økonomi på kartet.",
+    "Verktøyet folk møter, er styringsrenten. Finanspolitikken — statsbudsjettet og bruken av oljepenger — er et annet spor.",
     ["styringsrenten", "inflasjonsmal", "finanspolitikk"]
   ),
   c(
@@ -103,7 +103,7 @@ export const extraConcepts: Concept[] = [
     "Structural non-oil deficit",
     "olje",
     "Det oljekorrigerte underskuddet justert for konjunktur. Dette tallet sammenlignes med handlingsregelen.",
-    "Overføringen fra Statens pensjonsfond utland er lik det oljekorrigerte underskuddet, det faktiske underskuddet uten oljeinntekter. Det strukturelle tallet er det samme justert for konjunktur. I anslaget for 2026 er strukturelt underskudd 583,4 milliarder kroner og den faktiske overføringen 454,8 milliarder kroner. Det er et budsjettmål, ikke en rente.",
+    "Overføringen fra Statens pensjonsfond utland er lik det oljekorrigerte underskuddet, det faktiske underskuddet uten oljeinntekter. Det strukturelle tallet er det samme justert for konjunktur. I anslaget for 2026 er den faktiske overføringen 454,8 milliarder kroner. Det strukturelle underskuddet står i tabellen. Det er et budsjettmål, ikke en rente.",
     ["handlingsregelen", "finanspolitikk", "oljefondet"]
   ),
   c(
@@ -158,9 +158,8 @@ export const extraConcepts: Concept[] = [
     "Home savings scheme for youth",
     "personlig",
     "Spareordning med skattefradrag, under vilkår om alder og at pengene brukes til bolig.",
-    "BSU bygger egenkapital til bolig. Det er et annet valg enn ASK: formålet er låst, og forventet avkastning er lavere enn i aksjemarkedet. Satser og aldersgrense endres.",
-    ["belaningsgrad", "ask"],
-    "Sjekk Skatteetaten for årets satser og aldersgrense."
+    "BSU bygger egenkapital til bolig. Det er et annet valg enn ASK: formålet er låst, og forventet avkastning er lavere enn i aksjemarkedet. Du kan spare inntil {{sats:bsu-aar}}, samlet inntil {{sats:bsu-samlet}}, med fradrag på {{sats:bsu-fradrag}}. Sparing med fradrag gjelder til og med {{sats:bsu-alder}}.",
+    ["belaningsgrad", "ask"]
   ),
   c(
     "folketrygd",
@@ -168,7 +167,7 @@ export const extraConcepts: Concept[] = [
     "National insurance pension",
     "personlig",
     "Den offentlige alderspensjonen. I det nye systemet er den inntektspensjon pluss garantipensjon.",
-    "Folketrygden er det nederste laget. Oppå kommer tjenestepensjon fra arbeidsgiver, og eventuelt egen sparing. Inntekt og uttakstidspunkt betyr mest for inntektspensjonen. Botid, som trygdetid, betyr mest for garantipensjonen. Grunnpensjon er en ytelse i det gamle systemet, sammen med tilleggspensjon. Grunnbeløpet (G) brukes når ytelsene beregnes.",
+    "Folketrygden er det nederste laget. Oppå kommer tjenestepensjon fra arbeidsgiver, og eventuelt egen sparing. Inntekt og uttakstidspunkt betyr mest for inntektspensjonen. Botid, som trygdetid, betyr mest for garantipensjonen. Grunnpensjon er en ytelse i det gamle systemet, sammen med tilleggspensjon. Grunnbeløpet (G) brukes når ytelsene beregnes. Fra 1. mai er det {{sats:grunnbelop}}.",
     ["grunnbelop", "otp", "ips"]
   ),
   c(
@@ -177,7 +176,7 @@ export const extraConcepts: Concept[] = [
     "National insurance basic amount",
     "personlig",
     "Beløpet folketrygdens ytelser regnes ut fra. Kongen fastsetter det, og det reguleres hvert år fra 1. mai i takt med lønnsveksten.",
-    "Folketrygdloven § 1-4 sier at grunnbeløpet fastsettes av Kongen. Siden 2011 er det regjeringen i statsråd som fastsetter beløpet etter trygdeoppgjøret. Per 1. mai 2026 er G 136 549 kroner. Når noen sier «2 G» eller «6 G», mener de et multiplum av dette beløpet.",
+    "Folketrygdloven § 1-4 sier at grunnbeløpet fastsettes av Kongen. Siden 2011 er det regjeringen i statsråd som fastsetter beløpet etter trygdeoppgjøret. Fra 1. mai er grunnbeløpet {{sats:grunnbelop}}. Når noen sier «2 G» eller «6 G», mener de et multiplum av dette beløpet.",
     ["folketrygd", "otp"]
   ),
   c(
@@ -204,7 +203,7 @@ export const extraConcepts: Concept[] = [
     "Debt-to-income",
     "personlig",
     "Samlet gjeld delt på brutto årsinntekt.",
-    "Utlånsforskriften setter en ramme for hvor høy gjeldsgraden kan være. Banken kan ha egne, strengere grenser, og skal i tillegg stresse betjeningsevnen med høyere rente.",
+    "Utlånsforskriften setter rammen til {{sats:utlan-gjeld}}. Banken kan ha egne, strengere grenser, og skal i tillegg stresse betjeningsevnen med høyere rente.",
     ["utlansforskriften", "belaningsgrad"]
   ),
   c(
@@ -222,7 +221,7 @@ export const extraConcepts: Concept[] = [
     "Interest deduction",
     "personlig",
     "Gjeldsrenter trekkes fra i alminnelig inntekt og reduserer skatten.",
-    "Fradraget gjør at den reelle kostnaden av lånet er lavere enn renteregningen alene. Satsen følger skatten på alminnelig inntekt — sjekk året.",
+    "Fradraget gjør at den reelle kostnaden av lånet er lavere enn renteregningen alene. Satsen følger skatten på alminnelig inntekt, {{sats:alminnelig-sats}}.",
     ["annuitetslan", "alminnelig-inntekt"]
   ),
   c(
@@ -231,7 +230,7 @@ export const extraConcepts: Concept[] = [
     "Ordinary income",
     "personlig",
     "Inntektsgrunnlaget etter fradrag, som skattlegges med den flate satsen på alminnelig inntekt.",
-    "Lønn, renter og aksjeinntekt behandles ulikt før de havner her. Personfradrag og minstefradrag er vanlige poster på veien. Satser endres hvert år.",
+    "Lønn, renter og aksjeinntekt behandles ulikt før de havner her. Personfradrag og minstefradrag er vanlige poster på veien. Satsen på alminnelig inntekt er {{sats:alminnelig-sats}}. Den vedtas for hvert år.",
     ["personfradrag", "minstefradrag", "rentefradrag"]
   ),
   c(
@@ -240,9 +239,8 @@ export const extraConcepts: Concept[] = [
     "Personal allowance",
     "personlig",
     "Et bunnfradrag i alminnelig inntekt. Beløpet reguleres årlig.",
-    "Fradraget gjelder skatten på alminnelig inntekt. Ubrukt fradrag følger ikke med inn i neste år. Sjekk Skatteetaten for årets beløp.",
-    ["alminnelig-inntekt", "minstefradrag"],
-    "Beløpet endres. Sjekk året."
+    "Fradraget gjelder skatten på alminnelig inntekt. Ubrukt fradrag følger ikke med inn i neste år. Beløpet i år er {{sats:personfradrag}}.",
+    ["alminnelig-inntekt", "minstefradrag"]
   ),
   c(
     "minstefradrag",
@@ -250,7 +248,7 @@ export const extraConcepts: Concept[] = [
     "Minimum standard deduction",
     "personlig",
     "Standardfradrag i lønnsinntekt: en prosent av lønnen, opp til et tak.",
-    "Fradraget skal grovt dekke kostnader ved å ha jobb. Prosentsats og makstak settes i budsjettet — sjekk Skatteetaten for året.",
+    "Fradraget skal grovt dekke kostnader ved å ha jobb. I lønn er satsen {{sats:minstefradrag-sats}}, med øvre grense {{sats:minstefradrag-tak}}.",
     ["personfradrag", "alminnelig-inntekt"]
   ),
   c(
@@ -557,7 +555,7 @@ export const extraConcepts: Concept[] = [
     "Equity (home purchase)",
     "personlig",
     "Den delen av boligkjøpet du stiller med selv, ikke låner.",
-    "Egenkapital er boligverdi minus lån. Belåningsgrad er lånet delt på verdien. For nedbetalingslån krever utlånsforskriften 10 prosent egenkapital fra 31. desember 2024, fortsatt i 2026, som er det samme som 90 prosent belåningsgrad. Pengene kan komme fra sparing, salg av bolig eller gave. Annet lån regnes ikke som egenkapital.",
+    "Egenkapital er boligverdi minus lån. Belåningsgrad er lånet delt på verdien. For nedbetalingslån er grensen {{sats:utlan-belaning}}, og resten er egenkapital. Pengene kan komme fra sparing, salg av bolig eller gave. Annet lån regnes ikke som egenkapital.",
     ["belaningsgrad", "utlansforskriften", "bsu", "fellesgjeld"],
     "Egenkapital = verdi − lån. Belåningsgrad = lån / verdi."
   ),
@@ -866,9 +864,8 @@ export const extraConcepts: Concept[] = [
     "Deposit guarantee",
     "bank",
     "Dekningen fra Bankenes sikringsfond hvis banken ikke kan betale tilbake innskuddet.",
-    "Garantien gjelder innskudd, ikke aksjer og fondsandeler. For en kunde i en norsk bank i Norge dekker den fra første krone og opptil 2 millioner kroner per kunde per bank. Flere kontoer i samme bank legges sammen. Beløpet over taket faller utenfor den vanlige garantien. I 2026 er taket 2 millioner kroner. Enkelte innskudd fra boligsalg og andre særlige livshendelser kan være dekket utover taket i en periode.",
-    ["innskuddsdekning", "rentenetto"],
-    "2 millioner kroner per kunde per bank i 2026. Sjekk Bankenes sikringsfond."
+    "Garantien gjelder innskudd, ikke aksjer og fondsandeler. For en kunde i en norsk bank i Norge dekker den fra første krone og opptil {{sats:innskuddsgaranti}} per kunde per bank. Flere kontoer i samme bank legges sammen. Beløpet over taket faller utenfor den vanlige garantien. Enkelte innskudd fra boligsalg og andre særlige livshendelser kan være dekket utover taket i en periode.",
+    ["innskuddsdekning", "rentenetto"]
   ),
   c(
     "rentemargin",
@@ -940,9 +937,8 @@ export const extraConcepts: Concept[] = [
     "Adjustment factor for equity income",
     "personlig",
     "Faktoren som løfter aksjegevinst og utbytte før skatten på alminnelig inntekt regnes.",
-    "Skatten på alminnelig inntekt er flat. For at skatten på aksjeinntekt skal bli høyere, ganges gevinst og utbytte med en faktor etter at skjermingsfradraget er trukket fra. Tap oppjusteres på samme måte. Skatteetaten gjør det i skattemeldingen. For inntektsåret 2026 er faktoren 1,72. Faktoren vedtas for hvert år. Innenfor aksjesparekonto kommer skatten ved uttak, og oppjusteringen brukes da.",
-    ["skjermingsfradrag", "ask", "alminnelig-inntekt"],
-    "1,72 for inntektsåret 2026. Sjekk Skatteetaten."
+    "Skatten på alminnelig inntekt er flat. For at skatten på aksjeinntekt skal bli høyere, ganges gevinst og utbytte med en faktor etter at skjermingsfradraget er trukket fra. Tap oppjusteres på samme måte. Skatteetaten gjør det i skattemeldingen. For inntektsåret er faktoren {{sats:oppjustering}}. Faktoren vedtas for hvert år. Innenfor aksjesparekonto kommer skatten ved uttak, og oppjusteringen brukes da.",
+    ["skjermingsfradrag", "ask", "alminnelig-inntekt"]
   ),
   c(
     "verdsettingsrabatt",
@@ -950,9 +946,8 @@ export const extraConcepts: Concept[] = [
     "Valuation discount",
     "personlig",
     "Nedsettelsen som gjør at aksjer teller lavere enn markedsverdien i grunnlaget for formuesskatt.",
-    "Formuesskatt regnes av nettoformue. Aksjer tas ikke med til full verdi. For 2026 er verdsettingsrabatten på aksjer 20 prosent, så de teller med 80 prosent av grunnlaget. Børsnoterte aksjer tar utgangspunkt i kursen. Rabatten trekkes i skattefastsettingen, og gjeld som hører til aksjene, reduseres også. Satsen vedtas i budsjettet.",
-    ["formuesskatt", "ask"],
-    "20 prosent på aksjer i 2026. Sjekk Skatteetaten."
+    "Formuesskatt regnes av nettoformue. Aksjer tas ikke med til full verdi. Verdsettingsrabatten på aksjer er {{sats:verdsettingsrabatt}}, så de teller med det som er igjen. Børsnoterte aksjer tar utgangspunkt i kursen. Rabatten trekkes i skattefastsettingen, og gjeld som hører til aksjene, reduseres også. Satsen vedtas i budsjettet.",
+    ["formuesskatt", "ask"]
   ),
   c(
     "avskrivning",
@@ -991,3 +986,23 @@ export const extraConcepts: Concept[] = [
     ["volatilitet", "ols", "beta", "sharpe"]
   ),
 ];
+
+const satsPaKonsept: Record<string, string[]> = {
+  bsu: ["bsu-aar", "bsu-samlet", "bsu-fradrag", "bsu-alder"],
+  grunnbelop: ["grunnbelop"],
+  gjeldsgrad: ["utlan-gjeld"],
+  rentefradrag: ["alminnelig-sats"],
+  "alminnelig-inntekt": ["alminnelig-sats"],
+  personfradrag: ["personfradrag"],
+  minstefradrag: ["minstefradrag-sats", "minstefradrag-tak"],
+  egenkapital: ["utlan-belaning"],
+  "strukturelt-underskudd": ["sou-mrd", "sou-pst"],
+  oppjusteringsfaktor: ["oppjustering"],
+  verdsettingsrabatt: ["verdsettingsrabatt"],
+  innskuddsgaranti: ["innskuddsgaranti"],
+};
+
+for (const concept of extraConcepts) {
+  const ids = satsPaKonsept[concept.id];
+  if (ids) concept.satsIds = ids;
+}
