@@ -199,6 +199,61 @@ export const satser: Sats[] = [
     merknad: "Aksjer teller med 80 prosent i formuesgrunnlaget.",
   },
   {
+    id: "formue-bunn",
+    navn: "Bunnfradrag i formuesskatt, én person",
+    kortNavn: "Bunnfradrag",
+    enhet: "kr",
+    verdier: {
+      2025: { verdi: 1_760_000, status: "vedtatt" },
+      2026: { verdi: 1_900_000, status: "vedtatt" },
+    },
+    kilde: `${SKATT}/satser/formuesskatt/`,
+    sistSjekket: SJEKKET,
+    merknad:
+      "Ektefeller får det dobbelte. 2025: 1 760 000 kr, Stortingets skattevedtak 13. desember 2024 nr. 3203. 2026: Stortingets skattevedtak 18. desember 2025 nr. 2747 kapittel 2.",
+  },
+  {
+    id: "formue-sats",
+    navn: "Formuesskatt, samlet sats",
+    kortNavn: "Formuesskatt",
+    enhet: "%",
+    verdier: {
+      2025: { verdi: 1, status: "vedtatt" },
+      2026: { verdi: 1, status: "vedtatt" },
+    },
+    kilde: `${SKATT}/satser/formuesskatt/`,
+    sistSjekket: SJEKKET,
+    merknad:
+      "Når kommunen bruker høyeste sats. 2026: inntil 0,35 prosent kommune pluss 0,65 prosent stat. 2025: inntil 0,525 pluss 0,475. Skatteetaten bruker maks i forskuddet.",
+  },
+  {
+    id: "formue-topp",
+    navn: "Grense for høyere formuesskatt",
+    kortNavn: "Høyere trinn",
+    enhet: "kr",
+    verdier: {
+      2025: { verdi: 20_700_000, status: "vedtatt" },
+      2026: { verdi: 21_500_000, status: "vedtatt" },
+    },
+    kilde: "https://lovdata.no/dokument/STV/forskrift/2025-12-18-2747/KAPITTEL_2",
+    sistSjekket: SJEKKET,
+    merknad: "2025-grensen 20 700 000 kr står i skattevedtak 13. desember 2024 nr. 3203. 2026-grensen står i skattevedtaket lenken peker på.",
+  },
+  {
+    id: "formue-sats-hoy",
+    navn: "Formuesskatt over det øvre trinnet",
+    kortNavn: "Høyere sats",
+    enhet: "%",
+    verdier: {
+      2025: { verdi: 1.1, status: "vedtatt" },
+      2026: { verdi: 1.1, status: "vedtatt" },
+    },
+    kilde: "https://lovdata.no/dokument/STV/forskrift/2025-12-18-2747/KAPITTEL_2",
+    sistSjekket: SJEKKET,
+    merknad:
+      "Når kommunen bruker høyeste sats. 2026: 0,35 pluss 0,75. 2025: 0,525 pluss 0,575, skattevedtak 13. desember 2024 nr. 3203.",
+  },
+  {
     id: "innskuddsgaranti",
     navn: "Innskuddsgaranti per kunde per bank",
     kortNavn: "Innskuddsgaranti",
