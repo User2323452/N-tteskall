@@ -24,7 +24,8 @@ export type InteractiveId =
   | "lanform"
   | "reallonn"
   | "bolig"
-  | "fondkostnad";
+  | "fondkostnad"
+  | "kronekurs";
 
 export type FigureSpec =
   | { type: "photo"; src: string; alt: string; caption: string }
@@ -84,12 +85,7 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Styringsrenten er prisen på penger mellom Norges Bank og bankene. Boliglånsrenten følger etter.",
   },
   inflasjon: { type: "interactive", id: "inflasjon" },
-  kjopkraft: {
-    type: "photo",
-    src: "/bilder/begrep-kjopkraft.jpg",
-    alt: "En liten haug mynter ved siden av en pose med brød, epler og egg.",
-    caption: "Kjøpekraft er hvor mye mat og annet pengene faktisk kjøper, ikke tallet på kontoen.",
-  },
+  kjopkraft: { type: "interactive", id: "reallonn" },
   rentebanen: {
     type: "flow",
     title: "Et anslag, ikke et løfte",
@@ -244,7 +240,8 @@ export const conceptFigures: Record<string, FigureSpec> = {
     a: "Prisveksten",
     b: "Nær 2 prosent",
     link: "skal ligge",
-    caption: "Målet er at inflasjonen over tid skal være nær 2 prosent. Ett enkelt månedstall treffer sjelden prikken.",
+    caption:
+      "Målet er årsvekst i konsumprisene nær {{sats:inflasjon-mal}} over tid. Ett enkelt månedstall treffer sjelden prikken.",
   },
   "fleksibel-inflasjonsstyring": {
     type: "stack",
@@ -252,10 +249,10 @@ export const conceptFigures: Record<string, FigureSpec> = {
     layers: [
       { label: "Finansielle ubalanser", note: "skal kunne motvirkes", tone: "rose" },
       { label: "Aktivitet og sysselsetting", note: "veies med", tone: "amber" },
-      { label: "Inflasjon nær målet", note: "nær 2 prosent over tid", tone: "teal" },
+      { label: "Inflasjon nær målet", note: "over tid, ikke hver måned", tone: "teal" },
     ],
     caption:
-      "Forskrift for pengepolitikken § 3. Styringen vekter inflasjon mot produksjon og sysselsetting, og skal kunne motvirke oppbygging av finansielle ubalanser.",
+      "Bestemmelse om pengepolitikken § 2. Styringen vekter prisvekst nær {{sats:inflasjon-mal}} mot produksjon og sysselsetting, og skal kunne motvirke oppbygging av finansielle ubalanser.",
   },
   ppr: {
     type: "flow",
@@ -270,13 +267,14 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption: "Forenklet kjede. Renta virker også via kronen og via det folk venter seg. Figuren er ikke en prognose.",
   },
   pengepolitikk: {
-    type: "compare",
-    title: "To ulike spor",
-    leftLabel: "Pengepolitikk",
-    left: "Norges Bank setter renta og styrer likviditeten i kronemarkedet.",
-    rightLabel: "Finanspolitikk",
-    right: "Stortinget og regjeringen bestemmer skatt og statsbudsjett, inkludert bruk av oljepenger.",
-    caption: "Begge påvirker økonomien. De bestemmes av ulike organer, og ligger på ulike steder på kartet.",
+    type: "stack",
+    title: "Pengepolitikken i tre linjer",
+    layers: [
+      { label: "Eksempel", note: "renta opp, lånet blir dyrere", tone: "amber" },
+      { label: "Verktøy", note: "styringsrenten", tone: "teal" },
+      { label: "Hvem", note: "Norges Bank", tone: "blue" },
+    ],
+    caption: "Pengepolitikk er renten Norges Bank setter. Statsbudsjettet er et annet spor.",
   },
   produksjonsgap: {
     type: "compare",
@@ -511,12 +509,7 @@ export const conceptFigures: Record<string, FigureSpec> = {
     ],
     caption: "Høyere Sharpe betyr mer meravkastning per enhet svingning. To porteføljer med lik avkastning: den roligste vinner på dette målet.",
   },
-  kronekurs: {
-    type: "photo",
-    src: "/bilder/begrep-kronekurs.jpg",
-    alt: "To stabler mynter, en gullfarget og en sølvfarget, på lin.",
-    caption: "Kronekursen er prisen på norske kroner mot andre valutaer. Styrkes kronen, får du mer utenlandsk valuta for den.",
-  },
+  kronekurs: { type: "interactive", id: "kronekurs" },
   rentenetto: {
     type: "formula",
     title: "Det banken tjener på renten",
@@ -713,9 +706,10 @@ export const conceptFigures: Record<string, FigureSpec> = {
   },
   importpriser: {
     type: "flow",
-    title: "Kronen og varene utenfra",
-    steps: ["Svakere krone", "Dyrere import", "Høyere priser i KPI"],
-    caption: "En svakere krone gjør utenlandske varer dyrere i kroner. Det er en av kanalene fra valutakurs til inflasjon.",
+    title: "Fra europris til kroner",
+    steps: ["Pris i euro", "Kronekurs", "Pris i kroner"],
+    caption:
+      "Importprisen er den utenlandske prisen i kroner. Eksempel, ikke dagens kurs: 100 euro til 11 kroner er 1 100 kroner, før frakt og avgift.",
   },
   eos: {
     type: "pair",
@@ -772,7 +766,8 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "flow",
     title: "Fra valuta til pris",
     steps: ["Kronekurs", "Importpris", "KPI"],
-    caption: "Svakere krone løfter importprisene i kroner. Det kan løfte KPI. Rekkefølgen er poenget, ikke en prognose.",
+    caption:
+      "Importert inflasjon er virkningen på KPI. Importprisen er hva varen koster i kroner. Rekkefølgen er poenget, ikke en prognose.",
   },
   "tilbud-og-ettersporsel": {
     type: "sketch",

@@ -21,8 +21,9 @@ export const extraConcepts: Concept[] = [
     "Consumer price index (CPI)",
     "makro",
     "SSBs indeks for prisutviklingen på varene og tjenestene husholdningene kjøper.",
-    "KPI følger en handlekurv over tid. Tolvmånedersveksten er det vanlige målet når nyhetene sier at inflasjonen er så og så høy. Enkeltpriser kan hoppe uten at hele indeksen gjør det samme.",
-    ["inflasjon", "kpi-jae", "kjopkraft"]
+    "KPI følger en handlekurv over tid. Koster kurven 1 000 kroner i fjor og 1 030 kroner i år, er prisveksten 3 prosent. Tolvmånedersveksten er tallet nyhetene bruker. Indeksen i basisåret er 100, og referansen er {{sats:kpi-basis}}. SSB publiserer KPI den 10. i hver måned.",
+    ["inflasjon", "kpi-jae", "kjopkraft"],
+    "Én vare kan hoppe. KPI er hele kurven."
   ),
   c(
     "kpi-jae",
@@ -30,18 +31,19 @@ export const extraConcepts: Concept[] = [
     "CPI-ATE",
     "makro",
     "KPI justert for avgiftsendringer og uten energivarer. Ofte brukt som mål på underliggende prisvekst.",
-    "Strømpriser og avgifter svinger av grunner som ikke alltid sier noe om presset i økonomien. KPI-JAE demper den støyen. Norges Bank ser på flere mål samtidig.",
-    ["kpi", "inflasjon", "inflasjonsmal"]
+    "J står for justert for avgiftsendringer, og AE for uten energivarer. Strøm og avgifter kan hoppe uten at presset i økonomien har endret seg. Derfor brukes KPI-JAE som et blikk på den underliggende prisveksten. En vanlig misforståelse er at den erstatter KPI. Norges Bank ser på begge.",
+    ["kpi", "inflasjon", "inflasjonsmal"],
+    "J er avgifter. AE er uten energi."
   ),
   c(
     "inflasjonsmal",
     "Inflasjonsmål",
     "Inflation target",
     "makro",
-    "Operativt mål for pengepolitikken: konsumprisveksten skal over tid ligge nær 2 prosent.",
-    "Målet er et anker for lønns- og prisfastsetting, ikke et krav om at KPI treffer 2 prosent hver måned.",
+    "Det banken styrer etter i praksis: prisveksten skal over tid ligge nær 2 prosent.",
+    "Det operative målet er årsvekst i konsumprisene nær {{sats:inflasjon-mal}} over tid. Litt prisvekst holder avstand til prisfall, der folk kan utsette kjøp. Et fast tall gjør det lettere å planlegge lønn og priser. En vanlig misforståelse er at KPI skal treffe målet hver måned.",
     ["inflasjon", "fleksibel-inflasjonsstyring", "styringsrenten"],
-    "2 prosent er ankeret, ikke en månedlig fasit."
+    "Målet er ankeret, ikke en månedlig fasit."
   ),
   c(
     "fleksibel-inflasjonsstyring",
@@ -49,17 +51,19 @@ export const extraConcepts: Concept[] = [
     "Flexible inflation targeting",
     "makro",
     "Pengepolitikken vekter inflasjon mot produksjon og sysselsetting, og skal kunne motvirke oppbygging av finansielle ubalanser.",
-    "Banken prøver ikke å presse inflasjonen tilbake på én måned hvis det ville gitt et unødvendig hopp i ledigheten. Avveiningen gjøres over en horisont på noen år. Forskrift for pengepolitikken § 3 sier at styringen også skal kunne motvirke oppbygging av finansielle ubalanser. Inflasjonsmålet er nær 2 prosent over tid.",
-    ["inflasjonsmal", "produksjonsgap", "styringsrenten"]
+    "Finansielle ubalanser er gjeld og boligpriser som vokser for fort. Banken veier prisvekst mot produksjon og sysselsetting, og skal kunne motvirke en slik oppbygging. Avveiningen gjøres over noen år. Bestemmelse om pengepolitikken § 2 sier dette. En vanlig misforståelse er at prisveksten skal tvinges tilbake på én måned.",
+    ["inflasjonsmal", "produksjonsgap", "styringsrenten"],
+    "Prisvekst og ledighet kan peke hver sin vei."
   ),
   c(
     "ppr",
     "Pengepolitisk rapport",
     "Monetary Policy Report",
     "makro",
-    "Norges Banks rapport med analyser og rentebane, publisert flere ganger i året.",
-    "Rapporten forklarer vurderingen bak rentebeslutningen. Rentebanen i rapporten er et anslag gitt informasjonen der og da, ikke et løfte.",
-    ["rentebanen", "styringsrenten"]
+    "Norges Banks rapport med analyser og rentebane, fire ganger i året.",
+    "Den kommer i mars, juni, september og desember, sammen med rentemøtet de månedene. Rapporten forklarer vurderingen bak rentebeslutningen. Rentebanen i den er et anslag, ikke et løfte.",
+    ["rentebanen", "styringsrenten"],
+    "Fire ganger i året. Anslag, ikke løfte."
   ),
   c(
     "transmisjon",
@@ -67,17 +71,19 @@ export const extraConcepts: Concept[] = [
     "Transmission mechanism",
     "makro",
     "Kanalene fra en endring i styringsrenten til aktivitet og priser.",
-    "Etterspørselskanalen: høyere rente demper forbruk og investering. Valutakurskanalen: renta kan påvirke krona og dermed importerte priser. Forventningskanalen: troen på målet setter seg i lønns- og prisfastsetting.",
-    ["styringsrenten", "inflasjon"]
+    "Etterspørselskanalen: høyere rente gjør lånet dyrere, så du bruker mindre. Valutakurskanalen: renta kan styrke kronen, og en vare i euro koster da færre kroner. Forventningskanalen: troen på målet setter seg i lønnsoppgjør. En vanlig misforståelse er at prislappen endrer seg samme dag.",
+    ["styringsrenten", "inflasjon"],
+    "Renta, så etterspørsel, krone og forventninger. Deretter prisene."
   ),
   c(
     "pengepolitikk",
     "Pengepolitikk",
     "Monetary policy",
     "makro",
-    "Norges Banks styring av rente og likviditet i kronemarkedet for å nå inflasjonsmålet.",
-    "Verktøyet folk møter, er styringsrenten. Finanspolitikken — statsbudsjettet og bruken av oljepenger — er et annet spor.",
-    ["styringsrenten", "inflasjonsmal", "finanspolitikk"]
+    "Norges Bank setter styringsrenten for å holde prisveksten lav og stabil.",
+    "Verktøyet folk møter, er styringsrenten. På et lån på 3 millioner kroner gir 0,25 prosentpoeng om lag 625 kroner mer i måneden, før rentefradrag. Statsbudsjettet er et annet spor, vedtatt av Stortinget. En vanlig misforståelse er at budsjettet og renta er samme verktøy.",
+    ["styringsrenten", "inflasjonsmal", "finanspolitikk"],
+    "Norges Bank setter renta. Stortinget vedtar budsjettet."
   ),
   c(
     "produksjonsgap",
@@ -85,8 +91,9 @@ export const extraConcepts: Concept[] = [
     "Output gap",
     "makro",
     "Avvik mellom faktisk produksjon og det økonomien kan produsere uten tiltagende inflasjonspress.",
-    "Positivt gap betyr press: aktiviteten er høyere enn det som er holdbart uten at prisene skyter fart. Negativt gap betyr slakk. Gapet er et anslag, ikke et tall du kan lese av en kassalapp.",
-    ["fleksibel-inflasjonsstyring", "inflasjon", "konjunktur", "arbeidsledighet"]
+    "Tenk på økonomien som en motor. Over marsjfart er det press, og prisene kan skyte fart. Under marsjfart er det slakk, med mer ledighet. Gapet er et anslag på avstanden, ikke et tall på en kassalapp.",
+    ["fleksibel-inflasjonsstyring", "inflasjon", "konjunktur", "arbeidsledighet"],
+    "Over marsjfart: press. Under: slakk."
   ),
   c(
     "nbim",
@@ -413,8 +420,9 @@ export const extraConcepts: Concept[] = [
     "NOK exchange rate",
     "marked",
     "Prisen på norske kroner mot andre valutaer.",
-    "Svakere krone vil si flere kroner per euro eller dollar. Kronen styrkes ofte når renta i Norge er høyere enn ute, når oljeprisen er høy, eller når markedene er rolige. Den svekkes når rentedifferansen faller, oljeprisen faller, eller uro sender kapital mot større valutaer. Svakere krone gjør import dyrere. I-44 er Norges Banks handelsvektede indeks, og den stiger når kronen svekker seg. Dette er tendenser, ikke en lov.",
-    ["transmisjon", "inflasjon", "importpriser", "styringsrenten", "eos"]
+    "Svakere krone vil si flere kroner per euro. Kronen styrkes ofte når renta i Norge er høyere enn ute. Den svekkes når den forskjellen faller, eller når uro sender penger mot større valutaer. I-44 er Norges Banks handelsvektede indeks, og den stiger når kronen svekker seg. Dette er tendenser, ikke en lov.",
+    ["transmisjon", "inflasjon", "importpriser", "styringsrenten", "eos"],
+    "Flere kroner per euro: svakere krone."
   ),
   c(
     "rentenetto",
@@ -663,8 +671,9 @@ export const extraConcepts: Concept[] = [
     "Import prices",
     "marked",
     "Prisen i kroner på varer og tjenester vi kjøper fra utlandet.",
-    "Mye import fra EØS-området prises i euro. Kronerprisen er den utenlandske prisen omregnet med kronekursen, pluss frakt og norske avgifter. Svakere krone løfter importprisene og kan løfte KPI. Sterkere krone gjør det motsatte.",
-    ["kronekurs", "inflasjon", "eos", "styringsrenten", "importert-inflasjon"]
+    "Importprisen er den utenlandske prisen omregnet til kroner, pluss frakt og avgift. Eksempel, ikke dagens kurs: 100 euro til 11 kroner er 1 100 kroner. Svakere krone løfter den prisen. En vanlig misforståelse er at prisen i kroner er det samme som KPI.",
+    ["kronekurs", "inflasjon", "eos", "styringsrenten", "importert-inflasjon"],
+    "Prisen i kroner. KPI er et annet tall."
   ),
   c(
     "eos",
@@ -672,8 +681,9 @@ export const extraConcepts: Concept[] = [
     "EEA",
     "marked",
     "Avtalen som knytter Norge til EUs indre marked, uten at Norge er medlem av EU.",
-    "Varer, tjenester, kapital og personer kan i hovedsak bevege seg fritt. De fleste industrivarer handles uten toll mot EU. Landbruk og fisk har unntak, og Norge har egen toll mot land utenfor. Pengepolitikken er fortsatt Norges Banks.",
-    ["kronekurs", "importpriser"]
+    "Varer, tjenester, kapital og personer kan i hovedsak bevege seg fritt. De fleste industrivarer handles uten toll mot EU. Landbruk og fisk har unntak. Pengepolitikken er fortsatt Norges Banks oppgave.",
+    ["kronekurs", "importpriser"],
+    "Indre marked, ikke EU-medlemskap."
   ),
   c(
     "renteniva",
@@ -691,7 +701,8 @@ export const extraConcepts: Concept[] = [
     "makro",
     "Vedvarende fall i det generelle prisnivået.",
     "Inflasjon er at prisnivået stiger, slik at en krone rekker til mindre. Deflasjon er at prisnivået faller over tid. Ett tilbud eller ett hopp ned i strømprisen er ikke deflasjon. Penger du allerede har, rekker da lenger, og kjøp kan bli utsatt fordi folk venter at prisene faller videre.",
-    ["inflasjon", "kjopkraft", "kpi"]
+    ["inflasjon", "kjopkraft", "kpi"],
+    "Prisnivået skal falle, og fallet skal vare."
   ),
   c(
     "reallonn",
@@ -699,8 +710,9 @@ export const extraConcepts: Concept[] = [
     "Real wage",
     "makro",
     "Lønna etter at prisveksten er trukket fra.",
-    "Nominell lønn er kronene på lønnsslippen. Reallønn er hva de kronene rekker til etter prisvekst. Stiger lønna mindre enn KPI, faller reallønna selv om beløpet på slippen er høyere. Lønnsoppgjøret avtaler kroner. Reallønna sier om kjøpekraften fulgte med.",
-    ["lonnsoppgjor", "kjopkraft", "kpi"]
+    "Nominell lønn er kronene på lønnsslippen. Reallønn er hva de kronene rekker til etter prisvekst. Stiger lønna 3 prosent og prisene 4 prosent, faller reallønna. Lønnsoppgjøret avtaler kroner. Reallønna sier om kjøpekraften fulgte med.",
+    ["lonnsoppgjor", "kjopkraft", "kpi"],
+    "Kronene på slippen er nominell lønn. Reallønn er hva de rekker til."
   ),
   c(
     "arbeidsledighet",
@@ -717,8 +729,9 @@ export const extraConcepts: Concept[] = [
     "Business cycle",
     "makro",
     "Svingningen i aktiviteten rundt det økonomien kan holde over tid.",
-    "Høykonjunktur er når aktiviteten ligger over det som er holdbart uten at prispresset bygger seg opp. Lavkonjunktur er når den ligger under, med mer slakk. Produksjonsgapet er anslaget på dette avviket. Trenden er den jevne utviklingen under svingningen.",
-    ["produksjonsgap", "fleksibel-inflasjonsstyring"]
+    "Høykonjunktur er motoren over marsjfart. Lavkonjunktur er den under, med mer slakk. Produksjonsgapet er anslaget på avviket. En vanlig misforståelse er at høykonjunktur betyr at alt er billig.",
+    ["produksjonsgap", "fleksibel-inflasjonsstyring"],
+    "Over marsjfart, eller under."
   ),
   c(
     "noytral-rente",
@@ -726,8 +739,9 @@ export const extraConcepts: Concept[] = [
     "Neutral interest rate",
     "makro",
     "Rentenivået som verken strammer eller slipper opp i økonomien.",
-    "Norges Bank sammenligner styringsrenten med den nøytrale renta når den vurderer om pengepolitikken er stram eller romslig. Ligger styringsrenten over, dempes etterspørselen. Ligger den under, stimuleres den. Nivået er et anslag, ikke en rente du får i banken, og det oppdateres i pengepolitisk rapport.",
-    ["styringsrenten", "ppr", "produksjonsgap"]
+    "Den er som cruisekontroll: renta som verken gir mer gass eller bremser. Ligger styringsrenten over anslaget, dempes etterspørselen. Ligger den under, stimuleres den. Nivået er et anslag i pengepolitisk rapport. En vanlig misforståelse er at dette er renta du får i banken.",
+    ["styringsrenten", "ppr", "produksjonsgap"],
+    "Over linjen strammer. Under linjen slipper opp."
   ),
   c(
     "importert-inflasjon",
@@ -735,8 +749,9 @@ export const extraConcepts: Concept[] = [
     "Imported inflation",
     "makro",
     "Prisvekst som kommer fra varer og tjenester kjøpt i utlandet.",
-    "En svakere krone gjør importen dyrere i kroner. Høyere importpriser kan løfte KPI selv om presset hjemme er uendret. Sterkere krone virker den andre veien. Importert inflasjon er denne veien, fra kronekurs til importpris og videre til prisene husholdningene møter.",
-    ["kronekurs", "importpriser", "kpi", "inflasjon"]
+    "Importprisen er hva varen koster i kroner. Importert inflasjon er når den prisen løfter KPI, selv om presset hjemme er uendret. Svakere krone kan starte den veien. En vanlig misforståelse er at enhver dyrere importvare er inflasjon samme dag.",
+    ["kronekurs", "importpriser", "kpi", "inflasjon"],
+    "Pris først. KPI er virkningen."
   ),
   c(
     "tilbud-og-ettersporsel",
@@ -1213,6 +1228,70 @@ const eksempel: Record<string, { example: string; forYou: string }> = {
     example: "Én handel har ett gebyr. En handel i dollar har gebyr pluss veksling.",
     forYou: "Spør hva handelen koster før du kjøper ofte, og hva vekslingen koster hvis fondet er i annen valuta.",
   },
+  kpi: {
+    example: "1 000 kroner i fjor og 1 030 kroner i år er 3 prosent prisvekst.",
+    forYou: "Når nyhetene sier at prisene har steget, er det som regel denne kurven.",
+  },
+  "kpi-jae": {
+    example: "Strømprisen hopper. KPI kan hoppe med, mens KPI-JAE ser forbi energien.",
+    forYou: "Bruk den når du vil se prisveksten uten strøm og avgiftshopp.",
+  },
+  inflasjonsmal: {
+    example: "Målet er nær 2 prosent over tid. Én enkelt måned treffer sjelden prikken.",
+    forYou: "Lønn og priser planlegges mot dette ankeret, ikke mot forrige måneds tall.",
+  },
+  "fleksibel-inflasjonsstyring": {
+    example: "Prisveksten er over målet, og ledigheten stiger. Banken veier begge.",
+    forYou: "Derfor kan renta stå stille selv om prisene er over målet en periode.",
+  },
+  ppr: {
+    example: "Rapporten kommer i mars, juni, september og desember. Banen kan flyttes hver gang.",
+    forYou: "Les den som et anslag, ikke som et løfte om renta neste år.",
+  },
+  transmisjon: {
+    example: "Høyere rente gjør lånet dyrere, og en sterkere krone gjør eurovaren billigere i kroner.",
+    forYou: "Derfor merker du renteendringen på lånet før du ser den på prislappen.",
+  },
+  pengepolitikk: {
+    example: "0,25 prosentpoeng på 3 millioner kroner er om lag 625 kroner mer i måneden, før rentefradrag.",
+    forYou: "Renta Norges Bank setter, kan trekke med seg lånet ditt. Budsjettet er et annet vedtak.",
+  },
+  produksjonsgap: {
+    example: "Motoren over marsjfart er press. Under marsjfart er slakk.",
+    forYou: "Press kan bety høyere rente. Slakk kan bety det motsatte.",
+  },
+  kronekurs: {
+    example: "100 euro til 11 kroner er 1 100 kroner, før frakt og avgift. Eksemplet er ikke dagens kurs.",
+    forYou: "Flere kroner per euro betyr at ferie og import koster mer.",
+  },
+  importpriser: {
+    example: "100 euro til 11 kroner er 1 100 kroner, før frakt og avgift.",
+    forYou: "Se på prisen i kroner før du sier at KPI har steget.",
+  },
+  eos: {
+    example: "En jakke sydd i et EØS-land kan komme inn uten toll. En landbruksvare har ofte unntak.",
+    forYou: "Derfor er mange varer i butikken handlet mot EU, mens mat og fisk har egne regler.",
+  },
+  deflasjon: {
+    example: "En handlekurv til 1 000 kroner som koster 970 kroner året etter, er et eksempel på prisfall.",
+    forYou: "Ett tilbud i butikken er ikke det samme som at prisnivået faller.",
+  },
+  reallonn: {
+    example: "Lønn opp 3 prosent og priser opp 4 prosent. Reallønna faller.",
+    forYou: "Sammenlign lønnstillegget med prisveksten, ikke bare med fjorårets kroner.",
+  },
+  konjunktur: {
+    example: "Butikkene går for fullt og ledigheten er lav. Det er høykonjunktur.",
+    forYou: "Høykonjunktur kan presse prisene. Lavkonjunktur gir mer slakk.",
+  },
+  "noytral-rente": {
+    example: "Styringsrenten over anslaget bremser. Under anslaget gir den gass. Tallet er et anslag.",
+    forYou: "Det er ikke renta på boliglånet ditt.",
+  },
+  "importert-inflasjon": {
+    example: "Kronen svekkes, og varen koster flere kroner. KPI kan følge etter.",
+    forYou: "Den første endringen er prisen i kroner. KPI er virkningen, hvis den kommer.",
+  },
 };
 
 for (const concept of extraConcepts) {
@@ -1238,6 +1317,8 @@ const satsPaKonsept: Record<string, string[]> = {
   oppjusteringsfaktor: ["oppjustering"],
   verdsettingsrabatt: ["verdsettingsrabatt"],
   innskuddsgaranti: ["innskuddsgaranti"],
+  kpi: ["kpi-basis"],
+  inflasjonsmal: ["inflasjon-mal"],
 };
 
 for (const concept of extraConcepts) {
