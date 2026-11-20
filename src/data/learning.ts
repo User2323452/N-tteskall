@@ -11,11 +11,12 @@ const coreConcepts: Concept[] = [
     term: "Styringsrenten",
     english: "Policy rate",
     category: "makro",
-    definition:
-      "Renta bankene får på innskudd i Norges Bank — hovedverktøyet for å styre inflasjonen.",
+    definition: "Renta bankene får på innskudd i Norges Bank.",
     explanation:
-      "Når Norges Bank hever styringsrenten, blir det dyrere for bankene å låne og mer attraktivt å plassere penger i sentralbanken. Bankene hever vanligvis utlåns- og innskuddsrenter. Det demper etterspørsel og presser inflasjonen ned over tid. Motsatt når styringsrenten senkes.",
-    tip: "Tenk «pris på penger» i banksystemet — ikke boliglånsrenta direkte, men den som trekker boliglånsrenta med seg.",
+      "Den er hovedverktøyet for å holde prisveksten lav og stabil. Når den heves, blir det dyrere for bankene, og boliglånsrenta følger vanligvis etter. På et lån på 3 millioner kroner gir 0,25 prosentpoeng om lag 625 kroner mer i renteutgift i måneden, før rentefradrag. Det demper etterspørselen. En vanlig misforståelse er at tallet er boliglånsrenta di.",
+    tip: "Prisen bankene møter. Boliglånet ditt ligger vanligvis høyere.",
+    example: "3 millioner kroner og 0,25 prosentpoeng gir 7 500 kroner i året, om lag 625 kroner i måneden, før rentefradrag.",
+    forYou: "Når styringsrenten flyttes, merker du det på boliglånet og sparerenta, med bankens påslag oppå.",
     relatedIds: ["inflasjon", "rentebanen", "nibor", "renteniva"],
   },
   {
@@ -23,11 +24,12 @@ const coreConcepts: Concept[] = [
     term: "Inflasjon",
     english: "Inflation",
     category: "makro",
-    definition:
-      "Vedvarende oppgang i det generelle prisnivået — pengene kjøper mindre over tid.",
+    definition: "Vedvarende oppgang i det generelle prisnivået, så pengene kjøper mindre over tid.",
     explanation:
-      "I Norge måles inflasjon blant annet med konsumprisindeksen (KPI). Norges Banks mål er at inflasjonen over tid skal være nær 2 prosent. Høy inflasjon svekker kjøpekraft; for lav inflasjon eller deflasjon kan hemme økonomien. Pengepolitikken brukes for å holde inflasjonen stabil.",
-    tip: "Skill nominell lønn (tallet på lønnsslippen) fra reell lønn (hva du faktisk får kjøpt).",
+      "Koster den samme handlekurven 1 000 kroner i fjor og 1 030 kroner i år, er prisveksten 3 prosent. Det er et eksempel på det KPI måler. Høy prisvekst gjør at lønn og sparing rekker til mindre. En vanlig misforståelse er at én dyrere vare er inflasjon. Inflasjon er at prisene samlet stiger.",
+    tip: "Inflasjon er at nesten alt blir dyrere, ikke at én vare blir det.",
+    example: "1 000 kroner i fjor og 1 030 kroner i år er 3 prosent prisvekst.",
+    forYou: "Se prisveksten ved siden av lønnsoppgjøret. Kronene på slippen sier ikke hele historien.",
     relatedIds: ["styringsrenten", "kjopkraft", "deflasjon"],
   },
   {
@@ -35,10 +37,12 @@ const coreConcepts: Concept[] = [
     term: "Kjøpekraft",
     english: "Purchasing power",
     category: "makro",
-    definition:
-      "Hvor mye varer og tjenester du får for en gitt mengde penger.",
+    definition: "Hvor mye varer og tjenester du får for pengene.",
     explanation:
-      "Hvis prisene stiger raskere enn inntekten din, faller kjøpekraften. Inflasjonsjusterte (reelle) størrelser brukes for å sammenligne over tid. For husholdninger merkes kjøpekraft særlig i mat, energi, husleie og renter.",
+      "Kjøpekraft er hva pengene rekker til. Stiger prisene 4 prosent og lønna 3 prosent, rekker lønna til mindre. Det merkes i mat, husleie og regninger. En vanlig misforståelse er at flere kroner på slippen betyr at du kan kjøpe mer.",
+    tip: "Se på prisene og lønna sammen.",
+    example: "Lønn opp 3 prosent og priser opp 4 prosent. Kjøpekraften faller.",
+    forYou: "Et lønnstillegg som er mindre enn prisveksten, gir deg mindre i butikken.",
     relatedIds: ["inflasjon", "reallonn"],
   },
   {
@@ -46,10 +50,12 @@ const coreConcepts: Concept[] = [
     term: "Rentebanen",
     english: "Policy rate path",
     category: "makro",
-    definition:
-      "Norges Banks prognose for styringsrenten framover, publisert i Pengepolitisk rapport.",
+    definition: "Norges Banks prognose for styringsrenten framover.",
     explanation:
-      "Rentebanen er ikke et løfte, men et anslag gitt dagens informasjon. Markedet og bankene bruker den til å danne forventninger. Når Norges Bank endrer rentebanen, påvirkes ofte lengre renter og kronekursen selv om styringsrenten i dag står stille.",
+      "Den publiseres i Pengepolitisk rapport, fire ganger i året. Markedet bruker den til å danne forventninger, også for renter lenger fram. Banen er et anslag gitt dagens informasjon. En vanlig misforståelse er at den er et løfte om boliglånsrenta.",
+    tip: "Anslag, ikke kontrakt.",
+    example: "Banen kan vise lavere rente neste år. Neste rapport kan flytte den.",
+    forYou: "Banken din ser på banen når den priser fastrente. Banen er ikke din avtale.",
     relatedIds: ["styringsrenten", "inflasjon"],
   },
   {
@@ -245,11 +251,15 @@ export const lessons: Lesson[] = [
     order: 0,
     summary: "Prisnivå, KPI og hva en krone faktisk rekker til.",
     body: [
-      "Inflasjon er en vedvarende økning i det generelle prisnivået. Enkeltpriser hopper opp og ned hele tiden. Inflasjon handler om at prisene samlet sett stiger, slik at en krone rekker til mindre.",
-      "SSB måler dette med konsumprisindeksen (KPI). Indeksen følger en handlekurv av varer og tjenester husholdningene kjøper. Når nyhetene sier at prisveksten er så og så høy, er det som regel tolvmånedersveksten i KPI.",
-      "Kjøpekraft er hvor mye du får for pengene. [[nominell|Nominelle]] kroner er beløpet på konto eller lønnsslipp. [[reell|Reelt]] er det samme beløpet etter prisvekst. Stiger prisene raskere enn lønna, faller kjøpekraften.",
+      "Handlekurven koster mer enn i fjor. Hvor mye mer er inflasjon?",
+      "Inflasjon er at prisene samlet stiger, så en krone rekker til mindre. Én vare som hopper, er ikke hele bildet.",
+      "SSB måler det med konsumprisindeksen (KPI). Koster handlekurven 1 000 kroner i fjor og 1 030 kroner i år, er prisveksten 3 prosent. Det er et eksempel. Når nyhetene sier at prisveksten er så og så høy, er det som regel tolvmånedersveksten.",
+      "Kjøpekraft er hvor mye du får for pengene. [[nominell|Nominelle]] kroner er beløpet på lønnsslippen. [[reell|Reelt]] er det samme etter prisvekst. Indeksen i basisåret er 100. SSB publiserer KPI den 10. i hver måned.",
+      "Neste leksjon er målet banken styrer etter.",
     ],
     conceptIds: ["inflasjon", "kpi", "kjopkraft"],
+    figureConceptId: "kpi",
+    satsIds: ["kpi-basis"],
     quiz: {
       question: "Hva måler konsumprisindeksen (KPI)?",
       options: [
@@ -274,13 +284,18 @@ export const lessons: Lesson[] = [
     pathId: "norsk-pengepolitikk",
     title: "Inflasjonsmålet",
     order: 1,
-    summary: "Nær 2 prosent over tid — og fleksibelt.",
+    summary: "Nær målet over tid, og fleksibelt.",
     body: [
-      "Norges Bank har et [[operativt-mal|operativt mål]] om at konsumprisveksten skal ligge nær 2 prosent over tid. Tallet er et anker for forventningene. Det er ikke et krav om at KPI treffer 2 prosent hver eneste måned.",
-      "Styringen er fleksibel. Banken legger også vekt på produksjon og sysselsetting, og styringen skal kunne motvirke oppbygging av [[finansielle-ubalanser|finansielle ubalanser]]. Den prøver ikke å presse inflasjonen tilbake på én måned hvis det ville gitt et unødvendig hopp i ledigheten.",
-      "KPI-JAE er KPI uten energivarer og justert for avgiftsendringer. Den brukes ofte når man vil se den underliggende prisveksten, fordi strøm og avgifter svinger uten at det alltid sier noe om presset i økonomien.",
+      "Prisene steg mer enn du hadde ventet. Hva styrer Norges Bank etter?",
+      "Det [[operativt-mal|operative målet]] er det banken styrer etter i praksis: årsveksten i konsumprisene skal over tid ligge nær {{sats:inflasjon-mal}}. Tallet er et anker. KPI må ikke treffe det hver eneste måned.",
+      "Målet er ikke null. Litt prisvekst holder avstand til prisfall. Faller prisene vedvarende, kan folk utsette kjøp fordi de venter at det blir billigere. Et fast tall gjør det lettere å planlegge.",
+      "Styringen er fleksibel. Banken veier også produksjon og sysselsetting, og skal kunne motvirke [[finansielle-ubalanser|finansielle ubalanser]], gjeld og boligpriser som vokser for fort. Den prøver ikke å tvinge prisveksten tilbake på én måned hvis ledigheten da hopper unødvendig.",
+      "KPI-JAE er KPI justert for avgiftsendringer (J) og uten energivarer (AE). Strøm og avgifter kan hoppe uten at det sier noe om presset i økonomien.",
+      "Neste leksjon er renta bankene får i Norges Bank.",
     ],
     conceptIds: ["inflasjonsmal", "fleksibel-inflasjonsstyring", "kpi-jae"],
+    figureConceptId: "inflasjonsmal",
+    satsIds: ["inflasjon-mal"],
     quiz: {
       question: "Hva ligger i fleksibel inflasjonsstyring?",
       options: [
@@ -305,13 +320,30 @@ export const lessons: Lesson[] = [
     pathId: "norsk-pengepolitikk",
     title: "Styringsrenten",
     order: 2,
-    summary: "Foliorenten — og hvorfor boliglånet ditt ligger høyere.",
+    summary: "Foliorenten, og hvorfor boliglånet ditt ligger høyere.",
     body: [
-      "Styringsrenten er [[foliorente|foliorenten]]: renta bankene får på innskudd i Norges Bank, opp til en [[kvote]]. Det er hovedverktøyet i pengepolitikken.",
-      "Pengepolitikk er styring av rente og [[likviditet]] i kronemarkedet. Når styringsrenten settes opp, blir det dyrere for bankene å finansiere seg, og utlånsrentene følger vanligvis etter. Sparing blir litt mer attraktivt, og nytt lån litt dyrere.",
-      "Boliglånsrenta ligger normalt over styringsrenten. Banken har egne kostnader, påslag og risiko. Styringsrenten trekker boliglånsrenta med seg, men de to tallene er ikke like.",
+      "Boliglånet ble dyrere. Hvilken rente trakk det med seg?",
+      "Styringsrenten er [[foliorente|foliorenten]], renta bankene får på innskudd i Norges Bank. Pengepolitikk er at Norges Bank setter den renta for å holde prisveksten lav og stabil.",
+      "Regneeksempel, ikke renta du har: øker renta [[prosentpoeng|0,25 prosentpoeng]] på et lån på 3 millioner kroner, blir renteutgiften om lag 625 kroner høyere i måneden, før rentefradrag. 3 millioner ganger 0,25 prosentpoeng er 7 500 kroner i året. 7 500 delt på 12 er 625.",
+      "Boliglånsrenta ligger vanligvis over styringsrenten. Banken har egne kostnader og påslag. De to tallene er ikke like.",
+      "Neste leksjon er veien fra renta til prislappen.",
     ],
     conceptIds: ["styringsrenten", "pengepolitikk"],
+    figureConceptId: "styringsrenten",
+    quiz: {
+      question:
+        "Renta på et lån på 3 millioner kroner øker med 0,25 prosentpoeng. Om lag hvor mye mer blir renteutgiften i måneden, før rentefradrag?",
+      options: ["Om lag 75 kroner", "Om lag 7 500 kroner", "Ingenting. Fradraget tar hele økningen.", "Om lag 625 kroner"],
+      answerIndex: 3,
+      whyWrong: [
+        "0,25 prosentpoeng av 3 millioner er 7 500 kroner i året. I måneden er det 625.",
+        "7 500 kroner er årsbeløpet. Måneden er det delt på 12.",
+        "Rentefradraget kommer i skatten etterpå. Renteutgiften på lånet øker likevel.",
+        "",
+      ],
+      explain:
+        "3 millioner ganger 0,25 prosentpoeng er 7 500 kroner i året. Delt på 12 er det 625 kroner i måneden, før rentefradrag. Det er et regneeksempel.",
+    },
   },
   {
     id: "pp-4",
@@ -320,25 +352,48 @@ export const lessons: Lesson[] = [
     order: 3,
     summary: "Hvordan en renteendring når prisene.",
     body: [
-      "En renteendring virker ikke direkte på prislappen i butikken. Den går gjennom flere kanaler. Det kalles transmisjonsmekanismen.",
-      "Etterspørselskanalen: høyere rente demper forbruk og investering. Valutakurskanalen: høyere rente kan styrke krona, slik at importerte varer blir billigere i kroner — og omvendt når renta settes ned. Forventningskanalen: hvis husholdninger og bedrifter tror at inflasjonen holdes nær målet, setter det seg i lønns- og prisfastsetting.",
-      "Figuren under er en forenklet kjede, en pedagogisk modell. Den er ikke en prognose for hva som skjer neste kvartal.",
+      "Renta ble satt opp. Hvorfor endrer ikke prislappen seg samme dag?",
+      "En renteendring går gjennom flere kanaler. Det kalles transmisjonsmekanismen.",
+      "Etterspørselskanalen: høyere rente gjør lånet dyrere, så du bruker mindre i butikken. Valutakurskanalen: høyere rente kan styrke kronen, og en vare priset i euro koster da færre kroner. Forventningskanalen: tror folk at prisveksten holdes nær målet, legger lønnsoppgjøret ikke inn en ekstra spiral.",
+      "Figuren er en forenklet kjede, ikke en prognose for neste kvartal.",
+      "Neste leksjon er anslaget for renta fremover.",
     ],
     conceptIds: ["transmisjon"],
-    visual: "transmisjon",
+    figureConceptId: "transmisjon",
+    quiz: {
+      question: "Renta settes opp, og kronen styrkes. Hva kan skje med en vare som er priset i euro?",
+      options: [
+        "Den koster færre kroner",
+        "Den koster flere kroner",
+        "Europrisen settes av Norges Bank",
+        "Varen blir tollfri",
+      ],
+      answerIndex: 0,
+      whyWrong: [
+        "",
+        "En sterkere krone gjør utenlandsk valuta billigere i kroner, ikke dyrere.",
+        "Prisen i euro settes av den som selger varen. Norges Bank setter styringsrenten.",
+        "Toll følger handelsavtalen. En sterkere krone fjerner den ikke.",
+      ],
+      explain:
+        "Valutakurskanalen: høyere rente kan styrke kronen, og da koster en vare priset i euro færre kroner.",
+    },
   },
   {
     id: "pp-5",
     pathId: "norsk-pengepolitikk",
     title: "Rentebanen og Pengepolitisk rapport",
     order: 4,
-    summary: "Et anslag — ikke et løfte.",
+    summary: "Et anslag, ikke et løfte.",
     body: [
-      "Rentebanen er Norges Banks prognose for styringsrenten de neste årene. Den oppdateres når ny informasjon kommer. Markedet reagerer ofte på endringen i banen, ikke bare på renta som gjelder i dag.",
-      "Prognosen publiseres i Pengepolitisk rapport, flere ganger i året, sammen med vurderingen fra rentemøtet. Komiteen setter renta. Rapporten forklarer analysen.",
-      "Usikkerheten er stor. Jo lenger fram i tid, jo videre er spennet. Banen er et arbeidsverktøy, ikke en kontrakt med boliglånskunden.",
+      "Banken sa at renta skal ned neste år. Er det et løfte?",
+      "Rentebanen er Norges Banks prognose for styringsrenten de neste årene. Den er et anslag gitt dagens informasjon, ikke en kontrakt med deg.",
+      "Prognosen publiseres i Pengepolitisk rapport fire ganger i året, i mars, juni, september og desember. Komiteen setter renta. Rapporten forklarer analysen.",
+      "Jo lenger fram, jo videre er spennet. Banen flyttes når ny informasjon kommer.",
+      "Neste leksjon er når hensynene peker hver sin vei.",
     ],
     conceptIds: ["rentebanen", "ppr"],
+    figureConceptId: "rentebanen",
     quiz: {
       question: "Hva er rentebanen?",
       options: [
@@ -363,29 +418,66 @@ export const lessons: Lesson[] = [
     pathId: "norsk-pengepolitikk",
     title: "Avveiningen",
     order: 5,
-    summary: "Inflasjon og aktivitet peker ikke alltid samme vei.",
+    summary: "Prisvekst og aktivitet peker ikke alltid samme vei.",
     body: [
-      "Fleksibel inflasjonsstyring er en avveining. Høy prisvekst og høy aktivitet taler for høyere rente. Stigende ledighet og inflasjon under målet taler for lavere rente. Forskrift for pengepolitikken § 3 sier i tillegg at styringen skal kunne motvirke oppbygging av [[finansielle-ubalanser|finansielle ubalanser]]. Ofte peker hensynene hver sin vei, og komiteen må veie dem over horisonten.",
-      "Produksjonsgapet er et anslag på avviket mellom faktisk produksjon og det økonomien kan produsere uten at inflasjonspresset bygger seg opp. Positivt gap betyr press. Negativt gap betyr slakk.",
-      "Renta treffer husholdningene særlig via boliglån, forbruk og kronekurs. Hvor mye som brukes over statsbudsjettet, er et annet spor.",
+      "Prisveksten er over målet, og ledigheten stiger. Hva skal banken veie?",
+      "Fleksibel inflasjonsstyring er en avveining. Høy prisvekst taler for høyere rente. Stigende ledighet taler for lavere rente. Styringen skal også kunne motvirke [[finansielle-ubalanser|finansielle ubalanser]], gjeld og boligpriser som vokser for fort.",
+      "Tenk på økonomien som en motor. Produksjonsgapet sier om motoren går over eller under marsjfart. Over marsjfart er det press. Under er det slakk. Den svingningen rundt marsjfart er konjunkturen.",
+      "Renta treffer deg særlig via boliglån og forbruk. Hvor mye som brukes over statsbudsjettet, er et annet spor.",
+      "Neste leksjon er hva lønna rekker til, og hva prisfall gjør.",
     ],
-    conceptIds: ["fleksibel-inflasjonsstyring", "produksjonsgap"],
+    conceptIds: ["fleksibel-inflasjonsstyring", "produksjonsgap", "konjunktur"],
+    figureConceptId: "produksjonsgap",
     quiz: {
-      question: "Hvem setter styringsrenten i Norge?",
+      question: "Inflasjonen er over målet, men ledigheten stiger raskt. Hva må Norges Bank veie?",
       options: [
-        "Finansdepartementet",
-        "Finanstilsynet",
-        "Oslo Børs",
-        "Norges Bank",
+        "Bare å sette renta så høyt som mulig",
+        "Bare å få ledigheten til null denne måneden",
+        "Ingenting. Målet er en bestemt kronekurs",
+        "Prisveksten mot ledigheten, over tid",
       ],
       answerIndex: 3,
       whyWrong: [
-        "Finansdepartementet fastsetter blant annet utlånsforskriften, ikke styringsrenten.",
-        "Finanstilsynet fører tilsyn. Det setter ikke styringsrenten.",
-        "Oslo Børs er en markedsplass, ikke den som setter renta.",
+        "Høy rente demper prisveksten, og den kan samtidig øke ledigheten. Begge hensynene veies.",
+        "Ledigheten er ett hensyn. Prisveksten er et annet, og avveiningen gjøres over tid.",
+        "Norges Bank styrer mot prisvekstmålet, ikke mot en bestemt kronekurs.",
         "",
       ],
-      explain: "Norges Banks komité for pengepolitikk setter styringsrenten.",
+      explain:
+        "Fleksibel inflasjonsstyring veier prisvekst mot aktivitet og ledighet. Hensynene peker ofte hver sin vei.",
+    },
+  },
+  {
+    id: "pp-7",
+    pathId: "norsk-pengepolitikk",
+    title: "Reallønn og prisfall",
+    order: 6,
+    summary: "Hva lønna rekker til, og hvorfor prisfall ikke er en gave.",
+    body: [
+      "Lønna steg, men handleturen koster mer. Fikk du egentlig mer?",
+      "Reallønn er lønna etter prisvekst. Stiger lønna 3 prosent og prisene 4 prosent, faller reallønna. Du har flere kroner, og de rekker til mindre. Det er et regneeksempel, ikke et lønnsoppgjør.",
+      "Deflasjon er at prisene faller over tid. Én vare på tilbud er ikke deflasjon. Faller prisene vedvarende, kan folk utsette kjøp fordi de venter at det blir billigere.",
+      "Løpet om pengepolitikken stopper her.",
+    ],
+    conceptIds: ["reallonn", "deflasjon"],
+    figureConceptId: "reallonn",
+    quiz: {
+      question: "Lønna stiger 3 prosent og prisene 4 prosent. Hva skjer med reallønna?",
+      options: [
+        "Den stiger 7 prosent",
+        "Den står stille, fordi begge steg",
+        "Den faller. Prisene steg mer enn lønna",
+        "Den stiger 3 prosent, fordi lønna steg",
+      ],
+      answerIndex: 2,
+      whyWrong: [
+        "3 pluss 4 er ikke reallønna. Reallønna ser på lønna mot prisene.",
+        "Begge steg, men prisene steg mer. Da rekker lønna til mindre.",
+        "",
+        "3 prosent er lønnsveksten i kroner. Prisveksten tar en del av den.",
+      ],
+      explain:
+        "Reallønna faller når prisene stiger mer enn lønna. 3 prosent lønn og 4 prosent prisvekst er et regneeksempel.",
     },
   },
   {
@@ -1280,11 +1372,14 @@ export const lessons: Lesson[] = [
     order: 0,
     summary: "Hva som styrker og svekker kronen.",
     body: [
-      "Kronekursen er prisen på norske kroner mot andre valutaer. En svakere krone betyr at du betaler flere kroner for én euro eller dollar.",
-      "Kronen styrkes ofte når renta i Norge er høyere enn hos handelspartnerne, når oljeprisen er høy, eller når investorer er villige til å eie små valutaer. Den svekkes når rentedifferansen faller, oljeprisen faller, eller uro sender kapital mot større valutaer.",
-      "Norges Bank følger blant annet den handelsvektede indeksen I-44. Høyere I-44 betyr svakere krone. Dette er tendenser. Olje og uro kan overdøve renta.",
+      "Euroen koster flere kroner enn i fjor. Hva har skjedd med kronen?",
+      "Kronekursen er prisen på norske kroner mot andre valutaer. En svakere krone betyr at du betaler flere kroner for én euro.",
+      "Kronen styrkes ofte når renta i Norge er høyere enn ute. Den svekkes når den forskjellen faller, eller når uro sender penger mot større valutaer. Dette er tendenser, ikke en fasit.",
+      "Norges Bank følger blant annet I-44. Høyere I-44 betyr svakere krone.",
+      "Neste leksjon er hva kursen gjør med varene fra utlandet.",
     ],
     conceptIds: ["kronekurs"],
+    figureConceptId: "kronekurs",
     quiz: {
       question: "Hva betyr en svakere krone?",
       options: [
@@ -1309,13 +1404,34 @@ export const lessons: Lesson[] = [
     pathId: "kronekurs-og-eos",
     title: "Importpriser og EØS",
     order: 1,
-    summary: "Europriser blir kroner.",
+    summary: "Prisen i kroner, og virkningen på KPI.",
     body: [
-      "EØS-avtalen knytter Norge til EUs indre marked, uten at Norge er medlem av EU. De fleste industrivarer kan handles uten toll mot EU. Landbruk og fisk har unntak, og Norge har egen toll mot andre land.",
-      "Mye av importen prises i euro. Importprisen i kroner er den utenlandske prisen omregnet med kronekursen, pluss frakt og norske avgifter. Svakere krone løfter importprisene og kan løfte KPI.",
-      "Sterkere krone gjør import billigere, og svekker samtidig konkurranseevnen for bedrifter som selger ut. Det er den andre siden av samme kurs.",
+      "Jakken er sydd i et EØS-land og priset i euro. Hva betaler du i kroner?",
+      "EØS-avtalen knytter Norge til EUs indre marked, uten at Norge er medlem av EU. De fleste industrivarer kan handles uten toll mot EU. Landbruk og fisk har unntak.",
+      "Importprisen er prisen i kroner. Den er den utenlandske prisen omregnet til kroner, pluss frakt og norske avgifter. Eksempel, ikke dagens kurs: 100 euro til 11 kroner er 1 100 kroner, før frakt og avgift.",
+      "Importert inflasjon er noe annet. Det er virkningen på KPI når dyrere import løfter prisene husholdningene møter. En høyere importpris er ikke automatisk høyere KPI.",
+      "Neste leksjon er hvordan renta kan flytte den samme kursen.",
     ],
-    conceptIds: ["importpriser", "eos"],
+    conceptIds: ["importpriser", "importert-inflasjon", "eos"],
+    figureConceptId: "importpriser",
+    quiz: {
+      question: "Jakken koster 10 euro mer hos produsenten, og kronen er uendret. Hva er det, før vi ser på KPI?",
+      options: [
+        "En endring i inflasjonsmålet",
+        "En høyere importpris",
+        "Importert inflasjon, samme dag",
+        "En sterkere krone",
+      ],
+      answerIndex: 1,
+      whyWrong: [
+        "Inflasjonsmålet er det Norges Bank styrer etter. Det flytter seg ikke fordi en jakke koster mer.",
+        "",
+        "Importert inflasjon er virkningen på KPI. Her har vi bare en høyere pris i euro.",
+        "Kronen er uendret i eksemplet. Det som endret seg, er prisen i euro.",
+      ],
+      explain:
+        "Importprisen er hva varen koster i kroner. Importert inflasjon er om den dyrere importen løfter KPI.",
+    },
   },
   {
     id: "kk-3",
@@ -1324,11 +1440,33 @@ export const lessons: Lesson[] = [
     order: 2,
     summary: "Valutakurskanalen.",
     body: [
-      "Når Norges Bank hever styringsrenten, kan kronen styrkes fordi plasseringer i kroner blir mer attraktive. Sterkere krone demper importprisene, og det trekker inflasjonen ned. Settes renta ned, kan kronen svekke seg og løfte importert prispress.",
-      "Det er valutakurskanalen. Den virker sammen med etterspørselen: høyere rente demper også lån og forbruk.",
-      "Norges Bank styrer mot inflasjonsmålet, ikke mot en bestemt kronekurs. En renteendring er ikke et løfte om at kronen beveger seg.",
+      "Renta i Norge settes opp. Hva kan det gjøre med en jakke til 100 euro?",
+      "Høyere styringsrente kan styrke kronen, fordi plasseringer i kroner blir mer attraktive. Sterkere krone gjør varer fra utlandet billigere i kroner. Lavere rente kan svekke kronen og løfte prispresset utenfra.",
+      "Regneeksempel, ikke dagens kurs: 100 euro til 11 kroner er 1 100 kroner. Til 12 kroner er det 1 200 kroner. Forskjellen er 100 kroner, før frakt og avgift.",
+      "Norges Bank styrer mot prisvekstmålet, ikke mot en bestemt kronekurs.",
+      "Løpet om kronen og EØS stopper her.",
     ],
     conceptIds: ["styringsrenten", "kronekurs"],
+    figureConceptId: "kronekurs",
+    quiz: {
+      question:
+        "En jakke koster 100 euro. Kursen går fra 11 til 12 kroner per euro. Hva skjer med prisen i kroner, før frakt og avgift?",
+      options: [
+        "Den faller fra 1 200 til 1 100 kroner",
+        "Den er uendret, fordi europrisen er den samme",
+        "Den stiger fra 1 100 til 1 200 kroner",
+        "Den blir 100 euro dyrere",
+      ],
+      answerIndex: 2,
+      whyWrong: [
+        "12 kroner per euro er dyrere enn 11. Prisen i kroner stiger.",
+        "Europrisen er den samme, men hver euro koster flere kroner.",
+        "",
+        "Europrisen er fortsatt 100 euro. Det som endrer seg, er kronerprisen.",
+      ],
+      explain:
+        "100 euro til 11 kroner er 1 100 kroner. Til 12 kroner er det 1 200 kroner. Eksemplet er ikke dagens kurs.",
+    },
   },
   {
     id: "sh-1",
@@ -1472,8 +1610,8 @@ export const learningPaths: LearningPath[] = [
     subtitle:
       "Fra inflasjon og KPI til styringsrente, transmisjon og rentebane.",
     category: "makro",
-    estimatedMinutes: 35,
-    lessonIds: ["pp-1", "pp-2", "pp-3", "pp-4", "pp-5", "pp-6"],
+    estimatedMinutes: 40,
+    lessonIds: ["pp-1", "pp-2", "pp-3", "pp-4", "pp-5", "pp-6", "pp-7"],
   },
   {
     id: "personlig-sparing",
@@ -1613,6 +1751,9 @@ export const srsConceptIds = new Set<string>([
   "fastrente",
   "nominell-effektiv",
   "rentefradrag",
+  "konjunktur",
+  "deflasjon",
+  "importert-inflasjon",
 ]);
 
 const synonyms: Record<string, string[]> = {
@@ -1647,7 +1788,7 @@ const synonyms: Record<string, string[]> = {
   spotpris: ["nord pool", "strømpris", "strompris"],
   stromstotte: ["strømstøtte", "strømstønad", "stromstonad"],
   prisomrader: ["prisområde", "no1", "no2", "no4", "sør-norge", "nord-norge"],
-  importpriser: ["importpris", "importert inflasjon"],
+  importpriser: ["importpris", "importprisen"],
   eos: ["eøs", "eøs-avtalen", "indre marked"],
   "strukturelt-underskudd": ["oljepengebruk", "oljepenger"],
   utlansforskriften: ["boliglånsforskriften", "boliglansforskriften"],

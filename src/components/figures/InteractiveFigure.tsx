@@ -435,6 +435,28 @@ function TrinnFigure() {
   );
 }
 
+function EuroFigure() {
+  const [kurs, setKurs] = useState(11);
+  const pris = 100 * kurs;
+  return (
+    <Card
+      title="100 euro i kroner"
+      note="Eksempel, ikke dagens kurs. Prisen er 100 euro ganger kroner per euro, før frakt og norske avgifter."
+    >
+      <RangeField
+        label="Kroner per euro"
+        min={8}
+        max={14}
+        step={0.5}
+        value={kurs}
+        display={`${tall(kurs, 1)} kr`}
+        onChange={setKurs}
+      />
+      <p className="text-sm text-[var(--ink)]">100 euro koster {kroner(pris)} før frakt og avgift.</p>
+    </Card>
+  );
+}
+
 function InflationFigure() {
   const [rate, setRate] = useState(2);
   const [years, setYears] = useState(10);
@@ -531,6 +553,7 @@ export function InteractiveFigure({
   if (id === "yield") return <BondFigure />;
   if (id === "nominell") return <NominalFigure />;
   if (id === "reallonn") return <RealWageFigure />;
+  if (id === "kronekurs") return <EuroFigure />;
   if (id === "bolig") return <HousingFigure />;
   return <LoanTimeFigure focus={focus ?? "annuitet"} />;
 }

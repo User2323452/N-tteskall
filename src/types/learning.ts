@@ -50,8 +50,6 @@ export interface Lesson {
    * Eldre leksjoner lar feltet stå tomt og viser alle figurene.
    */
   figureConceptId?: string;
-  /** Statisk figur i leksjonen. */
-  visual?: "transmisjon";
   /** Enkel flervalgsspørsmål (valgfritt). */
   quiz?: {
     question: string;

@@ -97,6 +97,34 @@ export const satser: Sats[] = [
     merknad: "Fra 1. mai. 2026 er også fastsatt i forskrift 22. mai 2026 nr. 869 (Lovdata).",
   },
   {
+    id: "inflasjon-mal",
+    navn: "Operativt mål for prisveksten",
+    kortNavn: "Inflasjonsmål",
+    enhet: "%",
+    verdier: {
+      2025: { verdi: 2, status: "vedtatt" },
+      2026: { verdi: 2, status: "vedtatt" },
+    },
+    kilde: "https://lovdata.no/dokument/INS/forskrift/2026-09-18-1815",
+    sistSjekket: SJEKKET,
+    merknad:
+      "Bestemmelse om pengepolitikken 18. september 2026 § 2: årsvekst i konsumprisene som over tid er nær 2 prosent. Samme mål sto i bestemmelsen fra 2019 § 3.",
+  },
+  {
+    id: "kpi-basis",
+    navn: "Basisår for konsumprisindeksen",
+    kortNavn: "KPI-basis",
+    enhet: "tekst",
+    verdier: {
+      2025: { verdi: "2015 = 100", status: "vedtatt" },
+      2026: { verdi: "2025 = 100", status: "vedtatt" },
+    },
+    kilde:
+      "https://www.ssb.no/priser-og-prisindekser/konsumpriser/statistikk/konsumprisindeksen/artikler/endringer-i-konsumprisindeksen-kpi",
+    sistSjekket: SJEKKET,
+    merknad: "Indeksen i basisåret er 100. Fra januar 2026 er basisåret 2025. Før det var det 2015.",
+  },
+  {
     id: "sou-mrd",
     navn: "Strukturelt oljekorrigert underskudd",
     kortNavn: "Underskudd",
