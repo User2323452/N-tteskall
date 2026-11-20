@@ -169,7 +169,7 @@ export const extraConcepts: Concept[] = [
     "National insurance pension",
     "personlig",
     "Den offentlige alderspensjonen, det nederste laget under det jobben og du sparer.",
-    "I det nye systemet er alderspensjonen inntektspensjon pluss garantipensjon. Jobben og egen sparing kommer oppå. Grunnbeløpet, {{sats:grunnbelop}} fra 1. mai, er enheten ytelsene regnes i. Grunnpensjon hører til det gamle systemet, ikke dagens inntektspensjon.",
+    "Hvert år legges {{sats:pensjon-sats}} av pensjonsgivende inntekt inn i beholdningen, opp til {{sats:pensjon-tak}}. Det er årets tillegg, ikke pensjonen som betales ut. I det nye systemet er alderspensjonen inntektspensjon pluss garantipensjon. Jobben og egen sparing kommer oppå.",
     ["grunnbelop", "otp", "ips"],
     "Folketrygd underst. Jobben og egen sparing oppå."
   ),
@@ -180,7 +180,8 @@ export const extraConcepts: Concept[] = [
     "personlig",
     "Beløpet folketrygdens ytelser regnes ut fra. Kongen fastsetter det, og det reguleres hvert år fra 1. mai i takt med lønnsveksten.",
     "Folketrygdloven § 1-4 sier at grunnbeløpet fastsettes av Kongen. Siden 2011 er det regjeringen i statsråd som fastsetter beløpet etter trygdeoppgjøret. Fra 1. mai er grunnbeløpet {{sats:grunnbelop}}. Når noen sier «2 G» eller «6 G», mener de et multiplum av dette beløpet.",
-    ["folketrygd", "otp"]
+    ["folketrygd", "otp"],
+    "G oppdateres 1. mai. Et antall G er tallet ganger beløpet."
   ),
   c(
     "annuitetslan",
@@ -189,7 +190,8 @@ export const extraConcepts: Concept[] = [
     "personlig",
     "Lån med fast terminbeløp gjennom løpetiden. Renteandelen faller, avdragsandelen stiger.",
     "Du betaler omtrent det samme hver termin. I starten er mye av beløpet renter. Mot slutten er mer avdrag. Serielån har i stedet fast avdrag og synkende terminbeløp.",
-    ["serielan", "nominell-effektiv", "belaningsgrad"]
+    ["serielan", "nominell-effektiv", "belaningsgrad"],
+    "Fast termin. Renteandelen synker."
   ),
   c(
     "serielan",
@@ -198,7 +200,8 @@ export const extraConcepts: Concept[] = [
     "personlig",
     "Lån med fast avdrag. Terminbeløpet synker fordi renta beregnes av stadig lavere restgjeld.",
     "De første årene er dyrere enn på et annuitetslån med samme rente og løpetid. Du betaler ned lånet raskere, og betaler derfor mindre renter totalt.",
-    ["annuitetslan", "nominell-effektiv"]
+    ["annuitetslan", "nominell-effektiv"],
+    "Fast avdrag. Terminbeløpet synker."
   ),
   c(
     "gjeldsgrad",
@@ -206,7 +209,7 @@ export const extraConcepts: Concept[] = [
     "Debt-to-income",
     "personlig",
     "Samlet gjeld delt på brutto årsinntekt.",
-    "Utlånsforskriften setter rammen til {{sats:utlan-gjeld}}. Banken kan ha egne, strengere grenser, og skal i tillegg stresse betjeningsevnen med høyere rente.",
+    "Utlånsforskriften setter rammen til {{sats:utlan-gjeld}}. Banken kan være strengere. Den skal teste en rente som er {{sats:utlan-stress}} høyere, og minst {{sats:utlan-gulv}}. En vanlig misforståelse er at inntekten alene avgjør, uten rentetesten.",
     ["utlansforskriften", "belaningsgrad"]
   ),
   c(
@@ -215,8 +218,9 @@ export const extraConcepts: Concept[] = [
     "Nominal vs. effective interest rate",
     "personlig",
     "Nominell rente er den oppgitte renta. Effektiv rente tar med gebyrer og hvor ofte renta legges til.",
-    "To lån med samme nominelle rente kan ha ulik effektiv rente hvis etableringsgebyr og termingebyr er ulike. Når du sammenligner tilbud, er det effektiv rente som viser årskostnaden.",
-    ["annuitetslan", "styringsrenten"]
+    "To lån med samme oppgitte rente kan ha ulik effektiv rente hvis etableringsgebyr og termingebyr er ulike. Når du sammenligner tilbud, er det effektiv rente som viser årskostnaden. En vanlig misforståelse er at den oppgitte renta er hele prisen.",
+    ["annuitetslan", "styringsrenten"],
+    "Sammenlign effektiv rente."
   ),
   c(
     "rentefradrag",
@@ -224,8 +228,9 @@ export const extraConcepts: Concept[] = [
     "Interest deduction",
     "personlig",
     "Gjeldsrenter trekkes fra i alminnelig inntekt og reduserer skatten.",
-    "Fradraget gjør at den reelle kostnaden av lånet er lavere enn renteregningen alene. Satsen følger skatten på alminnelig inntekt, {{sats:alminnelig-sats}}.",
-    ["annuitetslan", "alminnelig-inntekt"]
+    "Gjeldsrenter trekkes fra i alminnelig inntekt. Satsen er {{sats:alminnelig-sats}}. 10 000 kroner i renter gir 2 200 kroner mindre i skatt, hvis du har skatt å trekke fra. Fradraget gjør ikke lånet gratis.",
+    ["annuitetslan", "alminnelig-inntekt"],
+    "Fradraget gjelder renter, og bare hvis du har skatt å trekke fra."
   ),
   c(
     "alminnelig-inntekt",
@@ -554,8 +559,9 @@ export const extraConcepts: Concept[] = [
     "Occupational pension",
     "personlig",
     "Pensjon fra jobben, i tillegg til folketrygden.",
-    "I privat sektor er en minstesparing lovpålagt: obligatorisk tjenestepensjon (OTP). Mange arbeidsgivere sparer mer. Den vanlige ordningen er innskuddspensjon: innskuddet er avtalt, utbetalingen avhenger av avkastning. Offentlig sektor har egne ordninger. AFP kan komme i tillegg der tariffavtalen gir det.",
-    ["otp", "folketrygd", "ips", "afp", "innskuddspensjon", "ytelsespensjon"]
+    "I privat sektor er minstesatsen {{sats:otp-sats}} av lønn opp til {{sats:otp-tak}}. Mange arbeidsgivere setter inn mer. Den vanlige ordningen er innskuddspensjon, der innskuddet er avtalt. Ytelsespensjon er det andre sporet, der utbetalingen er avtalt.",
+    ["otp", "folketrygd", "ips", "afp", "innskuddspensjon", "ytelsespensjon"],
+    "Innskudd: beløpet inn er avtalt. Ytelse: beløpet ut er avtalt."
   ),
   c(
     "egenkapital",
@@ -563,7 +569,7 @@ export const extraConcepts: Concept[] = [
     "Equity (home purchase)",
     "personlig",
     "Den delen av boligkjøpet du stiller med selv, ikke låner.",
-    "Egenkapital er boligverdi minus lån. Belåningsgrad er lånet delt på verdien. For nedbetalingslån er grensen {{sats:utlan-belaning}}, og resten er egenkapital. Pengene kan komme fra sparing, salg av bolig eller gave. Annet lån regnes ikke som egenkapital.",
+    "Egenkapital er boligverdi minus lån. For nedbetalingslån er grensen {{sats:utlan-belaning}}, så resten er egenkapital. Banken tester også en rente som er {{sats:utlan-stress}} høyere, og minst {{sats:utlan-gulv}}. Et nytt lån regnes ikke som egenkapital.",
     ["belaningsgrad", "utlansforskriften", "bsu", "fellesgjeld"],
     "Egenkapital = verdi − lån. Belåningsgrad = lån / verdi."
   ),
@@ -573,7 +579,7 @@ export const extraConcepts: Concept[] = [
     "Shared debt (housing co-op)",
     "personlig",
     "Din andel av lånet i borettslaget eller sameiet.",
-    "Prisantydningen er ofte bare innskuddet. Totalpris er innskudd pluss fellesgjeld. Gjelden betjenes gjennom felleskostnadene. Noen lag lar deg betale ned din andel (IN-ordning). Banken tar normalt fellesgjelden med når den vurderer lån og belåningsgrad.",
+    "Prisantydningen er ofte bare innskuddet. Totalpris er innskudd pluss fellesgjeld. I et eksempel er 500 000 kroner i innskudd og 1 500 000 kroner i fellesgjeld en totalpris på 2 000 000 kroner. Banken tar normalt fellesgjelden med når den vurderer lånet.",
     ["egenkapital", "belaningsgrad", "utlansforskriften"],
     "Se på totalpris, ikke bare innskuddet i annonsen."
   ),
@@ -584,7 +590,8 @@ export const extraConcepts: Concept[] = [
     "personlig",
     "Avtale der du leier boligen en periode, med rett eller plikt til å kjøpe den senere.",
     "Også kalt leie til eie. En del av leien kan være avtalt å telle som egenkapital. Vilkårene varierer. Du må fortsatt oppfylle bankens krav, inkludert utlånsforskriften, når kjøpet skal gjennomføres. Det er ikke en vanlig leiekontrakt.",
-    ["egenkapital", "utlansforskriften"]
+    ["egenkapital", "utlansforskriften"],
+    "Avtale, ikke lånegaranti."
   ),
   c(
     "frontfagsmodellen",
@@ -909,8 +916,9 @@ export const extraConcepts: Concept[] = [
     "Fixed mortgage rate",
     "personlig",
     "Boliglånsrente som ligger fast i en avtalt periode.",
-    "På flytende rente følger boliglånsrenta med når styringsrenten og pengemarkedet flytter seg. På fastrente er renta avtalt for en periode, for eksempel tre eller fem år. Du bytter sjansen for å følge renta ned mot et kjent beløp så lenge avtalen varer. Når perioden er ute, avtales renta på nytt. Annuitet og serie beskriver nedbetalingen. Fastrente beskriver om renta er låst.",
-    ["nominell-effektiv", "annuitetslan", "serielan", "styringsrenten"]
+    "På flytende rente følger boliglånsrenta med når styringsrenten flytter seg. På fastrente er renta avtalt for en periode. Du bytter sjansen for å følge renta ned mot et kjent beløp så lenge avtalen varer. Når perioden er ute, avtales renta på nytt.",
+    ["nominell-effektiv", "annuitetslan", "serielan", "styringsrenten"],
+    "Fastrente låser renta. Annuitet og serie sier hvordan lånet betales ned."
   ),
   c(
     "buffer",
@@ -928,8 +936,9 @@ export const extraConcepts: Concept[] = [
     "Defined contribution pension",
     "personlig",
     "Tjenestepensjon der arbeidsgiver setter inn et avtalt beløp, og utbetalingen følger avkastningen.",
-    "Innskuddet er kjent. Det du får som pensjonist, avhenger av hvor lenge pengene står og hva de kaster av seg. I privat sektor er obligatorisk tjenestepensjon som regel en slik ordning, minst det loven krever. Mange arbeidsgivere setter inn mer. Innskuddspensjon lover innbetalingen. Den lover ikke et bestemt beløp ut.",
-    ["tjenestepensjon", "ytelsespensjon", "otp", "folketrygd"]
+    "Innskuddet er kjent. Det du får som pensjonist, avhenger av hvor lenge pengene står og hva de kaster av seg. I privat sektor er minstesatsen en slik ordning, og mange arbeidsgivere setter inn mer. Ordningen lover innbetalingen. Den lover ikke et bestemt beløp ut.",
+    ["tjenestepensjon", "ytelsespensjon", "otp", "folketrygd"],
+    "Avtalt inn. Uvisst ut."
   ),
   c(
     "ytelsespensjon",
@@ -937,8 +946,9 @@ export const extraConcepts: Concept[] = [
     "Defined benefit pension",
     "personlig",
     "Tjenestepensjon der utbetalingen er avtalt på forhånd.",
-    "Du får en avtalt andel av lønna, eller et annet avtalt beløp, når vilkårene er oppfylt. Arbeidsgiver bærer risikoen for at pengene strekker til. Ordningen finnes i offentlig sektor og i eldre avtaler i privat sektor. Innskuddspensjon er det andre hovedsporet: der er innskuddet avtalt, og utbetalingen følger avkastningen.",
-    ["innskuddspensjon", "tjenestepensjon", "folketrygd"]
+    "Du får en avtalt andel av lønna, eller et annet avtalt beløp, når vilkårene er oppfylt. Arbeidsgiver bærer risikoen for at pengene strekker til. Ordningen finnes i offentlig sektor og i eldre avtaler i privat sektor. Innskuddspensjon er det andre hovedsporet, der utbetalingen følger avkastningen.",
+    ["innskuddspensjon", "tjenestepensjon", "folketrygd"],
+    "Avtalt ut. Arbeidsgiver bærer risikoen."
   ),
   c(
     "oppjusteringsfaktor",
@@ -1111,8 +1121,60 @@ const eksempel: Record<string, { example: string; forYou: string }> = {
     forYou: "Aktuelt hvis du sparer til første bolig og er innenfor alderen.",
   },
   folketrygd: {
-    example: "Lønn gjennom livet bygger inntektspensjon. Kort botid betyr mer for garantipensjonen.",
+    example: "500 000 kroner i pensjonsgivende inntekt, under taket, gir 90 500 kroner inn i beholdningen det året.",
     forYou: "Se folketrygden som bunnen. Jobben og egen sparing ligger oppå.",
+  },
+  grunnbelop: {
+    example: "En regel som sier 7,1 G, mener 7,1 ganger beløpet i tabellen.",
+    forYou: "Når en ytelse er oppgitt i G, er det dette beløpet den mener.",
+  },
+  gjeldsgrad: {
+    example: "700 000 kroner i inntekt og grensen på 5 ganger inntekten gir 3 500 000 kroner i samlet gjeld.",
+    forYou: "Banken ser på all gjeld, ikke bare boliglånet.",
+  },
+  "nominell-effektiv": {
+    example: "To lån med samme oppgitte rente. Det med etableringsgebyr har høyere effektiv rente.",
+    forYou: "Be om effektiv rente når du sammenligner to tilbud.",
+  },
+  rentefradrag: {
+    example: "10 000 kroner i renter og 22 prosent sats gir 2 200 kroner mindre i skatt, hvis du har skatt å trekke fra.",
+    forYou: "Se posten i skattemeldingen når du har gjeldsrenter.",
+  },
+  tjenestepensjon: {
+    example: "600 000 kroner i lønn og minstesatsen gir 12 000 kroner inn det året.",
+    forYou: "Sjekk hva jobben setter inn. Minstesatsen er gulvet.",
+  },
+  egenkapital: {
+    example: "400 000 kroner i egenkapital er 10 prosent av en bolig til 4 000 000 kroner.",
+    forYou: "Sparingen, salget eller gaven må være dine penger. Et nytt lån teller ikke.",
+  },
+  fellesgjeld: {
+    example: "500 000 kroner i innskudd og 1 500 000 kroner i fellesgjeld gir 2 000 000 kroner i totalpris.",
+    forYou: "Spør om totalpris, ikke bare tallet i annonsen.",
+  },
+  "leie-mot-eie": {
+    example: "Tre års leie, 2 000 kroner i måneden som egenkapital, og en avtalt pris på 3 500 000 kroner. Banken må fortsatt si ja.",
+    forYou: "Les hva som skjer hvis banken sier nei.",
+  },
+  fastrente: {
+    example: "Renta er avtalt i tre år. Når de tre årene er ute, avtales den på nytt.",
+    forYou: "Spør hva renta blir når bindingen er ute, og hva det koster å løse den tidligere.",
+  },
+  innskuddspensjon: {
+    example: "Jobben setter inn 12 000 kroner i år. Beløpet du får senere, følger avkastningen.",
+    forYou: "Spør om ordningen er innskudd eller ytelse. Det sier hvem som bærer risikoen.",
+  },
+  ytelsespensjon: {
+    example: "Avtalen sier en andel av lønna. Arbeidsgiver må sørge for at pengene strekker til.",
+    forYou: "Vanligere i offentlig sektor og i eldre avtaler.",
+  },
+  annuitetslan: {
+    example: "1 000 000 kroner, 5 prosent, 20 år og én termin i året: første termin er om lag 80 243 kroner.",
+    forYou: "Velg annuitet hvis du vil ha samme beløp hver termin.",
+  },
+  serielan: {
+    example: "Samme lån: første termin er 100 000 kroner, og rentene blir 525 000 kroner til sammen.",
+    forYou: "Velg serie hvis du tåler høyere termin i starten.",
   },
   naverdi: {
     example: "614 kroner i dag og 1 000 kroner om ti år er samme regnestykke ved 5 prosent.",
@@ -1163,13 +1225,15 @@ for (const concept of extraConcepts) {
 const satsPaKonsept: Record<string, string[]> = {
   bsu: ["bsu-aar", "bsu-samlet", "bsu-fradrag", "bsu-alder"],
   grunnbelop: ["grunnbelop"],
-  gjeldsgrad: ["utlan-gjeld"],
+  folketrygd: ["pensjon-sats", "pensjon-tak"],
+  tjenestepensjon: ["otp-sats", "otp-tak"],
+  gjeldsgrad: ["utlan-gjeld", "utlan-stress", "utlan-gulv"],
   rentefradrag: ["alminnelig-sats"],
   "alminnelig-inntekt": ["alminnelig-sats"],
   personfradrag: ["personfradrag"],
   minstefradrag: ["minstefradrag-sats", "minstefradrag-tak"],
   formuesskatt: ["formue-bunn", "formue-sats", "formue-topp", "formue-sats-hoy"],
-  egenkapital: ["utlan-belaning"],
+  egenkapital: ["utlan-belaning", "utlan-stress", "utlan-gulv"],
   "strukturelt-underskudd": ["sou-mrd", "sou-pst"],
   oppjusteringsfaktor: ["oppjustering"],
   verdsettingsrabatt: ["verdsettingsrabatt"],
