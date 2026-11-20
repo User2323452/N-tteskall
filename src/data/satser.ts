@@ -305,6 +305,100 @@ export const satser: Sats[] = [
     sistSjekket: SJEKKET,
     merknad: "Rammekreditt med pant i bolig.",
   },
+  {
+    id: "utlan-stress",
+    navn: "Utlånsforskriften – renteøkning i stresstesten",
+    kortNavn: "Rentestress",
+    enhet: "tekst",
+    verdier: {
+      2025: { verdi: "3 prosentpoeng", status: "vedtatt" },
+      2026: { verdi: "3 prosentpoeng", status: "vedtatt" },
+    },
+    kilde: "https://lovdata.no/dokument/SF/forskrift/2020-12-09-2648",
+    sistSjekket: SJEKKET,
+    merknad: "Utlånsforskriften § 5. Påslag på kundens samlede gjeld. Laveste rente som kan brukes, er en egen sats.",
+  },
+  {
+    id: "utlan-gulv",
+    navn: "Utlånsforskriften – laveste rente i stresstesten",
+    kortNavn: "Rentegulv",
+    enhet: "%",
+    verdier: {
+      2025: { verdi: 7, status: "vedtatt" },
+      2026: { verdi: 7, status: "vedtatt" },
+    },
+    kilde: "https://lovdata.no/dokument/SF/forskrift/2020-12-09-2648",
+    sistSjekket: SJEKKET,
+    merknad: "Utlånsforskriften § 5. Banken skal uansett legge til grunn minst denne renta.",
+  },
+  {
+    id: "pensjon-sats",
+    navn: "Opptjening av inntektspensjon",
+    kortNavn: "Pensjonsopptjening",
+    enhet: "%",
+    verdier: {
+      2025: { verdi: 18.1, status: "vedtatt" },
+      2026: { verdi: 18.1, status: "vedtatt" },
+    },
+    kilde: "https://lovdata.no/nav/folketrygdloven/kap20/%C2%A720-5",
+    sistSjekket: SJEKKET,
+    merknad:
+      "Folketrygdloven § 20-5. Andel av pensjonsgivende inntekt opp til taket. Det er årets innskudd i beholdningen, ikke pensjonen som betales ut.",
+  },
+  {
+    id: "pensjon-tak",
+    navn: "Tak for inntekt som gir pensjonsopptjening",
+    kortNavn: "Opptjeningstak",
+    enhet: "tekst",
+    verdier: {
+      2025: { verdi: "7,1 G", status: "vedtatt" },
+      2026: { verdi: "7,1 G", status: "vedtatt" },
+    },
+    kilde: "https://lovdata.no/nav/folketrygdloven/kap20/%C2%A720-5",
+    sistSjekket: SJEKKET,
+    merknad: "Folketrygdloven § 20-5. Gjennomsnittlig grunnbeløp i kalenderåret.",
+  },
+  {
+    id: "otp-sats",
+    navn: "Minstesats for obligatorisk tjenestepensjon",
+    kortNavn: "OTP-sats",
+    enhet: "%",
+    verdier: {
+      2025: { verdi: 2, status: "vedtatt" },
+      2026: { verdi: 2, status: "vedtatt" },
+    },
+    kilde: "https://lovdata.no/dokument/NL/lov/2005-12-21-124/%C2%A74",
+    sistSjekket: SJEKKET,
+    merknad: "OTP-loven § 4. Av lønn opp til 12 G. Mange arbeidsgivere setter inn mer.",
+  },
+  {
+    id: "otp-tak",
+    navn: "Lønn som minstesatsen for OTP regnes av",
+    kortNavn: "OTP-tak",
+    enhet: "tekst",
+    verdier: {
+      2025: { verdi: "12 G", status: "vedtatt" },
+      2026: { verdi: "12 G", status: "vedtatt" },
+    },
+    kilde: "https://lovdata.no/dokument/NL/lov/2005-12-21-124/%C2%A74",
+    sistSjekket: SJEKKET,
+    merknad: "Innskuddet skal minst være 2 prosent av lønn opp til 12 G.",
+  },
+  {
+    id: "ips-tak",
+    navn: "Maksimalt fradrag for individuell sparing til pensjon",
+    kortNavn: "IPS-tak",
+    enhet: "kr",
+    verdier: {
+      2025: { verdi: 15_000, status: "vedtatt" },
+      2026: { verdi: 25_000, status: "vedtatt" },
+    },
+    kilde:
+      "https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/arbeid-trygd-og-pensjon/pensjon-og-uforetrygd/ny-ordning-for-skattefavorisert-individuell-sparing-til-pensjon/",
+    sistSjekket: SJEKKET,
+    merknad:
+      "Ordningen individuell sparing til pensjon, skatteloven § 6-47. Nye avtaler i gammel IPS kan ikke inngås. Samlet fradrag når begge brukes, følger dette taket.",
+  },
 ];
 
 /** Trinnskatt. Figuren bruker tallene. Tabellen på mobil viser dem ikke. */

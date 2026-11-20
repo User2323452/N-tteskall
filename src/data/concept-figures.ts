@@ -175,7 +175,7 @@ export const conceptFigures: Record<string, FigureSpec> = {
       { label: "OTP fra jobben", note: "minst det loven krever", tone: "teal" },
       { label: "Folketrygd", note: "bunnen", tone: "green" },
     ],
-    caption: "Obligatorisk tjenestepensjon er laget arbeidsgiver må spare, oppå folketrygden.",
+    caption: "Obligatorisk tjenestepensjon er minst {{sats:otp-sats}} av lønn opp til {{sats:otp-tak}}, oppå folketrygden.",
   },
   ips: {
     type: "stack",
@@ -185,7 +185,7 @@ export const conceptFigures: Record<string, FigureSpec> = {
       { label: "Verktøy", note: "Fradrag nå, skatt ved uttak", tone: "blue" },
       { label: "Eksempel", note: "Låst til pensjon, så det er ikke buffer", tone: "amber" },
     ],
-    caption: "IPS er eget pensjonsspor. Årstaket for innskudd står hos Skatteetaten.",
+    caption: "IPS er eget pensjonsspor. Årstaket står i tabellen. Uttak tidligst fra 62 år.",
   },
   afp: {
     type: "compare",
@@ -201,7 +201,11 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "stack",
     title: "Tre rammer banken ser på",
     layers: [
-      { label: "Betjeningsevne", note: "tåler du høyere rente?", tone: "rose" },
+      {
+        label: "Betjeningsevne",
+        note: `${String(getSats("utlan-stress").verdier[sisteVedtatteAr(getSats("utlan-stress"))].verdi)} høyere, minst ${formatVerdi(satsNumber("utlan-gulv"), "%")}`,
+        tone: "rose",
+      },
       {
         label: "Gjeldsgrad",
         note: String(getSats("utlan-gjeld").verdier[sisteVedtatteAr(getSats("utlan-gjeld"))].verdi),
@@ -636,14 +640,18 @@ export const conceptFigures: Record<string, FigureSpec> = {
     type: "flow",
     title: "Fra lønn til senere utbetaling",
     steps: ["Lønn", "Arbeidsgiver setter inn", "Kontoen står", "Utbetaling som pensjonist"],
-    caption: "I innskuddspensjon er innskuddet avtalt. Det du får ut, avhenger av avkastning og tid. OTP er minstesatsen i privat sektor.",
+    caption: "I innskuddspensjon er innskuddet avtalt. Det du får ut, avhenger av avkastning og tid. Minstesatsen i privat sektor er {{sats:otp-sats}} av lønn opp til {{sats:otp-tak}}.",
   },
   egenkapital: { type: "interactive", id: "bolig" },
   fellesgjeld: {
-    type: "photo",
-    src: "/bilder/begrep-fellesgjeld.jpg",
-    alt: "En hvit boligblokk med mange balkonger og bjørketrær foran.",
-    caption: "Fellesgjeld er lånet som hører til hele bygget, ikke bare din leilighet. Din del følger andelen din.",
+    type: "split",
+    title: "Totalpris i eksemplet",
+    parts: [
+      { label: "Innskudd", share: 25, tone: "teal" },
+      { label: "Fellesgjeld", share: 75, tone: "slate" },
+    ],
+    caption:
+      "Eksempel, ikke en bestemt bolig. 500 000 kroner i innskudd pluss 1 500 000 kroner i fellesgjeld er 2 000 000 kroner i totalpris.",
   },
   "leie-mot-eie": {
     type: "flow",
