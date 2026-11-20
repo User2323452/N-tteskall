@@ -1015,6 +1015,79 @@ export const conceptFigures: Record<string, FigureSpec> = {
     caption:
       "Snittet er det samme i begge. Standardavviket sier hvor langt punktene ligger fra det. Volatilitet er denne spredningen for avkastning.",
   },
+  rente: {
+    type: "formula",
+    title: "Ett år, ett regneeksempel",
+    expression: "10 000 kr × 5 % = 500 kr",
+    bits: [
+      { name: "10 000 kr", means: "Det du setter inn" },
+      { name: "5 %", means: "Renta i eksempelet, ikke en rente fra banken i dag" },
+      { name: "500 kr", means: "Det som legges til på ett år" },
+    ],
+    caption: "Etter ett år er beløpet 10 500 kroner. Neste år regnes renta av det nye beløpet.",
+  },
+  realrente: {
+    type: "compare",
+    title: "Renta og prisene",
+    leftLabel: "Renta",
+    left: "4 prosent på sparekontoen.",
+    rightLabel: "Prisveksten",
+    right: "3 prosent dyrere varer.",
+    caption: "Regneeksempel: om lag 1 prosent igjen. Ikke en rente du får nå.",
+  },
+  "penger-og-banker": {
+    type: "flow",
+    title: "Fra innskudd til nytt innskudd",
+    steps: ["Du setter inn", "Banken låner ut", "Mottakeren får et innskudd"],
+    caption: "Lånet blir et nytt innskudd. Banken låner ikke bare ut de samme sedlene.",
+  },
+  aksje: {
+    type: "compare",
+    title: "To måter å tjene på",
+    leftLabel: "Utbytte",
+    left: "Penger selskapet betaler ut til eierne.",
+    rightLabel: "Kurs",
+    right: "Det du får hvis du selger andelen.",
+    caption: "Begge kan utebli, og kursen kan falle. Da er andelen verdt mindre enn du betalte.",
+  },
+  fond: {
+    type: "stack",
+    title: "Tre vanlige fond",
+    layers: [
+      { label: "Aksjefond", note: "eier aksjer", tone: "teal" },
+      { label: "Rentefond", note: "eier lån og obligasjoner", tone: "blue" },
+      { label: "Kombinasjonsfond", note: "eier begge deler", tone: "amber" },
+    ],
+    caption: "Fondet eier papirene. Du eier en andel sammen med de andre sparerne.",
+  },
+  etf: {
+    type: "compare",
+    title: "Samme fond, ulik handel",
+    leftLabel: "Vanlig fond",
+    left: "Ofte én pris om dagen.",
+    rightLabel: "ETF",
+    right: "Kjøpes og selges på børs gjennom dagen.",
+    caption: "En ETF er et fond med børspris. Den er ikke automatisk billigere.",
+  },
+  "kostnader-i-fond": {
+    type: "bars",
+    title: "Samme avkastning, ulik kostnad",
+    items: [
+      { label: "0,2 % i året", value: 542_713 },
+      { label: "1,5 % i året", value: 374_532 },
+    ],
+    caption:
+      "Regneeksempel, ikke en prognose. 100 000 kroner i 30 år, 6 prosent før kostnad. Stolpene er det som er igjen etter kostnaden.",
+  },
+  "kurtasje-valutapaslag": {
+    type: "compare",
+    title: "To kostnader ved handelen",
+    leftLabel: "Kurtasje",
+    left: "Gebyret for selve handelen.",
+    rightLabel: "Valutapåslag",
+    right: "Ekstra når du veksler til en annen valuta.",
+    caption: "De kommer i tillegg til den årlige kostnaden i et fond.",
+  },
 };
 
 /** Konsepter med samme interaktive figur deler nøkkel, så en leksjon viser den én gang. */

@@ -54,6 +54,7 @@ export const ordliste: Ord[] = [
     id: "ter",
     term: "TER",
     kort: "Årlig kostnad i et fond, oppgitt i prosent av sparingen. Den trekkes fra avkastningen hvert år.",
+    konseptId: "kostnader-i-fond",
   },
   {
     id: "palydende",

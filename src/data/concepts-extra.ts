@@ -985,7 +985,130 @@ export const extraConcepts: Concept[] = [
     "Lavt standardavvik betyr at observasjonene ligger tett på snittet. Høyt standardavvik betyr at de spriker. Volatilitet i finans er ofte standardavviket til avkastningen. Beta fra en OLS-regresjon hviler på hvordan avkastningen samvarierer med markedet, og spredningen inngår i det regnestykket. Standardavviket er spredningen. Volatilitet er navnet når spredningen gjelder avkastning.",
     ["volatilitet", "ols", "beta", "sharpe"]
   ),
+  c(
+    "rente",
+    "Rente",
+    "Interest rate",
+    "makro",
+    "Rente er prisen du betaler for å låne penger, eller det du får når du låner penger til andre.",
+    "Setter du 10 000 kroner på en konto med 5 prosent rente, blir det 500 kroner på ett år. Det er et regneeksempel, ikke renta du får i banken i dag. Renta styrer hva lånet koster deg, og hva sparingen gir. Mange tror at renta på boliglånet er det samme som styringsrenten.",
+    ["styringsrenten", "nominell-effektiv", "renters-rente"],
+    "Rente er prisen på penger, begge veier."
+  ),
+  c(
+    "realrente",
+    "Realrente",
+    "Real interest rate",
+    "makro",
+    "Realrente er det du sitter igjen med når prisveksten er trukket fra renta.",
+    "Får du 4 prosent på sparekontoen og prisene stiger 3 prosent, er realrenta om lag 1 prosent. Du kan kjøpe litt mer enn i fjor, ikke 4 prosent mer. Derfor kan en konto med rente likevel tape kjøpekraft hvis prisene stiger mer. Mange ser bare tallet banken oppgir.",
+    ["rente", "inflasjon", "kjopkraft"],
+    "Rente minus prisvekst."
+  ),
+  c(
+    "penger-og-banker",
+    "Penger og banker",
+    "Money and banks",
+    "makro",
+    "Penger er det du kan betale med, og bankene lager nye innskudd når de låner ut.",
+    "Lønn på konto og sedler i lomma er begge penger. Når banken låner ut 100 000 kroner, får låntakeren et innskudd, og den som mottar pengene får et nytt innskudd i sin bank. Slik blir det flere kroner i banksystemet enn det som ble satt inn. Renta, prisen på lån, påvirker hvor mange nye kroner som lages. Mange tror at banken bare låner ut akkurat de sedlene du satte inn.",
+    ["rente", "styringsrenten", "pengepolitikk"],
+    "Banken lager innskudd når den låner ut."
+  ),
+  c(
+    "aksje",
+    "Aksje",
+    "Share",
+    "personlig",
+    "En aksje er en liten eierandel i et selskap.",
+    "Eier du en aksje, eier du en bit av selskapet. Selskapet kan betale utbytte, og kursen kan stige, så du kan selge for mer enn du ga. Kursen kan også falle, og du kan tape det du satte inn. Det betyr noe fordi aksjer er en måte å eie verdiskaping på, ikke bare å ha penger på konto. Mange tror at en aksje er et lån til selskapet.",
+    ["utbytte", "fond", "diversifisering"],
+    "Aksje er eierskap. Obligasjon er lån."
+  ),
+  c(
+    "fond",
+    "Fond",
+    "Fund",
+    "personlig",
+    "Et fond er penger fra mange sparere, samlet og forvaltet av et fondsselskap.",
+    "Du kjøper en andel. Et aksjefond eier aksjer, et rentefond eier lån, og et kombinasjonsfond eier begge. Da kan du eie mange selskaper uten å plukke hvert av dem. Fondet fjerner ikke risikoen for at markedet faller.",
+    ["aksje", "indeksfond", "renters-rente", "kostnader-i-fond"],
+    "Fond er mange sparere i samme kurv."
+  ),
+  c(
+    "etf",
+    "ETF",
+    "Exchange-traded fund",
+    "personlig",
+    "En ETF er et fond du kjøper og selger på børs, omtrent som en aksje.",
+    "Prisen oppdateres gjennom dagen, mens et vanlig fond ofte prises én gang om dagen. Du betaler kurtasje når du handler, slik du gjør med en aksje. Innholdet kan likevel være et bredt fond. Det passer når du vil handle i børsens åpningstid. En ETF er ikke automatisk billigere enn et vanlig fond.",
+    ["fond", "aksje", "kurtasje-valutapaslag"],
+    "ETF er et fond med børspris."
+  ),
+  c(
+    "kostnader-i-fond",
+    "Kostnader i fond",
+    "Fund costs",
+    "personlig",
+    "Kostnaden i et fond er det som trekkes fra avkastningen din hvert år.",
+    "Regneeksempel, ikke en prognose: 100 000 kroner i 30 år med 6 prosent avkastning før [[ter|årlig kostnad]]. Med 0,2 prosent blir det om lag 542 713 kroner, og med 1,5 prosent om lag 374 532 kroner. Forskjellen på om lag 168 181 kroner kommer av at kostnaden trekkes hvert år. Mange ser på avkastningen og glemmer at prosenten spiser av renters rente.",
+    ["fond", "indeksfond", "renters-rente"],
+    "Sammenlign årlig kostnad før du velger fond."
+  ),
+  c(
+    "kurtasje-valutapaslag",
+    "Kurtasje og valutapåslag",
+    "Brokerage and FX markup",
+    "personlig",
+    "Kurtasje er prisen for én handel, og valutapåslag er ekstra kostnad når du kjøper i en annen valuta.",
+    "Handler du, betaler du kurtasje for den ene handelen, enten kursen stiger eller faller. Kjøper du noe i dollar eller euro, kommer valutapåslaget på vekslingen i tillegg. Små, hyppige handler blir dyre fordi kurtasjen tas hver gang. Mange tror at den eneste kostnaden er den årlige prosenten i fondet.",
+    ["aksje", "fond", "etf"],
+    "Kurtasje per handel. Valutapåslag per veksling."
+  ),
 ];
+
+const eksempel: Record<string, { example: string; forYou: string }> = {
+  rente: {
+    example: "10 000 kroner til 5 prosent i ett år blir 10 500 kroner.",
+    forYou: "Når du sammenligner lån eller sparekonto, er det renta som sier hva pengene koster eller gir.",
+  },
+  realrente: {
+    example: "4 prosent rente og 3 prosent prisvekst gir om lag 1 prosent realrente.",
+    forYou: "Se på renta og prisveksten sammen før du vurderer om sparingen faktisk vokser.",
+  },
+  "penger-og-banker": {
+    example: "Et lån på 100 000 kroner blir et innskudd hos den som mottar pengene.",
+    forYou: "Derfor merker du det på boliglån og sparing når renta går opp eller ned.",
+  },
+  aksje: {
+    example: "Kjøper du for 1 000 kroner og kursen faller til 800, er andelen din verdt 800 kroner den dagen.",
+    forYou: "Utbytte og kurs er de to måtene en aksje kan gi deg penger, og begge kan utebli.",
+  },
+  fond: {
+    example: "Tusen sparere setter inn penger. Fondet kjøper aksjer for dem, og du eier din del.",
+    forYou: "Velg type fond etter hva pengene skal tåle: aksjer svinger mer, rentepapirer vanligvis mindre.",
+  },
+  etf: {
+    example: "Du kjøper andelen på børsen mens den er åpen, til prisen der og da.",
+    forYou: "Se på både årlig kostnad og det du betaler per handel.",
+  },
+  "kostnader-i-fond": {
+    example:
+      "100 000 kroner, 30 år, 6 prosent før kostnad: 0,2 prosent kostnad gir om lag 542 713 kroner, 1,5 prosent gir om lag 374 532 kroner.",
+    forYou: "En liten prosent hvert år blir et stort beløp når pengene står lenge.",
+  },
+  "kurtasje-valutapaslag": {
+    example: "Én handel har ett gebyr. En handel i dollar har gebyr pluss veksling.",
+    forYou: "Spør hva handelen koster før du kjøper ofte, og hva vekslingen koster hvis fondet er i annen valuta.",
+  },
+};
+
+for (const concept of extraConcepts) {
+  const tekst = eksempel[concept.id];
+  if (!tekst) continue;
+  concept.example = tekst.example;
+  concept.forYou = tekst.forYou;
+}
 
 const satsPaKonsept: Record<string, string[]> = {
   bsu: ["bsu-aar", "bsu-samlet", "bsu-fradrag", "bsu-alder"],

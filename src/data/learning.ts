@@ -1053,9 +1053,142 @@ export const lessons: Lesson[] = [
     ],
     conceptIds: ["styringsrenten", "kronekurs"],
   },
+  {
+    id: "sh-1",
+    pathId: "start-her",
+    title: "Rente og renters rente",
+    order: 0,
+    summary: "Prisen på penger, og hvorfor tid betyr noe.",
+    body: [
+      "Rente er prisen for å låne penger, og betalingen du får når du låner penger til andre, for eksempel banken. Regneeksempel: 10 000 kroner til 5 prosent i ett år blir 10 500 kroner. Det er ikke renta du får i banken i dag.",
+      "Boliglånsrenta er ikke det samme som styringsrenten. Styringsrenten er renta bankene får i Norges Bank. Boliglånet ditt ligger vanligvis høyere.",
+      "Renters rente betyr at neste års rente regnes av det som allerede har vokst. Derfor betyr det mer hvor lenge pengene står, enn det føles som det første året.",
+    ],
+    conceptIds: ["rente", "renters-rente"],
+    figureConceptId: "rente",
+    quiz: {
+      question: "Du setter inn 10 000 kroner til 5 prosent rente i ett år. Om lag hvor mye har du da?",
+      options: [
+        "10 500 kroner",
+        "10 000 kroner",
+        "15 000 kroner",
+        "10 050 kroner",
+      ],
+      answerIndex: 0,
+      whyWrong: [
+        "",
+        "Pengene blir stående, men renta legger noe på.",
+        "5 prosent av 10 000 er 500, ikke 5 000.",
+        "500 kroner er 5 prosent. 50 kroner ville vært 0,5 prosent.",
+      ],
+      explain: "5 prosent av 10 000 kroner er 500 kroner. Etter ett år er beløpet 10 500 kroner. Det er et regneeksempel.",
+    },
+  },
+  {
+    id: "sh-2",
+    pathId: "start-her",
+    title: "Inflasjon og realrente",
+    order: 1,
+    summary: "Hva renta er verdt når prisene stiger.",
+    body: [
+      "Inflasjon betyr at prisene samlet sett stiger, så en krone kjøper mindre. Det måles ofte med konsumprisindeksen.",
+      "Realrente er renta etter prisvekst. Regneeksempel: 4 prosent på sparekontoen og 3 prosent prisvekst gir om lag 1 prosent realrente. Du kan kjøpe litt mer, ikke 4 prosent mer.",
+      "Stiger prisene mer enn renta, faller kjøpekraften selv om det står flere kroner på kontoen.",
+    ],
+    conceptIds: ["inflasjon", "realrente"],
+    figureConceptId: "realrente",
+    quiz: {
+      question: "Sparekontoen gir 4 prosent, og prisene stiger 3 prosent. Om lag hvor mye mer får du kjøpt?",
+      options: [
+        "4 prosent mer",
+        "7 prosent mer",
+        "Om lag 1 prosent mer",
+        "Ingenting, prisene spiser hele renta",
+      ],
+      answerIndex: 2,
+      whyWrong: [
+        "4 prosent er renta før prisvekst. Du må trekke fra det varene koster mer.",
+        "Du legger ikke renta og prisveksten sammen. Du trekker prisveksten fra.",
+        "",
+        "3 prosent er mindre enn 4 prosent, så det blir en liten rest igjen.",
+      ],
+      explain: "4 prosent minus 3 prosent er om lag 1 prosent. Det er realrenta i eksempelet, ikke en rente fra en bank i dag.",
+    },
+  },
+  {
+    id: "sh-3",
+    pathId: "start-her",
+    title: "Penger og banker",
+    order: 2,
+    summary: "Hva penger er, og hvordan et lån blir et innskudd.",
+    body: [
+      "Penger er det du kan betale med. Sedler i lomma og lønn på konto er begge penger.",
+      "Når banken låner ut, får låntakeren et innskudd. Bruker hen pengene, får mottakeren et nytt innskudd i sin bank. Slik blir det flere kroner i banksystemet enn de sedlene du satte inn.",
+      "Renta er prisen på slike lån. Derfor påvirker den hvor mange nye kroner som lages, og hva du betaler for boliglånet.",
+    ],
+    conceptIds: ["penger-og-banker"],
+    figureConceptId: "penger-og-banker",
+    quiz: {
+      question: "Banken låner ut 100 000 kroner til en kunde. Hva skjer med innskuddene?",
+      options: [
+        "Banken låner bare ut de samme sedlene, og summen av innskudd er uendret",
+        "Det oppstår et nytt innskudd",
+        "Kundens lønnskonto blir slettet",
+        "Norges Bank trykker 100 000 nye sedler til den kunden",
+      ],
+      answerIndex: 1,
+      whyWrong: [
+        "Lånet blir et innskudd hos den som mottar pengene. Det er flere kroner på konto enn sedlene som ble satt inn.",
+        "",
+        "Lånet sletter ikke lønnskontoen. Det legger til et innskudd.",
+        "Et vanlig banklån er ikke det samme som at Norges Bank trykker sedler til én kunde.",
+      ],
+      explain: "Når banken låner ut, blir lånet et innskudd. Mottakeren får kroner på konto. Det er slik bankene lager nye innskudd.",
+    },
+  },
+  {
+    id: "sh-4",
+    pathId: "start-her",
+    title: "Aksjer og fond",
+    order: 3,
+    summary: "Eie en bit, eller eie sammen med andre.",
+    body: [
+      "En aksje er en eierandel i et selskap. Du kan få utbytte, og du kan tjene hvis kursen stiger. Kursen kan også falle.",
+      "Et fond samler penger fra mange. Et aksjefond eier aksjer, et rentefond eier lån, og et kombinasjonsfond eier begge. Du eier en andel, ikke hvert papir selv.",
+      "Den [[ter|årlige kostnaden]] trekkes hvert år. Regneeksempel, ikke en prognose: 100 000 kroner i 30 år med 6 prosent før kostnad blir om lag 542 713 kroner ved 0,2 prosent kostnad, og om lag 374 532 kroner ved 1,5 prosent.",
+    ],
+    conceptIds: ["aksje", "fond", "kostnader-i-fond"],
+    figureConceptId: "fond",
+    quiz: {
+      question: "To fond har samme avkastning før kostnad. Det ene koster 0,2 prosent i året, det andre 1,5 prosent. Hva stemmer over 30 år?",
+      options: [
+        "De ender likt, fordi avkastningen før kostnad er lik",
+        "Det dyre fondet ender høyere, fordi høy kostnad betyr høyere kvalitet",
+        "Kostnaden merkes bare det første året",
+        "Det billige fondet ender klart høyere, fordi kostnaden trekkes hvert år",
+      ],
+      answerIndex: 3,
+      whyWrong: [
+        "Samme avkastning før kostnad er ikke samme sluttbeløp. Kostnaden trekkes fra hvert år.",
+        "Høyere kostnad er ikke et løfte om bedre avkastning. I eksempelet er avkastningen før kostnad den samme.",
+        "Kostnaden tas hvert år, og renters rente gjør at forskjellen vokser.",
+        "",
+      ],
+      explain:
+        "I regneeksemplet, 100 000 kroner og 6 prosent før kostnad i 30 år, blir 0,2 prosent kostnad om lag 542 713 kroner og 1,5 prosent om lag 374 532 kroner. Det er ikke en prognose.",
+    },
+  },
 ];
 
 export const learningPaths: LearningPath[] = [
+  {
+    id: "start-her",
+    title: "Start her",
+    subtitle: "Rente, prisvekst, banker, aksjer og fond.",
+    category: "makro",
+    estimatedMinutes: 12,
+    lessonIds: ["sh-1", "sh-2", "sh-3", "sh-4"],
+  },
   {
     id: "norsk-pengepolitikk",
     title: "Norsk pengepolitikk",
@@ -1187,11 +1320,22 @@ export const srsConceptIds = new Set<string>([
   "belaningsgrad",
   "gjeldsgrad",
   "personfradrag",
+  "rente",
+  "realrente",
+  "penger-og-banker",
+  "aksje",
+  "fond",
+  "etf",
+  "kostnader-i-fond",
+  "kurtasje-valutapaslag",
 ]);
 
 const synonyms: Record<string, string[]> = {
   oljefondet: ["spu", "pensjonsfondet", "oljefond", "statens pensjonsfond"],
-  styringsrenten: ["renta", "sentralbankrenta", "foliorente", "policy rate"],
+  styringsrenten: ["sentralbankrenta", "foliorente", "policy rate"],
+  rente: ["renta", "renten", "renter"],
+  aksje: ["aksjer", "aksjen"],
+  fond: ["aksjefond", "rentefond", "fondet"],
   inflasjon: ["prisvekst"],
   kpi: ["konsumprisindeks", "cpi", "konsumpris"],
   "kpi-jae": ["kpi jae", "cpi-ate", "underliggende inflasjon"],
@@ -1287,6 +1431,14 @@ export function getConcept(id: string): Concept | undefined {
   return concepts.find((c) => c.id === id);
 }
 
+function conceptRank(concept: Concept, query: string): number {
+  const term = fold(concept.term);
+  const syns = (synonyms[concept.id] ?? []).map((item) => fold(item));
+  if (term === query || syns.includes(query)) return 0;
+  if (term.startsWith(query)) return 1;
+  return 2;
+}
+
 export function searchLearning(query: string): {
   concepts: Concept[];
   paths: LearningPath[];
@@ -1299,10 +1451,13 @@ export function searchLearning(query: string): {
   const conceptHits = concepts.filter((c) => {
     const syn = (synonyms[c.id] ?? []).join(" ");
     const hay = fold(
-      stripMarkup(`${c.term} ${c.english ?? ""} ${c.definition} ${c.explanation} ${c.tip ?? ""} ${syn}`)
+      stripMarkup(
+        `${c.term} ${c.english ?? ""} ${c.definition} ${c.explanation} ${c.example ?? ""} ${c.forYou ?? ""} ${c.tip ?? ""} ${syn}`
+      )
     );
     return hay.includes(q);
   });
+  conceptHits.sort((a, b) => conceptRank(a, q) - conceptRank(b, q));
   const pathHits = learningPaths.filter((p) =>
     fold(`${p.title} ${p.subtitle}`).includes(q)
   );
@@ -1453,6 +1608,14 @@ function assertLearning() {
       throw new Error(`For mange quizer har svar ${index}: ${count} av ${quizzes.length}`);
     }
   }
+
+  const first = (query: string) => searchLearning(query).concepts[0]?.id;
+  if (first("renta") !== "rente") throw new Error("Søk på renta skal treffe rente først");
+  if (first("renten") !== "rente") throw new Error("Søk på renten skal treffe rente først");
+  if (first("aksjer") !== "aksje") throw new Error("Søk på aksjer skal treffe aksje først");
+  if (first("aksjefond") !== "fond") throw new Error("Søk på aksjefond skal treffe fond først");
+  if (first("rentefond") !== "fond") throw new Error("Søk på rentefond skal treffe fond først");
+  if (first("fond") !== "fond") throw new Error("Søk på fond skal treffe fond først");
 }
 
 assertLearning();
