@@ -61,7 +61,14 @@ export type FigureSpec =
     }
   | { type: "pair"; title: string; a: string; b: string; link: string; caption: string }
   | { type: "bars"; title: string; items: { label: string; value: number }[]; caption: string }
-  | { type: "sketch"; title: string; kind: SketchKind; caption: string };
+  | { type: "sketch"; title: string; kind: SketchKind; caption: string }
+  | {
+      type: "table";
+      title: string;
+      columns: string[];
+      rows: { label: string; cells: string[] }[];
+      caption: string;
+    };
 
 /** Enkle tegninger der poenget er en linje, en kurve eller punkter. */
 export type SketchKind =
@@ -1121,6 +1128,121 @@ export const conceptFigures: Record<string, FigureSpec> = {
     rightLabel: "Valutapåslag",
     right: "Ekstra når du veksler til en annen valuta.",
     caption: "De kommer i tillegg til den årlige kostnaden i et fond.",
+  },
+  "investeringskonto-zero": {
+    type: "table",
+    title: "Tre kontoer, kort",
+    columns: ["ASK", "IKZ", "Vanlig"],
+    rows: [
+      { label: "Innhold", cells: ["Aksjer, fond", "Også renter", "Det du kjøper"] },
+      { label: "Skatt", cells: ["Ved uttak", "Ved uttak", "Ved salg"] },
+      { label: "Innskudd først", cells: ["Ja", "Nei", "Nei"] },
+      { label: "Stemmerett", cells: ["Ja", "Nei", "Ja"] },
+      { label: "Garanti", cells: ["Nei", "Nei", "Nei"] },
+    ],
+    caption:
+      "Kort sammenligning. Verdipapirene dekkes ikke av innskuddsgarantien. TODO: verifiser skattesatsen på IKZ hos Skatteetaten.",
+  },
+  kapitalforsikring: {
+    type: "flow",
+    title: "Hvem eier hva",
+    steps: ["Du betaler inn", "Selskapet eier papirene", "Du har et krav", "Skatt ved uttak"],
+    caption: "Du har kravet. Selskapet står som eier, så stemmeretten følger ikke med.",
+  },
+  lonnsslipp: {
+    type: "flow",
+    title: "Fra brutto til konto",
+    steps: ["Brutto", "Trekk", "Netto"],
+    caption: "Netto er det som kommer på konto. 40 000 og 12 000 i teksten er et eksempel.",
+  },
+  skattekort: {
+    type: "compare",
+    title: "Trekk, ikke fasit",
+    leftLabel: "Skattekort",
+    left: "Styrer trekket gjennom året.",
+    rightLabel: "Skattemelding",
+    right: "Oppgjøret etter året.",
+    caption: "Kortet er forskuddet. Meldingen er der du sjekker fasiten.",
+  },
+  tabelltrekk: {
+    type: "compare",
+    title: "To måter å trekke på",
+    leftLabel: "Tabell",
+    left: "Følger lønn og fradrag.",
+    rightLabel: "Prosent",
+    right: "En prosent av utbetalingen.",
+    caption: "Prosenttrekk brukes ofte når du har flere arbeidsgivere.",
+  },
+  frikort: {
+    type: "compare",
+    title: "Under og over grensen",
+    leftLabel: "Under",
+    left: "Ikke skattetrekk.",
+    rightLabel: "Over uten kort",
+    right: "50 prosent av det over grensen.",
+    caption: "Grensen og trekket står i tabellen. TODO: verifiser om 2025-grensen var den samme.",
+  },
+  feriepenger: {
+    type: "formula",
+    title: "Minstesatsen",
+    expression: "Feriepenger = grunnlag × minstesats",
+    bits: [
+      { name: "Grunnlag", means: "Arbeidsvederlag utbetalt året før" },
+      { name: "Minstesats", means: "10,2 prosent i ferieloven" },
+    ],
+    caption: "Tariffavtaler gir ofte 12 prosent. Over 60 år kommer 2,3 prosentpoeng på toppen, opp til 6 G.",
+  },
+  skattemelding: {
+    type: "flow",
+    title: "Fra trekk til oppgjør",
+    steps: ["Trekk gjennom året", "Skattemelding", "Oppgjør"],
+    caption: "Du sjekker meldingen. Oppgjøret viser restskatt eller tilgode.",
+  },
+  restskatt: {
+    type: "compare",
+    title: "For lite, eller for mye",
+    leftLabel: "Restskatt",
+    left: "Trekket var for lavt.",
+    rightLabel: "Tilgode",
+    right: "Trekket var for høyt.",
+    caption: "TODO: verifiser rentesatsen på restskatt hos Skatteetaten. Den står ikke her.",
+  },
+  forbrukslan: {
+    type: "compare",
+    title: "Med pant, og uten",
+    leftLabel: "Boliglån",
+    left: "Pant i boligen.",
+    rightLabel: "Forbrukslån",
+    right: "Uten pant. Ofte dyrere.",
+    caption: "Sammenlign effektiv rente. Ingen rentesats står her, fordi tilbudene varierer.",
+  },
+  kredittkort: {
+    type: "flow",
+    title: "Rammen og renta",
+    steps: ["Du bruker kortet", "Forfall", "Hele beløpet, eller rente"],
+    caption: "Ubrukt ramme kan telle som gjeld. 20 000 kroner i teksten er et eksempel.",
+  },
+  studielan: {
+    type: "flow",
+    title: "Fra lån til stipend",
+    steps: ["Basislån", "Vilkår sjekkes", "Inntil 40 % kan bli stipend", "Rente etter fulltid"],
+    caption:
+      "40 prosent krever bortebo, bestått grad og grensene. Enkeltfag kan gi 15 prosent. Renta løper fra dagen etter støtten.",
+  },
+  gjeldsregisteret: {
+    type: "compare",
+    title: "Hva som synes",
+    leftLabel: "I registeret",
+    left: "Forbrukslån og kredittkort.",
+    rightLabel: "Ikke her",
+    right: "Boliglån med pant.",
+    caption: "Banken ser den usikrede gjelden når du søker et nytt lån.",
+  },
+  statsbudsjett: {
+    type: "flow",
+    title: "Ett år for staten",
+    steps: ["Inntekter", "Utgifter", "Stortinget vedtar"],
+    caption: "Finanspolitikken er valgene i budsjettet. Handlingsregelen rammer inn oljepengebruken.",
   },
 };
 

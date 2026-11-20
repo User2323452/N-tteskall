@@ -338,6 +338,62 @@ export const satser: Sats[] = [
     merknad: "Gjelder kunde i norsk bank i Norge. Beløpet følger av finansforetaksloven.",
   },
   {
+    id: "frikort-grense",
+    navn: "Frikortgrense",
+    kortNavn: "Frikortgrense",
+    enhet: "kr",
+    verdier: {
+      2025: { verdi: 100_000, status: "vedtatt" },
+      2026: { verdi: 100_000, status: "vedtatt" },
+    },
+    kilde: "https://www.skatteetaten.no/rettskilder/type/uttalelser/uttalelser/forskuddsutskrivingen-2026/",
+    sistSjekket: SJEKKET,
+    merknad:
+      "Forskuddsutskrivingen 2026 og frikortsiden setter grensen til 100 000 kroner. 2025-kolonnen er satt likt. TODO: verifiser om 2025-grensen var en annen.",
+  },
+  {
+    id: "frikort-trekk",
+    navn: "Trekk over frikortgrensen uten skattekort",
+    kortNavn: "Trekk over grensen",
+    enhet: "%",
+    verdier: {
+      2025: { verdi: 50, status: "vedtatt" },
+      2026: { verdi: 50, status: "vedtatt" },
+    },
+    kilde: "https://www.skatteetaten.no/presse/nyhetsrommet/sommerjobb-og-frikort-dette-ma-du-vite-/",
+    sistSjekket: SJEKKET,
+    merknad:
+      "Skatteetaten, 8. juli 2026: uten ordinært skattekort trekkes 50 prosent av inntekten over frikortgrensen. 2025-kolonnen er satt likt.",
+  },
+  {
+    id: "feriepenger-sats",
+    navn: "Feriepenger, minstesats i ferieloven",
+    kortNavn: "Feriepenger",
+    enhet: "%",
+    verdier: {
+      2025: { verdi: 10.2, status: "vedtatt" },
+      2026: { verdi: 10.2, status: "vedtatt" },
+    },
+    kilde: "https://lovdata.no/nav/lov/1988-04-29-21/kapIII/%C2%A710",
+    sistSjekket: SJEKKET,
+    merknad:
+      "Ferieloven § 10: 10,2 prosent av feriepengegrunnlaget. Over 60 år med ekstraferie: 2,3 prosentpoeng mer, bare opp til 6 G. Tariffavtaler gir ofte 12 prosent.",
+  },
+  {
+    id: "studielan-basis",
+    navn: "Basislån, fulltidsstudent",
+    kortNavn: "Basislån",
+    enhet: "tekst",
+    verdier: {
+      2026: { verdi: "170 368 kr", status: "vedtatt" },
+      2027: { verdi: "170 368 kr", status: "vedtatt" },
+    },
+    kilde: "https://lanekassen.no/nb-NO/presse-og-samfunnskontakt/nyheter/studere-til-hosten-2026/",
+    sistSjekket: SJEKKET,
+    merknad:
+      "Studieåret 2026–2027, fulltid i høyere utdanning, elleve måneder. Ett beløp for studieåret, derfor samme tall i begge kolonner.",
+  },
+  {
     id: "utlan-belaning",
     navn: "Utlånsforskriften – maks belåningsgrad, nedbetalingslån",
     kortNavn: "Maks belåningsgrad",
@@ -624,6 +680,7 @@ export function kildeNavn(url: string): string {
   if (host.endsWith("norges-bank.no")) return "Norges Bank";
   if (host.endsWith("ssb.no")) return "SSB";
   if (host.endsWith("finanstilsynet.no")) return "Finanstilsynet";
+  if (host.endsWith("lanekassen.no")) return "Lånekassen";
   return host;
 }
 
