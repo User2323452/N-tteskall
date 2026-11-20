@@ -122,7 +122,7 @@ export const extraConcepts: Concept[] = [
     "olje",
     "Statens inntekter, utgifter og bruk av oljepenger over statsbudsjettet.",
     "Stortinget vedtar budsjettet. Et eksempel er bruken av Oljefondet, med årets anslag i tabellen hos handlingsregelen. Norges Bank setter styringsrenten. En vanlig misforståelse er at budsjettet og renta er samme verktøy.",
-    ["handlingsregelen", "pengepolitikk"],
+    ["handlingsregelen", "pengepolitikk", "statsbudsjett"],
     "Stortinget vedtar budsjettet. Norges Bank setter renta."
   ),
   c(
@@ -1121,6 +1121,146 @@ export const extraConcepts: Concept[] = [
     ["aksje", "fond", "etf"],
     "Kurtasje per handel. Valutapåslag per veksling."
   ),
+  c(
+    "investeringskonto-zero",
+    "Investeringskonto Zero (IKZ)",
+    "Investment account with capital insurance",
+    "personlig",
+    "En kapitalforsikring der du kan bytte verdipapirer uten skatt før du tar penger ut.",
+    "Kontoen er et produkt hos Nordnet, og forsikringen er i Nordnet Livsforsikring. Selskapet eier papirene, og du har et krav lik verdien. Kjøp og salg skattes ikke før uttak. Tar du ut en andel av verdien, følger samme andel av gevinsten med. TODO: verifiser hos Skatteetaten skattesats, oppjustering, skjerming og verdsettingsrabatt, og hos Nordnet hva Zero viser til.",
+    ["ask", "kapitalforsikring", "fond"],
+    "Uttak tar med seg en like stor del av gevinsten."
+  ),
+  c(
+    "kapitalforsikring",
+    "Kapitalforsikring",
+    "Capital insurance",
+    "personlig",
+    "En forsikring der spareverdien følger verdipapirer, og skatten kommer ved uttak.",
+    "Du har et krav på verdien, og selskapet eier papirene. Du har ikke stemmerett på generalforsamlingen, og skatt utløses ved uttak. Investeringskonto Zero er ett eksempel på en slik konto. En vanlig misforståelse er at den er det samme som en aksjesparekonto.",
+    ["investeringskonto-zero", "ask"],
+    "Selskapet eier papirene. Du eier kravet."
+  ),
+  c(
+    "lonnsslipp",
+    "Lønnsslipp",
+    "Payslip",
+    "personlig",
+    "Oversikten som viser brutto lønn, trekk og det som utbetales.",
+    "Brutto er lønna før trekk. Netto er det som kommer på konto. Et eksempel er 40 000 kroner brutto og 12 000 kroner i trekk, som gir 28 000 kroner netto. Tallene er et eksempel. En vanlig misforståelse er at brutto er det du kan bruke.",
+    ["skattekort", "feriepenger"],
+    "Brutto minus trekk er netto."
+  ),
+  c(
+    "skattekort",
+    "Skattekort",
+    "Tax deduction card",
+    "personlig",
+    "Kortet som sier hvor mye arbeidsgiveren skal trekke i skatt.",
+    "Du bestiller det hos Skatteetaten, og det gjelder for ett inntektsår. Frikort er kortet du har når inntekten er under grensen. Trekket er et forskudd, ikke den endelige skatten. En vanlig misforståelse er at kortet erstatter skattemeldingen.",
+    ["frikort", "tabelltrekk", "skattemelding"],
+    "Kortet styrer trekket. Oppgjøret kommer senere."
+  ),
+  c(
+    "tabelltrekk",
+    "Tabelltrekk og prosenttrekk",
+    "Table deduction and percentage deduction",
+    "personlig",
+    "To måter arbeidsgiveren regner skattetrekket på.",
+    "Tabelltrekk følger en tabell ut fra lønn og fradrag. Prosenttrekk er en prosent av utbetalingen, og brukes ofte på ekstrajobb og når du har flere arbeidsgivere. Prosenten står på skattekortet ditt. En vanlig misforståelse er at prosenten er den samme for alle.",
+    ["skattekort"],
+    "Én jobb: ofte tabell. Flere jobber: ofte prosent."
+  ),
+  c(
+    "frikort",
+    "Frikort",
+    "Tax exemption card",
+    "personlig",
+    "Skattekort som sier at arbeidsgiveren ikke skal trekke skatt, så lenge inntekten er under grensen.",
+    "Grensen er {{sats:frikort-grense}}. Feriepenger teller med i det du tjener. Går du over grensen uten ordinært skattekort, trekkes {{sats:frikort-trekk}} av det som er over. TODO: verifiser om 2025-grensen var den samme. En vanlig misforståelse er at frikortet gjelder uansett hvor mye du tjener.",
+    ["skattekort", "feriepenger"],
+    "Under grensen: ikke trekk. Over: bestill skattekort."
+  ),
+  c(
+    "feriepenger",
+    "Feriepenger",
+    "Holiday pay",
+    "personlig",
+    "Lønn du har tjent opp året før, og som utbetales når du har ferie.",
+    "Minstesatsen i ferieloven er {{sats:feriepenger-sats}} av feriepengegrunnlaget. Over 60 år med ekstraferie er satsen 2,3 prosentpoeng høyere, bare opp til 6 G. Tariffavtaler gir ofte 12 prosent, ifølge Skatteetaten. De er skattepliktige, men utbetales ofte uten trekk den måneden. En vanlig misforståelse er at de kommer oppå full lønn i feriemåneden.",
+    ["lonnsslipp", "grunnbelop"],
+    "Opptjent i fjor. Utbetalt i ferien."
+  ),
+  c(
+    "skattemelding",
+    "Skattemelding",
+    "Tax return",
+    "personlig",
+    "Oversikten over inntekt, fradrag og formue som du skal sjekke og levere.",
+    "Skatteetaten fyller ut det de har. Du retter det som er feil, og leverer. Oppgjøret viser om du har betalt for mye eller for lite. En vanlig misforståelse er at meldingen blir riktig uten at du ser på den.",
+    ["restskatt", "skattekort"],
+    "Se over. Rett. Lever."
+  ),
+  c(
+    "restskatt",
+    "Restskatt",
+    "Remaining tax",
+    "personlig",
+    "Skatt du skylder når oppgjøret viser at trekket gjennom året var for lavt.",
+    "Tilgodebeløp er det motsatte: skatt du har betalt for mye. Trekket på lønnsslippen er et forskudd. TODO: verifiser rentesatsen på restskatt hos Skatteetaten. En vanlig misforståelse er at restskatt betyr at du har gjort noe galt.",
+    ["skattemelding", "skattekort"],
+    "For lite trekk gir restskatt. For mye trekk gir tilgode."
+  ),
+  c(
+    "forbrukslan",
+    "Forbrukslån",
+    "Consumer loan",
+    "personlig",
+    "Et lån uten pant i bolig.",
+    "Banken har svakere sikkerhet enn på et boliglån, og renten er derfor ofte høyere. Det du sammenligner, er effektiv rente, som banken oppgir. Her står ingen rentesats, fordi den varierer fra tilbud til tilbud. En vanlig misforståelse er at laveste nominelle rente er det billigste lånet.",
+    ["nominell-effektiv", "kredittkort", "gjeldsregisteret"],
+    "Sammenlign effektiv rente. Ikke bare den nominelle."
+  ),
+  c(
+    "kredittkort",
+    "Kredittkort",
+    "Credit card",
+    "personlig",
+    "En kreditt du kan bruke, og som får rente hvis du ikke betaler hele beløpet ved forfall.",
+    "Ubrukt ramme kan telle når banken vurderer hvor mye gjeld du har. Et eksempel er en ramme på 20 000 kroner. Tallet er et eksempel, ikke et tilbud. En vanlig misforståelse er at ubrukt ramme er usynlig for banken.",
+    ["forbrukslan", "gjeldsregisteret", "nominell-effektiv"],
+    "Betal hele beløpet ved forfall hvis du vil unngå renta."
+  ),
+  c(
+    "studielan",
+    "Studielån",
+    "Student loan",
+    "personlig",
+    "Basislånet fra Lånekassen, der en del kan bli stipend hvis vilkårene er oppfylt.",
+    "Fulltidsstudent i høyere utdanning kan få {{sats:studielan-basis}} for studieåret, over elleve måneder. Inntil 40 prosent kan bli stipend hvis du bor borte, består en grad og er under grensene. Enkeltfag og årsstudium kan gi 15 prosent. Lånet er rentefritt mens du får støtte til fulltidsutdanning, og renta løper fra dagen etter.",
+    ["nominell-effektiv"],
+    "Først lån. Stipend etter at vilkårene er sjekket."
+  ),
+  c(
+    "gjeldsregisteret",
+    "Gjeldsregisteret",
+    "Debt register",
+    "personlig",
+    "Registeret over usikret gjeld, som forbrukslån og kredittkort.",
+    "Bankene ser i registeret når de vurderer et nytt lån. Boliglån med pant står ikke der. En vanlig misforståelse er at registeret viser all gjeld du har.",
+    ["forbrukslan", "kredittkort"],
+    "Usikret gjeld. Ikke boliglånet."
+  ),
+  c(
+    "statsbudsjett",
+    "Statsbudsjettet",
+    "Fiscal budget",
+    "olje",
+    "Stortingets plan for statens inntekter og utgifter ett år.",
+    "Finanspolitikken er valgene i det budsjettet. Handlingsregelen sier hvor mye oljepenger som kan brukes. Norges Bank setter styringsrenten. En vanlig misforståelse er at budsjettet og renta er samme verktøy.",
+    ["finanspolitikk", "handlingsregelen"],
+    "Budsjettet er Stortinget. Renta er Norges Bank."
+  ),
 ];
 
 const eksempel: Record<string, { example: string; forYou: string }> = {
@@ -1370,6 +1510,62 @@ const eksempel: Record<string, { example: string; forYou: string }> = {
     example: "Høyere pris på olje og gass kan gi høyere inntekter til staten når volumet er det samme.",
     forYou: "Inntektene fyller fondet. Bruken etterpå følger handlingsregelen.",
   },
+  "investeringskonto-zero": {
+    example: "Du tar ut 20 prosent av verdien. Da følger 20 prosent av gevinsten med. Innskuddet tas ikke ut først. 20 prosent er et eksempel på metoden.",
+    forYou: "Kontoen dekkes ikke av innskuddsgarantien. Nordnet oppgir 101 prosent av verdien ved dødsfall.",
+  },
+  kapitalforsikring: {
+    example: "Du selger et fond inne i forsikringen. Skatten venter til du tar penger ut av kontoen.",
+    forYou: "Sjekk hva kontoen kan eie, og at den ikke er en aksjesparekonto.",
+  },
+  lonnsslipp: {
+    example: "40 000 kroner brutto og 12 000 kroner i trekk gir 28 000 kroner netto. Tallene er et eksempel.",
+    forYou: "Les brutto, trekk og netto før du planlegger det som kommer på konto.",
+  },
+  skattekort: {
+    example: "Ny jobb: arbeidsgiveren henter kortet og trekker etter det.",
+    forYou: "Bestill kort før første lønn, så trekket ikke blir 50 prosent over frikortgrensen.",
+  },
+  tabelltrekk: {
+    example: "Hovedjobben bruker tabell. Ekstrajobben bruker prosenttrekk.",
+    forYou: "Har du to jobber, sjekk at ikke begge bruker hele tabellen.",
+  },
+  frikort: {
+    example: "Du tjener 80 000 kroner i året, under grensen. Arbeidsgiveren trekker ikke skatt.",
+    forYou: "Feriepengene teller med når du ser om du holder deg under grensen.",
+  },
+  feriepenger: {
+    example: "100 000 kroner i feriepengegrunnlag og minstesatsen gir 10 200 kroner.",
+    forYou: "Sjekk satsen i arbeidsavtalen. Loven er gulvet, tariffen kan være høyere.",
+  },
+  skattemelding: {
+    example: "Banken har rapportert rentene. Du sjekker at beløpet stemmer før du leverer.",
+    forYou: "Se på meldingen hvert år, også når du tror alt er ferdig utfylt.",
+  },
+  restskatt: {
+    example: "Trekket gjennom året ble for lavt. Oppgjøret viser at du skylder resten.",
+    forYou: "For lavt trekk i år kan gi en regning neste år.",
+  },
+  forbrukslan: {
+    example: "To tilbud har ulik nominell rente. Du sammenligner den effektive, som banken oppgir.",
+    forYou: "Et lån uten pant koster ofte mer enn boliglånet. Sammenlign effektiv rente.",
+  },
+  kredittkort: {
+    example: "Rammen er 20 000 kroner. Du bruker 4 000 og betaler hele beløpet ved forfall. 20 000 er et eksempel.",
+    forYou: "Ubrukt ramme kan telle som gjeld når du søker boliglån.",
+  },
+  studielan: {
+    example: "Du bor borte og fullfører en grad. Inntil 40 prosent av basislånet kan bli stipend.",
+    forYou: "Renta starter dagen etter at støtten til fulltid stopper. Første regning kommer om lag sju måneder senere, og den ventetiden er betalingsfri, men ikke rentefri.",
+  },
+  gjeldsregisteret: {
+    example: "Et kredittkort med ramme på 20 000 kroner kan vises der, selv om du ikke har brukt rammen. Tallet er et eksempel.",
+    forYou: "Banken ser usikret gjeld før den sier ja til et nytt lån.",
+  },
+  statsbudsjett: {
+    example: "Oljepengebruken vedtas i budsjettet. Handlingsregelen er retningslinjen for hvor mye.",
+    forYou: "Budsjettet er politikken. Styringsrenten er Norges Bank.",
+  },
 };
 
 for (const concept of extraConcepts) {
@@ -1398,6 +1594,9 @@ const satsPaKonsept: Record<string, string[]> = {
   oppjusteringsfaktor: ["oppjustering"],
   verdsettingsrabatt: ["verdsettingsrabatt"],
   innskuddsgaranti: ["innskuddsgaranti"],
+  frikort: ["frikort-grense", "frikort-trekk"],
+  feriepenger: ["feriepenger-sats"],
+  studielan: ["studielan-basis"],
   kpi: ["kpi-basis"],
   inflasjonsmal: ["inflasjon-mal"],
 };

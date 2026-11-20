@@ -92,6 +92,37 @@ export function PlainFigure({ spec }: { spec: Exclude<FigureSpec, { type: "inter
     );
   }
 
+  if (spec.type === "table") {
+    return (
+      <Frame title={spec.title} caption={spec.caption}>
+        <table className="w-full text-left text-[11px]">
+          <thead>
+            <tr>
+              <th className="pb-1 pr-1" />
+              {spec.columns.map((col) => (
+                <th key={col} className="pb-1 pr-1 font-semibold text-[var(--ink)]">
+                  {col}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {spec.rows.map((row) => (
+              <tr key={row.label} className="border-t border-[var(--line)]">
+                <th className="py-1 pr-1 font-medium text-[var(--ink)]">{row.label}</th>
+                {row.cells.map((cell, index) => (
+                  <td key={`${row.label}-${index}`} className="py-1 pr-1 text-[var(--muted)]">
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Frame>
+    );
+  }
+
   if (spec.type === "stack") {
     return (
       <Frame title={spec.title} caption={spec.caption}>
